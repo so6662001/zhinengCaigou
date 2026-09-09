@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>风控与审批流 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .appr { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: #fff; }
+  .appr.urgent { border-color: #f5c6c2; background: #fff8f7; }
+  .appr .h { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .appr .amt { font-size: 15px; font-weight: 700; font-family: var(--mono); margin-left: auto; }
+  .flow { display: flex; align-items: center; gap: 0; overflow: auto; padding: 6px 0; }
+  .node { border: 1.5px solid var(--line-strong); border-radius: 10px; padding: 7px 10px; min-width: 112px; background: #fff; font-size: 12px; text-align: center; }
+  .node b { display: block; font-size: 12.5px; }
+  .node small { color: var(--text-3); }
+  .node.auto { border-color: var(--success); background: var(--success-2); }
+  .node.on { border-color: var(--primary); background: var(--primary-2); box-shadow: 0 0 0 3px rgba(31,94,255,.1); }
+  .node.end { border-style: dashed; }
+  .edge { width: 30px; height: 1.5px; background: var(--line-strong); position: relative; flex: 0 0 auto; }
+  .edge::after { content: ""; position: absolute; right: -1px; top: -3.5px; border: 4px solid transparent; border-left-color: var(--line-strong); }
+  .edge span { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-3); white-space: nowrap; font-family: var(--mono); }
+  .branch { display: flex; flex-direction: column; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="风控与审批流"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div><h1>风控与审批流</h1><p>风控前置到下单之前:授权额度、价格偏离、供应商资质、集中度、资金占用自动校验;90% 采购单零人工审批,只有真正的例外才找人。</p></div>
+        <div class="actions"><a class="btn" data-toast="已导出本月风控报告">导出风控报告</a><a class="btn primary" data-toast="审批流编辑器已打开">✎ 编辑审批流</a></div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi hi"><div class="lbl">待我审批</div><div class="val num">2</div><div class="delta">1 项已等待 41 分 · 超时阈值 60 分</div></div>
+        <div class="card kpi"><div class="lbl">本月自动通过率</div><div class="val num">91<small>%</small></div><div class="delta dim">184 单中 168 单零人工 · 审批中位 <b>26 分</b></div></div>
+        <div class="card kpi"><div class="lbl">本月前置拦截</div><div class="val num">27<small>次</small></div><div class="delta dim">价格偏离 11 · 资质 8 · 额度 5 · 集中度 3</div></div>
+        <div class="card kpi"><div class="lbl">规避损失(估算)</div><div class="val num down">¥ 186K</div><div class="delta dim">含 6 单「表面低价」拦截 ¥38,200</div></div>
+        <div class="card kpi"><div class="lbl">黑名单 / 观察名单</div><div class="val num">2 <small>/ 9</small></div><div class="delta dim">本月新增观察 1(日照贸易商 B)</div></div>
+        <div class="card kpi"><div class="lbl">三单匹配(合同-磅单-发票)</div><div class="val num">100<small>%</small></div><div class="delta dim">差异自动挂起付款 3 笔</div></div>
+      </div>
+
+      <div class="grid mb" style="grid-template-columns: minmax(0,1fr) 380px; gap:14px">
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>审批流(采购单)</h3><span class="sub">按金额分级 + 例外并行会签 · 企微推送 · 超时自动升级</span></div>
+            <div class="card-b">
+              <div class="flow">
+                <div class="node"><b>配货引擎生成 PO</b><small>含决策说明 / 比价矩阵</small></div>
+                <div class="edge"></div>
+                <div class="node auto"><b>自动校验</b><small>额度 · 价格偏离 · 资质 · 集中度 · 资金</small></div>
+                <div class="edge"><span>全部通过 91%</span></div>
+                <div class="node auto"><b>自动下达</b><small>≤ ¥50 万 无需人工</small></div>
+                <div class="edge"></div>
+                <div class="branch">
+                  <div class="row" style="gap:0"><div class="node"><b>采购经理</b><small>¥50 万 – 200 万</small></div><div class="edge"></div><div class="node on"><b>总经理</b><small>&gt; ¥200 万 · 待 1</small></div></div>
+                  <div class="row" style="gap:0"><div class="node on"><b>采购总监说明</b><small>价格偏离 &gt; ±30 · 待 1</small></div><div class="edge"></div><div class="node"><b>供应链风控</b><small>新供应商首 3 单</small></div></div>
+                </div>
+                <div class="edge"></div>
+                <div class="node end"><b>财务复核 & 电子签</b><small>付款计划 · 三单匹配</small></div>
+              </div>
+              <div class="small dim mt">超时规则:审批 &gt; 60 分钟企微再次提醒;&gt; 120 分钟升级至上级并短信;急单(交期 ≤ 1 天)阈值减半。审批人可在企微卡片内直接「批准 / 驳回 / 要求改方案」。</div>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>风控规则</h3><span class="sub">下单前校验 · 可按品种 / 区域覆盖</span><div class="r"><a class="btn xs">+ 新增规则</a></div></div>
+            <div class="card-b tight" style="overflow:auto">
+              <table class="tbl compact">
+                <thead><tr><th>规则</th><th>触发条件</th><th>动作</th><th class="r">本月触发</th><th class="c">启用</th></tr></thead>
+                <tbody>
+                  <tr><td class="bold">单笔授权额度</td><td>≤ 50 万自动 · 50–200 万经理 · &gt; 200 万总经理</td><td>分级审批</td><td class="r num">5</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">单日累计额度</td><td>&gt; ¥800 万 / 天</td><td>总经理审批</td><td class="r num">1</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">价格偏离</td><td>到厂价 vs Mysteel 基准 &gt; ±30 元/吨</td><td>采购总监说明 + 会签</td><td class="r num">11</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">异常低价</td><td>报价低于市场 −50 且供应商非协议</td><td>标记疑似非标,强制核验质保书</td><td class="r num">3</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">毛利穿底</td><td>到厂价 &gt; 销售合同价 − 45</td><td>硬拦截,通知销售改价或取消</td><td class="r num">0</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">供应商资质</td><td>营业执照 / 质保书 / 开票信息缺失或过期</td><td>剔除资源</td><td class="r num">8</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">黑名单 / 关联方</td><td>黑名单或与黑名单同法人 / 同收款账户</td><td>永久排除,告警</td><td class="r num">2</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">供应商集中度</td><td>单家占比 &gt; 35%(月)</td><td>配货引擎硬约束 + 周报</td><td class="r num">3</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">预付款风险</td><td>预付 &gt; ¥100 万 或 供应商信用 &lt; 85</td><td>供应链风控会签 + 担保</td><td class="r num">2</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">资金占用</td><td>在途 + 库存资金 &gt; 授信 85%</td><td>提示财务,配货引擎提高账期权重</td><td class="r num">1</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">到货核验</td><td>磅差 &lt; −0.30% 或 质保书不匹配</td><td>挂起付款,生成索赔,信用 −3</td><td class="r num">3</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td class="bold">三单匹配</td><td>合同 / 磅单 / 发票 吨位或金额不一致</td><td>挂起付款,通知供应商</td><td class="r num">3</td><td class="c"><span class="switch on"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>拦截与审批日志</h3><span class="sub">可审计 · 保留 5 年</span><div class="r"><input class="inp" placeholder="搜索单号 / 供应商" style="width:180px;height:28px"></div></div>
+            <div class="card-b tight" style="overflow:auto">
+              <table class="tbl compact">
+                <thead><tr><th>时间</th><th>对象</th><th>规则</th><th>详情</th><th>结果</th><th>处理人</th></tr></thead>
+                <tbody>
+                  <tr><td class="num">09/09 09:12</td><td class="num">RFQ-260908-02</td><td>异常低价</td><td>润忠(南通)热卷报价低于市场 −68,非协议</td><td><span class="tag yellow">强制核验</span></td><td>系统 → 陈建国</td></tr>
+                  <tr><td class="num">09/09 08:50</td><td class="num">PO-260909-23</td><td>单笔授权额度</td><td>中天 理计 240t · ¥2,180,000 &gt; 200 万</td><td><span class="tag blue">审批中</span></td><td>总经理</td></tr>
+                  <tr><td class="num">09/09 08:20</td><td class="num">PO-260907-09</td><td>到货核验</td><td>日照 2 车磅差 −0.42%,索赔 ¥6,240</td><td><span class="tag red">挂起付款</span></td><td>系统</td></tr>
+                  <tr><td class="num">09/08 16:05</td><td class="num">PO-260908-31</td><td>价格偏离</td><td>敬业 中板 到厂价 +41 vs 基准(华东无资源,北方直发运费高)</td><td><span class="tag blue">待说明</span></td><td>采购总监</td></tr>
+                  <tr><td class="num">09/08 10:30</td><td class="num">SO-260908-06</td><td>毛利穿底</td><td>销售报价 3,420,最优到厂 3,442 → 无法满足最低毛利</td><td><span class="tag red">硬拦截</span></td><td>系统 → 销售改价 3,495</td></tr>
+                  <tr><td class="num">09/07 14:12</td><td class="num">供应商 X</td><td>黑名单 / 关联方</td><td>新申报供应商收款账户与黑名单 X 一致</td><td><span class="tag red">拒绝准入</span></td><td>系统</td></tr>
+                  <tr><td class="num">09/06 09:40</td><td class="num">PO-260906-14</td><td>单笔授权额度</td><td>玖隆 Φ20/22 400t · ¥1,376,000</td><td><span class="tag green">批准(18 分)</span></td><td>采购经理 刘</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右:待审批 -->
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>待我审批</h3><span class="tag red">2</span><div class="r"><a class="small" href="#">全部审批记录</a></div></div>
+            <div class="card-b" style="display:flex;flex-direction:column;gap:10px">
+              <div class="appr urgent">
+                <div class="h"><span class="tag red">超授权</span><b class="num">PO-260909-23</b><span class="tiny muted">等待 41 分</span><span class="amt">¥ 2,180,000</span></div>
+                <div class="small mt" style="margin-top:6px">中天钢铁 · 螺纹 Φ12/14 理计 240t · 到厂 3,286(磅计等价)· 需求 SO-08 万科合肥 + RPL-0909-01</div>
+                <div class="think mt" style="padding:8px 10px;margin-top:8px">
+                  <div class="h" style="margin-bottom:4px"><span class="ai">审批要点</span></div>
+                  <ul style="margin:0;padding-left:14px" class="small">
+                    <li>比次优方案(马钢磅计)便宜 <b class="down">98 元/吨</b>,单笔省 ¥23,520</li>
+                    <li>中天信用 94 · 理计负差稳定 −3.8%(σ 0.3)· 近 30 天成交 12 次无异常</li>
+                    <li>本月中天占比将升至 31%(上限 35%)✓ · 价格 vs 基准 −71 ✓ · 毛利 ✓</li>
+                    <li>唯一超限项:单笔金额 &gt; 200 万(因合并了 2 张需求)</li>
+                  </ul>
+                </div>
+                <div class="row mt" style="gap:6px;margin-top:8px"><button class="btn sm primary" data-toast="PO-260909-23 已批准,合同已推送电子签">✓ 批准</button><button class="btn sm" data-toast="已要求引擎拆分为 2 张 PO(各 &lt; 200 万)">拆单后自动通过</button><button class="btn sm ghost" data-toast="已驳回并通知采购员">驳回</button></div>
+              </div>
+              <div class="appr">
+                <div class="h"><span class="tag yellow">价格偏离 +41</span><b class="num">PO-260908-31</b><span class="tiny muted">等待 17 小时</span><span class="amt">¥ 599,200</span></div>
+                <div class="small mt" style="margin-top:6px">敬业 · 中板 Q355B 20*2200*10000 160t · 到厂 3,745 vs 基准 3,704 · 需求 SO-07 徐工徐州</div>
+                <div class="think mt" style="padding:8px 10px;margin-top:8px">
+                  <div class="h" style="margin-bottom:4px"><span class="ai">审批要点</span></div>
+                  <ul style="margin:0;padding-left:14px" class="small">
+                    <li>华东 Q355B 20mm 现货仅 2 家有货且不足量;敬业北方直发运费 +186 是偏离主因</li>
+                    <li>销售合同价 3,820,毛利 75 元/吨 ✓ 未穿底</li>
+                    <li>替代:等永钢 9/18 排产(晚 3 天,客户不接受)</li>
+                  </ul>
+                </div>
+                <div class="row mt" style="gap:6px;margin-top:8px"><button class="btn sm primary" data-toast="PO-260908-31 已批准并记录偏离原因">✓ 批准并记录原因</button><button class="btn sm ghost">驳回</button></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>黑名单 / 观察名单</h3></div>
+            <div class="card-b tight">
+              <table class="tbl compact">
+                <thead><tr><th>供应商</th><th>原因</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr><td>某贸易商 X</td><td class="small">质保书造假 2026-05</td><td><span class="tag red">黑名单</span></td></tr>
+                  <tr><td>某物资 Y</td><td class="small">收款后未发货,诉讼中</td><td><span class="tag red">黑名单</span></td></tr>
+                  <tr><td>日照 · 上海贸易商 B</td><td class="small">磅差连续 2 周偏负</td><td><span class="tag yellow">观察 · 30 天</span></td></tr>
+                  <tr><td>润忠(南通)</td><td class="small">报价异常低 + 3 次不回复</td><td><span class="tag yellow">观察</span></td></tr>
+                  <tr><td>华东贸易商 A(萋钢)</td><td class="small">理计负差波动 σ 0.9</td><td><span class="tag yellow">观察</span></td></tr>
+                  <tr><td colspan="3" class="center muted small">观察名单供应商:配货降权 +12,单笔 ≤ 100t,到货 100% 复磅</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

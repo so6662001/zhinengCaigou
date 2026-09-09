@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>销售需求池 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .rawtxt { font-size: 11.5px; color: var(--text-3); font-style: italic; min-width: 190px; max-width: 240px; white-space: normal; }
+  .tbl td:nth-child(2), .tbl td:nth-child(3), .tbl td:nth-child(5), .tbl td:nth-child(11), .tbl td:nth-child(12) { white-space: nowrap; }
+  .src { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; }
+  .src i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .merge { border: 1.5px dashed var(--primary); border-radius: 10px; padding: 10px 12px; background: #f6f9ff; font-size: 12.5px; }
+  .parse { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 8px; align-items: center; font-size: 12px; }
+  .parse .box { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: #fff; }
+  .parse .arrow { text-align: center; color: var(--primary); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="销售需求池"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div><h1>销售需求池</h1><p>所有采购需求的唯一入口:ERP 销售订单、销售端小程序、安全库存补库、客户长协排产自动汇入;规格自动标准化,同地同期自动合并,配货引擎从这里取数。</p></div>
+        <div class="actions">
+          <span class="tag green"><i class="dot g pulse"></i> ERP 实时同步</span>
+          <a class="btn" data-toast="需求录入表单已打开(支持语音/粘贴微信文本)">+ 手工录入</a>
+          <a class="btn primary" href="allocation.html">⇶ 去配货 <span class="tag" style="background:#fff;color:var(--primary);margin-left:4px">12 单</span></a>
+        </div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi hi"><div class="lbl">今日待配货</div><div class="val num">12<small>单 · 1,860t</small></div><div class="delta">已合并 3 组 · 06:00 已预配货</div></div>
+        <div class="card kpi"><div class="lbl">本周累计需求</div><div class="val num">58<small>单 · 9,340t</small></div><div class="delta dim">已配货 46 · 在途/完成 40</div></div>
+        <div class="card kpi"><div class="lbl">待标准化(规格不清)</div><div class="val num up">2</div><div class="delta dim">NLP 置信 &lt; 90% · 已@销售确认</div></div>
+        <div class="card kpi"><div class="lbl">交期风险</div><div class="val num up">2</div><div class="delta dim">SO-03 缺资源 · SO-05 冷轧 LT 5 天</div></div>
+        <div class="card kpi"><div class="lbl">需求 → 配货中位耗时</div><div class="val num">4.2<small>分</small></div><div class="delta dim">含标准化与合并 · 人工仅确认</div></div>
+        <div class="card kpi"><div class="lbl">销售毛利保护</div><div class="val num">100<small>%</small></div><div class="delta dim">价格上限 = 合同价 − 最低毛利 45 · 0 单穿底</div></div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: minmax(0,1fr) 360px; gap:14px">
+        <div class="card">
+          <div class="tabs"><a class="on">待配货 12</a><a>待标准化 2</a><a>已配货 46</a><a>已完成 40</a><a>已取消 1</a><a>全部</a></div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--line)" class="row">
+            <div class="chips"><span class="chip on">全部来源</span><span class="chip">ERP 销售订单</span><span class="chip">销售小程序</span><span class="chip">安全库存补库</span><span class="chip">长协排产</span></div>
+            <div class="seg" style="margin-left:auto"><a class="on">按交期</a><a>按客户</a><a>按到货地</a><a>按品种</a></div>
+          </div>
+          <div class="card-b tight" style="overflow:auto">
+            <table class="tbl compact">
+              <thead><tr><th>需求单</th><th>来源</th><th>客户 · 销售员</th><th>到货地</th><th>标准化规格</th><th>原始描述</th><th class="r">吨位</th><th>要求交期</th><th class="r">合同价</th><th class="r">价格上限</th><th>约束</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td class="num">SO-260909-01</td><td><span class="src"><i style="background:#1f5eff"></i>ERP</span></td><td>中建八局 · 王磊</td><td>苏州工业园</td><td><b>螺纹 HRB400E Φ20/22/25 12m</b></td><td class="rawtxt">—</td><td class="r num">260</td><td>9/11</td><td class="r num">3,495</td><td class="r num">3,450</td><td><span class="tag">磅计</span><span class="tag">沙钢/中天</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr><td class="num">SO-260909-02</td><td><span class="src"><i style="background:#1f5eff"></i>ERP</span></td><td>三一重工 · 周敏</td><td>昆山</td><td><b>热卷 Q235B 5.75*1500*C</b></td><td class="rawtxt">—</td><td class="r num">180</td><td>9/10</td><td class="r num">3,620</td><td class="r num">3,575</td><td><span class="tag">质保书必须</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr style="background:var(--danger-2)"><td class="num">SO-260909-03</td><td><span class="src"><i style="background:#07c160"></i>小程序</span></td><td>上海建工 · 李强</td><td>上海宝山</td><td><b>螺纹 HRB400E Φ32 12m</b></td><td class="rawtxt">"32的螺纹120吨,宝山工地,明天必须到,定尺12米"</td><td class="r num">120</td><td>9/10 <span class="tag red">急</span></td><td class="r num">3,530</td><td class="r num">3,485</td><td><span class="tag">不可分批</span></td><td><span class="tag red">缺 40t</span></td></tr>
+                <tr><td class="num">SO-260909-04</td><td><span class="src"><i style="background:#1f5eff"></i>ERP</span></td><td>中铁四局 · 王磊</td><td>无锡</td><td><b>盘螺 HRB400E Φ8/10</b></td><td class="rawtxt">—</td><td class="r num">150</td><td>9/12</td><td class="r num">3,660</td><td class="r num">3,615</td><td><span class="tag">中天优先</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr><td class="num">SO-260909-05</td><td><span class="src"><i style="background:#1f5eff"></i>ERP</span></td><td>格力电器 · 赵云</td><td>南京</td><td><b>冷轧 SPCC 1.0*1250*C</b></td><td class="rawtxt">—</td><td class="r num">95</td><td>9/13 <span class="tag yellow">LT 紧</span></td><td class="r num">4,280</td><td class="r num">4,235</td><td><span class="tag">鞍钢/宝钢</span></td><td><span class="tag yellow">待确认</span></td></tr>
+                <tr><td class="num">SO-260909-08</td><td><span class="src"><i style="background:#07c160"></i>小程序</span></td><td>万科 · 陈芳</td><td>合肥</td><td><b>螺纹 HRB400E Φ12/14/16</b></td><td class="rawtxt">"万科合肥 12 14 16 各一百多吨,理计也行,下周一前"</td><td class="r num">340</td><td>9/12</td><td class="r num">3,460</td><td class="r num">3,415</td><td><span class="tag purple">允许理计</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr style="background:#f6f9ff"><td class="num">SO-260909-09</td><td><span class="src"><i style="background:#1f5eff"></i>ERP</span></td><td>绿地控股 · 李强</td><td>杭州</td><td><b>螺纹 HRB400E Φ18/20</b></td><td class="rawtxt">—</td><td class="r num">150</td><td>9/13</td><td class="r num">3,510</td><td class="r num">3,465</td><td><span class="tag blue">⇄ 合并组 M-02</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr><td class="num">SO-260909-11</td><td><span class="src"><i style="background:#1f5eff"></i>ERP</span></td><td>比亚迪 · 赵云</td><td>常州</td><td><b>镀锌 DX51D+Z 0.8*1250*C</b></td><td class="rawtxt">—</td><td class="r num">60</td><td>9/14</td><td class="r num">4,690</td><td class="r num">4,645</td><td><span class="tag blue">⇄ 合并组 M-03</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr style="background:#f6f9ff"><td class="num">RPL-0909-01</td><td><span class="src"><i style="background:#6e4cf5"></i>安全库存</span></td><td>太仓库 补库 · 系统</td><td>太仓库</td><td><b>螺纹 HRB400E Φ14 30t / Φ16 20t</b></td><td class="rawtxt">可用 ≤ ROP · 05:30 自动生成</td><td class="r num">50</td><td>9/12</td><td class="r num">—</td><td class="r num">3,400 <span class="tiny muted">市价−50</span></td><td><span class="tag blue">⇄ 拼入 SO-08</span></td><td><span class="tag green">已配货</span></td></tr>
+                <tr style="background:#fffbea"><td class="num">SO-260909-13</td><td><span class="src"><i style="background:#07c160"></i>小程序</span></td><td>某建筑劳务 · 陈芳</td><td>嘉兴</td><td><span class="tag yellow">待确认:Φ12 还是 Φ12 盘螺?</span></td><td class="rawtxt">"12的 80吨 嘉兴 越快越好 要沙钢的"</td><td class="r num">80</td><td>?</td><td class="r num">—</td><td class="r num">—</td><td><span class="tag yellow">NLP 置信 78%</span></td><td><span class="tag yellow">待标准化</span> <a class="btn xs" data-toast="已@陈芳 确认规格">@销售</a></td></tr>
+                <tr style="opacity:.7"><td class="num">RPL-0909-02</td><td><span class="src"><i style="background:#6e4cf5"></i>安全库存</span></td><td>常州库 补库 · 系统</td><td>常州库</td><td><b>螺纹 HRB400E Φ25</b></td><td class="rawtxt">可用 150 &lt; ROP 169 · &gt;100t 需确认</td><td class="r num">264</td><td>9/13</td><td class="r num">—</td><td class="r num">3,400</td><td></td><td><span class="tag">待采购确认</span> <a class="btn xs primary" href="safety-stock.html">确认</a></td></tr>
+                <tr><td colspan="12" class="center muted small">… 其余 5 单待配货 · <a href="#">展开</a></td></tr>
+              </tbody>
+              <tfoot><tr><td colspan="6">待配货合计</td><td class="r num">1,860</td><td colspan="5"></td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>规格标准化</h3><span class="ai">NLP</span><span class="sub">销售怎么说都行</span></div>
+            <div class="card-b">
+              <div class="parse">
+                <div class="box"><div class="tiny muted">销售小程序 · 陈芳 · 08:52</div>"万科合肥 12 14 16 各一百多吨,理计也行,下周一前"</div>
+                <div class="arrow">→</div>
+                <div class="box"><div class="tiny muted">结构化 · 置信 96%</div><div class="chips" style="gap:3px"><span class="tag blue">螺纹钢</span><span class="tag blue">HRB400E(默认)</span><span class="tag blue">Φ12/14/16</span><span class="tag blue">120/120/100t</span><span class="tag blue">合肥</span><span class="tag blue">9/12(周五)</span><span class="tag purple">允许理计</span></div></div>
+              </div>
+              <div class="small dim mt">材质缺省按客户历史(万科 → HRB400E);"各一百多吨"按合同明细回填 120/120/100;"下周一前"取工作日 9/12。置信 &lt; 90% 自动 @销售确认。</div>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>自动合并建议</h3><span class="sub">同到货地 / 同交期窗口 / 同品种</span></div>
+            <div class="card-b" style="display:flex;flex-direction:column;gap:8px">
+              <div class="merge"><b>M-02 杭州 · 螺纹</b> <span class="tag green">已采纳</span><div class="dim small">SO-09 绿地 Φ18/20 150t + RPL-0909-03 杭州库 Φ18 165t → 合并询价 315t,议价量级提升,预计多省 <b class="down">5 元/吨</b></div></div>
+              <div class="merge"><b>M-03 常州/南京 · 镀锌</b> <span class="tag green">已采纳</span><div class="dim small">SO-11 比亚迪 60t + 南京库补库 50t → 鞍钢南京加工中心一次开单,凑整 110t 享阶梯价</div></div>
+              <div class="merge"><b>M-01 太仓 · 螺纹小规格</b> <span class="tag green">已采纳</span><div class="dim small">RPL-0909-01 50t 拼入 SO-08 中天直发车次,省运费 ¥1,650</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>需求趋势 · 近 8 周</h3><span class="sub">吨 / 周 · 按品种</span></div>
+            <div class="card-b" style="padding-top:8px">
+              <div class="legend mb"><span><i style="background:#1f5eff"></i>建材</span><span><i style="background:#ff6a1a"></i>板卷</span><span><i style="background:#12945a"></i>型材</span></div>
+              <div id="chart"></div>
+              <div class="small dim">建材需求周环比 +9%,9 月旺季信号明确,与安全库存引擎的季节因子一致。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  const labels=['W29','W30','W31','W32','W33','W34','W35','W36'];
+  document.getElementById('chart').innerHTML=lineChart([
+    {data:[5200,5400,5100,5600,5900,6100,6300,6900],color:'#1f5eff',marker:true},
+    {data:[1800,1900,1750,2000,2100,2050,2200,2300],color:'#ff6a1a',marker:true},
+    {data:[900,950,1000,980,1100,1150,1200,1240],color:'#12945a',marker:true}],{labels,h:170,w:340,pad:36});
+</script>
+</body>
+</html>

@@ -9,11 +9,12 @@
     { group: '数据资产' },
     { href: 'market.html', ico: '⟁', text: '行情与钢厂调价' },
     { href: 'suppliers.html', ico: '◎', text: '供应商画像' },
-    { href: '#', ico: '▦', text: '资源库存(自有+在途)' },
-    { href: '#', ico: '⌁', text: '销售需求池' },
+    { href: 'inventory.html', ico: '▦', text: '资源库存(自有+在途)' },
+    { href: 'safety-stock.html', ico: '◔', text: '安全库存自动运算', cnt: '6' },
+    { href: 'demand.html', ico: '⌁', text: '销售需求池' },
     { group: '系统' },
-    { href: '#', ico: '⚙', text: '配货规则 / 权重' },
-    { href: '#', ico: '⛨', text: '风控与审批流' },
+    { href: 'rules.html', ico: '⚙', text: '配货规则 / 权重' },
+    { href: 'risk.html', ico: '⛨', text: '风控与审批流', cnt: '2' },
     { href: '#', ico: '⇄', text: '接口(ERP / 钢厂 / 物流)' },
   ];
 
