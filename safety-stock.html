@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安全库存自动运算 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .formula { font-family: var(--mono); font-size: 12.5px; background: #0b1526; color: #d7e2f5; border-radius: 8px; padding: 12px 14px; line-height: 1.9; }
+  .formula b { color: #ffb86b; } .formula i { color: #58d68d; font-style: normal; }
+  .matrix { display: grid; grid-template-columns: 60px repeat(3, 1fr); gap: 4px; font-size: 11.5px; }
+  .matrix .h { text-align: center; color: var(--text-3); font-weight: 600; padding: 4px; }
+  .matrix .c { border-radius: 6px; padding: 7px 8px; text-align: center; border: 1px solid var(--line); }
+  .matrix .c b { display: block; font-size: 13px; }
+  .matrix .c small { color: var(--text-3); }
+  .m1 { background: #e5f7ee; } .m2 { background: #eef4ff; } .m3 { background: #fff6d9; } .m4 { background: #f3f5f8; }
+  .step { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: start; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 12.5px; }
+  .step:last-child { border-bottom: none; }
+  .step .n { width: 22px; height: 22px; border-radius: 50%; background: var(--primary-2); color: var(--primary); display: grid; place-items: center; font-weight: 700; font-size: 11px; }
+  .step .v { font-family: var(--mono); font-weight: 700; white-space: nowrap; }
+  .param { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; align-items: center; font-size: 12.5px; }
+  .res td, .res th { padding-left: 7px; padding-right: 7px; }
+  .res td:nth-child(13) { min-width: 250px; white-space: normal; line-height: 1.45; }
+  .res td:first-child { white-space: normal; min-width: 150px; line-height: 1.35; }
+  .res td:first-child .tiny { display: block; }
+  .res td:nth-child(12) { white-space: nowrap; }
+  .res tr.grp td { background: #f8fafc; font-weight: 700; color: var(--text-2); padding: 6px 12px; }
+  .layer { display: grid; grid-template-columns: 72px 1fr auto; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 12.5px; }
+  .layer:last-child { border-bottom: none; }
+  .layer .l { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .layer .l i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .layer .cnt { font-family: var(--mono); font-weight: 700; text-align: right; max-width: 72px; }
+  .layer .cnt small { display: block; font-weight: 400; color: var(--text-3); font-size: 10.5px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="安全库存自动运算"></header>
+    <div class="content" style="padding-bottom:90px">
+
+      <div class="page-head">
+        <div>
+          <h1>安全库存自动运算引擎 <span class="tag purple" style="vertical-align:middle">✦ 每日 05:30 自动重算 · 管材 / 型材 / 板材 4,860 SKU</span></h1>
+          <p>三层运算(品类 → 规格族 → SKU)解决「规格太多算不过来」:只有 870 个 A/B 类 SKU 单独设安全库存,142 个规格族做聚合与替代,3,990 个长尾 SKU 按单采购;低于补货点自动生成补库需求进入配货,库存过高自动建议调拨或下调。</p>
+        </div>
+        <div class="actions">
+          <span class="small dim">上次运算 09/09 05:30 · 4,860 SKU / 142 族 · 耗时 6.8 s</span>
+          <a class="btn" data-toast="回测完成:近 90 天按当前三层参数,缺货率 0.9%,库存资金较实际低 ¥6.1M">▶ 回测近 90 天</a>
+          <a class="btn primary" data-toast="已重算 4,860 SKU:低于补货点 23 · 过高 118 · 生成补库需求 9 张">⟳ 立即重算</a>
+        </div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi hi"><div class="lbl">低于补货点(需补货)</div><div class="val num">23<small>SKU</small></div><div class="delta">补库需求 <b>9 张 / 1,240t</b> · 5 张 ≤100t 已自动进池</div></div>
+        <div class="card kpi"><div class="lbl">库存过高 / 呆滞</div><div class="val num">118<small>SKU</small></div><div class="delta dim">可释放资金 <b class="down">¥ 6.8M</b> · 呆滞 640t(型材为主)</div></div>
+        <div class="card kpi"><div class="lbl">SKU 级安全库存对象</div><div class="val num">870<small>/ 4,860</small></div><div class="delta dim">A/B 类 18% SKU 覆盖 82% 销量</div></div>
+        <div class="card kpi"><div class="lbl">规格族聚合</div><div class="val num">142<small>族</small></div><div class="delta dim">板材切割替代 · 管材拼车 · 型材长度互替</div></div>
+        <div class="card kpi"><div class="lbl">实际服务水平(近 90 天)</div><div class="val num">99.1<small>%</small></div><div class="delta dim">A 类 99.6% · B 类 98.2% · 缺货 11 次</div></div>
+        <div class="card kpi"><div class="lbl">安全库存总量</div><div class="val num">3,940<small>t</small></div><div class="delta"><span class="down">▼ 22%</span> <span class="dim">vs 逐 SKU 单算 · 持有成本 ¥ 668K/月</span></div></div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 300px minmax(0,1fr); gap:14px">
+        <!-- 左:模型 / 分层 / 参数 -->
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>三层运算</h3><span class="sub">工作量从 4,860 降到 1,012 个决策对象</span></div>
+            <div class="card-b">
+              <div class="layer"><div class="l"><i style="background:#0b1526"></i>L1 品类</div><div class="small">管 / 型 / 板 三大类的总量目标、资金上限、季节因子与行情修正;每日按品类调整覆盖天数</div><div class="cnt">3<small>品类</small></div></div>
+              <div class="layer"><div class="l"><i style="background:#1f5eff"></i>L2 规格族</div><div class="small"><b>板材</b>按材质 × 厚度成族,大板可切小板 → 族内共享安全库存(平均 −28%);<b>管材</b>按品种 × 材质 × 外径段成族,用于合并补货凑整车与资金上限;<b>型材</b>按品种 × 材质成族,9m / 12m 可互替</div><div class="cnt">142<small>族</small></div></div>
+              <div class="layer"><div class="l"><i style="background:#12945a"></i>L3 SKU</div><div class="small">仅 A/B 类 SKU 独立计算 SS / ROP / 目标;C 类不设安全库存,按单采购 + 族内替代 + 与 A/B 类补货拼车</div><div class="cnt">870<small>SKU 独立 · 3,990 按单</small></div></div>
+              <div class="alert green mt" style="margin-top:10px"><span class="ic">✓</span><div>效果:安全库存总量 −22%、服务水平 99.1% 不降;采购员每天只看 23 条补货 + 118 条过高建议,不再面对 4,860 行表。</div></div>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>运算模型</h3><span class="sub">需求与提前期双波动</span></div>
+            <div class="card-b">
+              <div class="formula">
+                <b>SS</b> = Z × √( LT × σd² + d̄² × σLT² )<br>
+                <b>ROP</b> = d̄ × LT + SS<br>
+                <b>目标库存</b> = ROP + Q<br>
+                <b>补货量</b> = 目标库存 − 可用 (在库+在途−锁定)<br>
+                <i># 族级: SS族 = Z × √(Σ SKU 方差 + 协方差) &lt; Σ SS_SKU</i><br>
+                <i># Q = max(EOQ, 覆盖天数×d̄) → 整车取整</i><br>
+                <i># 行情修正: 买入时机指数 &gt; 75 → 覆盖天数 +3</i>
+              </div>
+              <div class="small dim mt">d̄ / σd:近 8 周日销量(近 2 周 ×2,剔除脉冲)+ 在手订单 + 季节因子;LT / σLT:供应商画像实测。板材族级 SS 按「可切割替代关系」合并方差。</div>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>ABC-XYZ 服务水平矩阵</h3><span class="sub">4,860 SKU 自动分类</span></div>
+            <div class="card-b">
+              <div class="matrix">
+                <div></div><div class="h">X 稳定<br><small>CV &lt; 0.5</small></div><div class="h">Y 波动<br><small>0.5-1.0</small></div><div class="h">Z 随机<br><small>&gt; 1.0</small></div>
+                <div class="h">A<br><small>销量 70%</small></div><div class="c m1"><b>99%</b><small>Z=2.33 · 210</small></div><div class="c m1"><b>97.5%</b><small>Z=1.96 · 160</small></div><div class="c m2"><b>95%</b><small>Z=1.65 · 40</small></div>
+                <div class="h">B<br><small>20%</small></div><div class="c m2"><b>97.5%</b><small>Z=1.96 · 180</small></div><div class="c m2"><b>95%</b><small>Z=1.65 · 190</small></div><div class="c m3"><b>90%</b><small>Z=1.28 · 90</small></div>
+                <div class="h">C<br><small>10%</small></div><div class="c m3"><b>90% / 族级</b><small>320</small></div><div class="c m4"><b>按单 + 替代</b><small>1,240</small></div><div class="c m4"><b>按单采购</b><small>2,430</small></div>
+              </div>
+              <div class="small dim mt">分类每周自动刷新;新 SKU 前 8 周按所属族的分类继承。</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>品类参数</h3><div class="r"><a class="btn xs" data-toast="参数已保存,下次 05:30 生效">保存</a></div></div>
+            <div class="card-b param">
+              <span>整车取整</span><b>管/型 33t · 板卷 25t · 型材 ≤ 12m</b>
+              <span>板材切割替代(大 → 小)</span><span class="switch on"></span>
+              <span>型材长度互替(12m → 9m)</span><span class="switch on"></span>
+              <span>管材同供应商拼车补货</span><span class="switch on"></span>
+              <span>品类资金上限 管 / 型 / 板</span><b>¥ 11M / 7M / 14M</b>
+              <span>补库需求自动进需求池阈值</span><b>≤ 100t 自动 · &gt; 100t 确认</b>
+              <span>呆滞判定</span><b>库龄 &gt; 90 天 或 可售 &gt; 45 天</b>
+              <span>资金年化 / 仓储</span><b>7.2% · 0.8 元/吨/天</b>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右:结果 -->
+        <div>
+          <div class="card mb">
+            <div class="tabs"><a class="on">全部异常 141</a><a>管材 1,860 SKU</a><a>型材 1,240 SKU</a><a>板材 1,370 SKU</a><a>规格族视图 142</a></div>
+            <div class="card-h" style="border-bottom:1px solid var(--line)"><h3>运算结果</h3><span class="sub">单位:吨 · 状态按「可用量 vs ROP / 目标库存」判定 · 仅显示需要采购员看的行</span>
+              <div class="r"><div class="chips"><span class="chip on">需补货 23</span><span class="chip on">过高 118</span><span class="chip">健康 729</span><span class="chip">参数变化</span></div><input class="inp" placeholder="仓库 / 规格" style="width:130px;height:28px"></div></div>
+            <div class="card-b tight" style="overflow:auto">
+              <table class="tbl compact res">
+                <thead><tr><th>仓库 · 规格</th><th>分类</th><th class="r">d̄/天</th><th class="r">σd</th><th class="r">LT</th><th class="r">σLT</th><th class="r">服务</th><th class="r">SS</th><th class="r">ROP</th><th class="r">目标</th><th class="r">可用</th><th>状态</th><th>系统动作</th><th></th></tr></thead>
+                <tbody>
+                  <tr class="grp"><td colspan="14">管材 · 需补货 9 / 过高 31</td></tr>
+                  <tr class="sel"><td><b>无锡库 · 无缝管 20# Φ108×4.5 6m</b> <span class="tiny muted">衡钢</span></td><td><span class="tag green">A-X</span></td><td class="r num">28</td><td class="r num">8</td><td class="r num">3</td><td class="r num">0.8</td><td class="r num">99%</td><td class="r num bold">61</td><td class="r num bold">145</td><td class="r num">310</td><td class="r num up">120</td><td><span class="tag red">&lt; ROP</span></td><td>补 190t → 6 车 <b>RPL-0909-04 198t</b>;价格库:天津大无缝 B 到厂 4,402 最低但晚 2 天 → 引擎建议 4 车走 B、2 车走 A 即提</td><td><button class="btn xs primary" data-toast="RPL-0909-04 198t 已推送需求池">确认进需求池</button></td></tr>
+                  <tr><td><b>无锡库 · 无缝管 20# 族</b> <span class="tiny muted">Φ57~Φ219 · 24 SKU</span></td><td><span class="tag blue">族级</span></td><td class="r num">96</td><td class="r num">—</td><td class="r num">3</td><td class="r num">0.8</td><td class="r num">—</td><td class="r num bold">210 <span class="tiny down">vs 296</span></td><td class="r num bold">—</td><td class="r num">1,180</td><td class="r num">1,020</td><td><span class="tag green">族健康</span></td><td>族级 SS 210(逐 SKU 求和 296)· 本次 3 个 SKU 补货合并同供应商拼车,节省运费 ¥3,400;族资金占用 ¥4.5M &lt; 上限</td><td><span class="tag purple">✦ 拼车</span></td></tr>
+                  <tr><td><b>天津库 · 镀锌管 Q235B DN50×3.5 6m</b> <span class="tiny muted">友发</span></td><td><span class="tag yellow">B-X</span></td><td class="r num">14</td><td class="r num">4</td><td class="r num">2</td><td class="r num">0.5</td><td class="r num">97.5%</td><td class="r num bold">18</td><td class="r num bold">46</td><td class="r num">145</td><td class="r num up">40</td><td><span class="tag red">&lt; ROP</span></td><td>补 105t → 与友发焊管 4寸 补货(健康区间内顺带 33t)拼 4 车 <b>RPL-0909-05 132t</b>;友发今日 +30,买入时机 82 → 今日锁</td><td><button class="btn xs primary" data-toast="RPL-0909-05 132t 已推送需求池,与焊管拼车">确认进需求池</button></td></tr>
+                  <tr><td><b>无锡库 · 方管 Q235B 100×100×5 6m</b> <span class="tiny muted">友发</span></td><td><span class="tag yellow">B-Y</span></td><td class="r num">9</td><td class="r num">5</td><td class="r num">3</td><td class="r num">1.0</td><td class="r num">95%</td><td class="r num bold">21</td><td class="r num bold">48</td><td class="r num">114</td><td class="r num">52</td><td><span class="tag yellow">接近 ROP</span></td><td>预计 2 天后触发;可并入 RPL-0909-05 车次省一趟运费 → <b>建议提前补 66t</b></td><td><a class="btn xs" data-toast="已并入 RPL-0909-05,合计 198t / 6 车">并入拼车</a></td></tr>
+                  <tr><td><b>无锡库 · 无缝管 20# Φ325×10</b> <span class="tiny muted">长尾</span></td><td><span class="tag">C-Z</span></td><td class="r num">0.6</td><td class="r num">1.9</td><td class="r num">5</td><td class="r num">1.5</td><td class="r num">按单</td><td class="r num bold">0</td><td class="r num bold">—</td><td class="r num">0</td><td class="r num">0</td><td><span class="tag green">✓ 按单</span></td><td>不设安全库存;有需求时走比价(天津大无缝 B 4,632 最低,LT 5 天)· 近 90 天 2 单均按单采购准时</td><td></td></tr>
+
+                  <tr class="grp"><td colspan="14">型材 · 需补货 6 / 过高 52(呆滞集中)</td></tr>
+                  <tr><td><b>杭州库 · 角钢 Q235B 63×6 6m</b> <span class="tiny muted">马钢</span></td><td><span class="tag yellow">B-Y</span></td><td class="r num">6.8</td><td class="r num">3.5</td><td class="r num">3</td><td class="r num">0.8</td><td class="r num">95%</td><td class="r num bold">13</td><td class="r num bold">33</td><td class="r num">66</td><td class="r num up">28</td><td><span class="tag red">&lt; ROP</span></td><td>补 38t → <b>不采购</b>:合肥库同规格呆滞 96t(112 天)调拨 38t,短驳 ¥28/t;剩余 58t 建议清库</td><td><a class="btn xs primary" data-toast="调拨单已生成:合肥→杭州 角钢 63×6 38t">生成调拨</a></td></tr>
+                  <tr><td><b>杭州库 · H型钢 Q355B 400×200 12m</b> <span class="tiny muted">马钢</span></td><td><span class="tag yellow">B-X</span></td><td class="r num">26</td><td class="r num">6</td><td class="r num">3</td><td class="r num">0.6</td><td class="r num">97.5%</td><td class="r num bold">37</td><td class="r num bold">115</td><td class="r num">280</td><td class="r num">290</td><td><span class="tag green">健康</span></td><td>9m 与 12m 合并为一个替代族计算(12m 可切 9m)· 单算 12m 会误报「过高 +100」</td><td><span class="tag purple">✦ 长度互替</span></td></tr>
+                  <tr><td><b>常州库 · 工字钢 Q235B 20# 9m</b> <span class="tiny muted">莱钢</span></td><td><span class="tag yellow">B-X</span></td><td class="r num">8</td><td class="r num">2.4</td><td class="r num">3</td><td class="r num">0.6</td><td class="r num">97.5%</td><td class="r num bold">12</td><td class="r num bold">36</td><td class="r num">102</td><td class="r num">80</td><td><span class="tag green">健康</span></td><td>—</td><td></td></tr>
+                  <tr><td><b>合肥库 · 槽钢 Q235B 10# 6m</b> <span class="tiny muted">马钢</span></td><td><span class="tag">C-Z</span></td><td class="r num">2.0</td><td class="r num">2.6</td><td class="r num">5</td><td class="r num">2.0</td><td class="r num">按单</td><td class="r num bold">0</td><td class="r num bold">—</td><td class="r num">0</td><td class="r num up">114</td><td><span class="tag red">呆滞 96 天</span></td><td>C-Z 不应备货;114t 可售 57 天 → 调拨杭州(日均 4.2t)60t + 让利 20 元清 54t,释放 ¥42 万</td><td><a class="btn xs" data-toast="调拨 + 促销建议已推送">推送</a></td></tr>
+                  <tr><td><b>型材长尾 · C-Y / C-Z</b> <span class="tiny muted">890 SKU</span></td><td><span class="tag">C</span></td><td colspan="9" class="small dim">合计日均 42t · 现库 640t · 其中呆滞 420t → 逐步转「按单 + 族内替代」,本月已减 180t</td><td><span class="tag yellow">治理中</span></td><td>本周清单 26 条,呆滞 &gt; 120 天自动进促销池</td><td><a class="btn xs">清单</a></td></tr>
+
+                  <tr class="grp"><td colspan="14">板材 · 需补货 8 / 过高 35</td></tr>
+                  <tr><td><b>上海宝杨库 · 中板 Q235B 12mm 族</b> <span class="tiny muted">6 SKU · 可切割</span></td><td><span class="tag blue">族级 A-X</span></td><td class="r num">62</td><td class="r num">18</td><td class="r num">4</td><td class="r num">1.2</td><td class="r num">99%</td><td class="r num bold">193 <span class="tiny down">vs 268</span></td><td class="r num bold">441</td><td class="r num">705</td><td class="r num">558</td><td><span class="tag green">族健康</span></td><td>12×2200×10000 大板可切 12×2000×8000 等 5 个 SKU → 族内共享 SS,较逐 SKU 少备 75t;SKU 级只盯主销 12×2000×8000(可用 210 &gt; ROP 160)</td><td><span class="tag purple">✦ 切割替代</span></td></tr>
+                  <tr><td><b>上海宝杨库 · 热卷 Q235B 5.75×1500×C</b> <span class="tiny muted">日照</span></td><td><span class="tag green">A-X</span></td><td class="r num">62</td><td class="r num">18</td><td class="r num">4</td><td class="r num">1.2</td><td class="r num">99%</td><td class="r num bold">193</td><td class="r num bold">441</td><td class="r num">705</td><td class="r num">558</td><td><span class="tag green">健康</span></td><td>在途 198t 延迟 2.5h 已按延后重算,仍 &gt; ROP</td><td></td></tr>
+                  <tr><td><b>南京库 · 冷轧 SPCC 1.0×1250×C</b> <span class="tiny muted">鞍钢</span></td><td><span class="tag yellow">B-Y</span></td><td class="r num">12</td><td class="r num">5</td><td class="r num">5</td><td class="r num">1.5</td><td class="r num">97.5%</td><td class="r num bold">42</td><td class="r num bold">102</td><td class="r num">202</td><td class="r num">210</td><td><span class="tag green">健康</span></td><td>鞍钢 10 月订货 +50 → 行情修正覆盖 +3 天,目标临时 238;建议 9/12 前追加 1 车 25t</td><td><span class="tag purple">✦ 行情修正</span></td></tr>
+                  <tr><td><b>上海宝杨库 · 热卷 Q235B 3.0×1500×C</b> <span class="tiny muted">日照</span></td><td><span class="tag">C-Z</span></td><td class="r num">14</td><td class="r num">12</td><td class="r num">4</td><td class="r num">1.2</td><td class="r num">按单</td><td class="r num bold">0</td><td class="r num bold">—</td><td class="r num">0</td><td class="r num up">260</td><td><span class="tag yellow">过高</span></td><td>C-Z 不设安全库存;260t 库龄 48 天浮亏 −12 → 让利 10 元促销,释放 ¥94 万</td><td><a class="btn xs" data-toast="促销建议已推送销售总监">推送销售</a></td></tr>
+                  <tr><td><b>南京库 · 镀锌 DX51D+Z 0.8×1250×C</b> <span class="tiny muted">鞍钢</span></td><td><span class="tag yellow">B-X</span></td><td class="r num">5</td><td class="r num">1.6</td><td class="r num">5</td><td class="r num">1.5</td><td class="r num">97.5%</td><td class="r num bold">16</td><td class="r num bold">41</td><td class="r num">91</td><td class="r num up">35</td><td><span class="tag orange">&lt; ROP</span></td><td>补 56t → 与 SO-11 比亚迪常州 60t 合并采购,鞍钢南京加工中心一次开单</td><td><button class="btn xs">确认</button></td></tr>
+                  <tr><td colspan="14" class="center muted small">… 其余 118 条异常与 729 条健康 SKU · <a href="#">展开全部</a> · 3,990 个按单 SKU 不在此列表</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="grid g2">
+            <div class="card">
+              <div class="card-h"><h3>演算过程 · 无锡库 无缝管 20# Φ108×4.5 6m</h3><span class="sub">点表格任一行可切换</span></div>
+              <div class="card-b">
+                <div class="step"><span class="n">1</span><div>近 8 周日销量加权均值 d̄(剔除 8/28 一笔 90t 项目单脉冲)+ 在手订单</div><span class="v">28 t/天</span></div>
+                <div class="step"><span class="n">2</span><div>日销量标准差 σd(CV = 0.29 → X 稳定;销量占比 → A 类)</div><span class="v">8 t</span></div>
+                <div class="step"><span class="n">3</span><div>提前期 LT / σLT(衡钢代理 A 无锡库自提,画像近 30 天实测)</div><span class="v">3 / 0.8 天</span></div>
+                <div class="step"><span class="n">4</span><div>服务水平 A-X → 99%,Z 值</div><span class="v">2.33</span></div>
+                <div class="step"><span class="n">5</span><div>SS = 2.33 × √(3×8² + 28²×0.8²) = 2.33 × √(192 + 502) = 2.33 × 26.3</div><span class="v">≈ 61 t</span></div>
+                <div class="step"><span class="n">6</span><div>ROP = 28 × 3 + 61</div><span class="v">145 t</span></div>
+                <div class="step"><span class="n">7</span><div>Q:EOQ = √(2×8,400×800/609) ≈ 149t,覆盖 5 天 = 140t → 取 149 → 整车向上取整 33t × 5</div><span class="v">165 t</span></div>
+                <div class="step"><span class="n">8</span><div>目标库存 = 145 + 165;可用 = 在库 200 + 在途 0 − 锁定 80 = 120 &lt; ROP → <b>触发补货</b></div><span class="v">310 t</span></div>
+                <div class="step"><span class="n">9</span><div>补货量 = 310 − 120 = 190t → 6 车 198t = <b>RPL-0909-04</b>;价格库比价:B 到厂 4,402 / A 4,408,B 晚 2 天 → 引擎拆 4 车 B + 2 车 A</div><span class="v">198 t</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-h"><h3>日销量 vs 库存水位 · 近 8 周</h3><span class="sub">无锡库 无缝管 Φ108×4.5</span></div>
+              <div class="card-b" style="padding-top:8px">
+                <div class="legend mb"><span><i style="background:#1f5eff"></i>可用库存</span><span><i style="background:#8a97a8"></i>日销量</span><span><i style="background:#ff6a1a"></i>ROP 145</span><span><i style="background:#12945a"></i>目标 310</span><span><i style="background:#d92d20"></i>SS 61</span></div>
+                <div id="chart"></div>
+                <div class="alert blue mt"><span class="ic">✦</span><div>过去 8 周触发补货 3 次,均在 ROP 附近,无缺货;旧做法「每个规格固定备 100t」在 8/28 项目单后缺货 3 天,且 Φ325 等长尾规格常年压 60t 不动。</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt">
+            <div class="card-h"><h3>自动化闭环</h3><span class="sub">安全库存引擎在整个系统中的位置</span></div>
+            <div class="card-b">
+              <div class="steps" style="justify-content:space-between;width:100%">
+                <div class="st done"><span class="n">1</span>05:30 拉取销量 / 库存 / 在途 / 在手订单 / 供应商 LT</div><div class="ln done"></div>
+                <div class="st done"><span class="n">2</span>ABC-XYZ 分类 · 规格族聚合</div><div class="ln done"></div>
+                <div class="st done"><span class="n">3</span>行情修正(买入时机指数)</div><div class="ln done"></div>
+                <div class="st done"><span class="n">4</span>计算 SS / ROP / 目标 → 判定</div><div class="ln done"></div>
+                <div class="st on"><span class="n">5</span>生成 RPL → 拼车 / 调拨 / 需求池</div><div class="ln"></div>
+                <div class="st"><span class="n">6</span>06:00 配货引擎 + 价格库统一求解</div><div class="ln"></div>
+                <div class="st"><span class="n">7</span>到货入库 → 次日复算</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-foot">
+      <div><div class="small dim">待确认补库需求(&gt; 100t)</div><b>4 张 · 760t</b> <span class="small dim">(RPL-0909-02 / 03 / 04 / 05)</span></div>
+      <div><div class="small dim">预计采购额</div><b class="num">¥ 3,120,000</b></div>
+      <div><div class="small dim">调拨代替采购</div><b>2 项 · 98t</b></div>
+      <div><div class="small dim">下调 / 清库建议</div><b>118 项 · 释放 ¥6.8M</b></div>
+      <div style="margin-left:auto" class="row">
+        <button class="btn" data-toast="118 项参数调整与清库建议已应用 / 推送">应用下调建议</button>
+        <button class="btn" data-toast="2 张调拨单已生成">生成调拨单</button>
+        <button class="btn primary lg" data-toast="4 张补库需求已推送需求池,配货引擎重新求解中…">✓ 确认 4 张补库需求进入需求池</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  const n=56, labels=Array.from({length:n},(_,i)=>{const d=new Date(2026,6,15+i);return (d.getMonth()+1)+'/'+d.getDate();});
+  const sales=Array.from({length:n},(_,i)=>{const b=28+Math.sin(i/5)*8+((i*7)%5)*2-4; return Math.max(0,Math.round(i===44?90:b));});
+  const stock=[]; let s=300;
+  for(let i=0;i<n;i++){ s-=sales[i]; if(s<=145){ s+=165; } stock.push(s); }
+  document.getElementById('chart').innerHTML=lineChart([
+    {data:stock,color:'#1f5eff',marker:true},{data:sales,color:'#8a97a8'},
+    {data:stock.map(()=>145),color:'#ff6a1a',dash:true},{data:stock.map(()=>310),color:'#12945a',dash:true},{data:stock.map(()=>61),color:'#d92d20',dash:true}
+  ],{labels,h:200});
+</script>
+</body>
+</html>

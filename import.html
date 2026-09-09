@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自定义 Excel 导入向导 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .sheet-wrap { border: 1px solid var(--line); border-radius: 8px; overflow: auto; max-height: 420px; background: #fff; }
+  .sheet { border-collapse: collapse; font-size: 12px; font-family: var(--mono); min-width: 100%; }
+  .sheet th, .sheet td { border: 1px solid #e3e8ef; padding: 4px 8px; white-space: nowrap; min-width: 56px; text-align: left; }
+  .sheet th { background: #f1f4f8; color: var(--text-3); font-weight: 600; text-align: center; position: sticky; top: 0; z-index: 1; font-family: inherit; }
+  .sheet td.rn { background: #f1f4f8; color: var(--text-3); text-align: center; min-width: 32px; position: sticky; left: 0; }
+  .sheet tr.hdr td { background: #fff4e5; font-weight: 700; color: var(--text); }
+  .sheet tr.hdr td.rn::after { content: " 表头"; font-size: 9px; color: var(--accent); }
+  .sheet tr.skip td { color: #b0b9c6; background: #fafbfc; text-decoration: line-through; }
+  .sheet td.map-spec { background: #e8f0ff; } .sheet td.map-price { background: #e6f7ee; } .sheet td.map-mat { background: #f3ecff; } .sheet td.map-len { background: #fff7e0; } .sheet td.map-wh { background: #e7f6fb; } .sheet td.map-note { background: #f4f4f4; }
+  .sheet td.axis { background: #e8f0ff; font-weight: 700; }
+  .sheet td.ignore { color: #b0b9c6; }
+  .maprow { display: grid; grid-template-columns: 96px 14px 1fr 40px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 12.5px; }
+  .maprow:last-child { border-bottom: none; }
+  .maprow .col { font-family: var(--mono); font-weight: 700; padding: 3px 8px; border-radius: 5px; display: inline-block; }
+  .maprow select { width: 100%; padding: 5px 8px; border: 1px solid var(--line-strong); border-radius: 6px; font-size: 12.5px; background: #fff; font-family: inherit; }
+  .lay { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .lay a { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; cursor: pointer; font-size: 12.5px; display: block; }
+  .lay a.on { border-color: var(--primary); background: var(--primary-2); }
+  .lay a b { display: block; margin-bottom: 2px; }
+  .lay a .mini { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin: 6px 0; }
+  .lay a .mini i { display: block; height: 7px; background: #dfe5ee; border-radius: 1px; }
+  .lay a .mini i.h { background: var(--accent); } .lay a .mini i.s { background: var(--primary); } .lay a .mini i.p { background: var(--success); }
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-2); }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid rgba(0,0,0,.06); }
+  .out td, .out th { font-size: 12px; }
+  .rule { display: grid; grid-template-columns: 64px 1fr; gap: 4px 10px; align-items: start; font-size: 12.5px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+  .rule > span:first-child { color: var(--text-2); font-weight: 600; padding-top: 2px; }
+  .rule .arrow { grid-column: 2; font-size: 11.5px; }
+  .rule code { display: inline-block; margin: 1px 2px 1px 0; }
+  .rule code { background: #f1f4f8; padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-size: 11.5px; }
+  .rule .arrow { color: var(--text-3); }
+  .conf { display: inline-block; min-width: 38px; text-align: right; font-family: var(--mono); font-size: 11px; color: var(--success); font-weight: 700; }
+  input.ipt, select.ipt { padding: 5px 8px; border: 1px solid var(--line-strong); border-radius: 6px; font-size: 12.5px; background: #fff; font-family: inherit; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="价格库 / Excel 导入向导"></header>
+    <div class="content" style="padding-bottom:90px">
+
+      <div class="page-head">
+        <div>
+          <h1>自定义 Excel 导入向导 <span class="tag purple" style="vertical-align:middle">✦ 供应商的表怎么排,系统就怎么读</span></h1>
+          <p>不要求供应商改表。<b>纵向清单、横向价格矩阵(外径 × 壁厚)、多级表头、合并单元格、一个文件多 sheet 多品类</b>都能读。第一次导入指一下「表头在哪、哪列是规格、哪列是价格」,保存为该供应商模板,以后同格式的邮件附件 / 小程序上传 <b>全自动入库</b>。</p>
+        </div>
+        <div class="actions">
+          <a class="btn" href="pricing.html">← 返回价格库</a>
+          <a class="btn" data-toast="模板库已打开:31 个供应商模板">模板库(31)</a>
+          <a class="btn primary" data-toast="模板已保存:天津友发 v5 · 下次自动匹配">保存为供应商模板</a>
+        </div>
+      </div>
+
+      <div class="card mb">
+        <div class="card-b" style="padding:12px 16px">
+          <div class="steps" style="justify-content:space-between">
+            <div class="st done"><span class="n">✓</span>① 上传 / 收件</div><div class="ln done"></div>
+            <div class="st on"><span class="n">2</span>② 识别表格结构 · 列映射</div><div class="ln"></div>
+            <div class="st"><span class="n">3</span>③ 规格解析 · 单位换算</div><div class="ln"></div>
+            <div class="st"><span class="n">4</span>④ 校验 · 差异预览</div><div class="ln"></div>
+            <div class="st"><span class="n">5</span>⑤ 入库 · 展开 SKU</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid mb" style="grid-template-columns: minmax(0,1fr) 400px; gap:14px">
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>Excel 原样预览</h3><span class="sub" id="sheetSub"></span>
+              <div class="r row" style="gap:8px">
+                <span class="small dim">Sheet</span><select class="ipt" id="sheetSel"></select>
+                <span class="small dim">表头行</span><input class="ipt" id="hdrRow" style="width:52px" value="3">
+                <span class="small dim">数据起始</span><input class="ipt" id="dataRow" style="width:52px" value="4">
+              </div></div>
+            <div class="card-b">
+              <div class="lay mb" id="lay">
+                <a data-l="list" class="on"><b>纵向清单式</b><span class="tiny muted">一行一个规格,常见于贸易商</span><div class="mini"><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="s"></i><i></i><i></i><i class="p"></i><i></i><i class="s"></i><i></i><i></i><i class="p"></i><i></i></div></a>
+                <a data-l="matrix"><b>横向价格矩阵</b><span class="tiny muted">行=外径 · 列=壁厚,钢管厂标配</span><div class="mini"><i></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="s"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="s"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></div></a>
+                <a data-l="multi"><b>多级表头 / 合并单元格</b><span class="tiny muted">钢厂调价表:材质分组 + 长度分列</span><div class="mini"><i></i><i class="h" style="grid-column:span 2"></i><i class="h" style="grid-column:span 2"></i><i></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="s"></i><i class="p"></i><i class="p"></i><i class="p"></i><i class="p"></i></div></a>
+              </div>
+              <div class="legend mb"><span><i style="background:#fff4e5"></i>表头行</span><span><i style="background:#e8f0ff"></i>规格 / 轴</span><span><i style="background:#f3ecff"></i>材质</span><span><i style="background:#fff7e0"></i>长度</span><span><i style="background:#e7f6fb"></i>仓库</span><span><i style="background:#e6f7ee"></i>价格</span><span><i style="background:#f4f4f4"></i>备注(NLP)</span><span><i style="background:#fafbfc"></i>跳过行(标题 / 空行 / 合计)</span></div>
+              <div class="sheet-wrap"><table class="sheet" id="sheet"></table></div>
+              <div class="small dim mt" id="sheetTip"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>解析结果预览(标准化后)</h3><span class="sub" id="outSub"></span><div class="r"><a class="btn xs" data-toast="已展示全部行">查看全部</a></div></div>
+            <div class="card-b tight" style="overflow:auto"><table class="tbl compact out" id="out"></table></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>列 / 轴映射</h3><span class="sub">自动识别,可手改</span></div>
+            <div class="card-b" id="mapBox"></div>
+          </div>
+          <div class="card mb">
+            <div class="card-h"><h3>规格解析与单位换算</h3><span class="sub">内置钢贸行话词典</span></div>
+            <div class="card-b">
+              <div class="rule"><span>规格写法</span><span><code>108*4.5</code> <code>108×4.5</code> <code>Φ108X4.5</code> <code>4寸*3.75</code> <code>DN100</code></span><span class="arrow">→ 外径 108 · 壁厚 4.5</span></div>
+              <div class="rule"><span>行话</span><span><code>6分</code> <code>1.2寸</code> <code>厚壁/薄壁</code> <code>国标/非标</code></span><span class="arrow">→ DN20 · 按供应商历史学习壁厚</span></div>
+              <div class="rule"><span>型材</span><span><code>H400*200</code> <code>HW/HM/HN</code> <code>10# 槽钢</code> <code>∠50*5</code></span><span class="arrow">→ 型号标准码</span></div>
+              <div class="rule"><span>板材</span><span><code>12*2200*L</code> <code>12厚</code> <code>开平 12*1500*6000</code></span><span class="arrow">→ 厚 × 宽 × 长 · 加工方式</span></div>
+              <div class="rule"><span>价格单位</span><span><select class="ipt" style="width:100%"><option>元/吨(含税 13%)</option><option>元/吨(不含税 → ×1.13)</option><option>元/米(→ ÷ 理论米重)</option><option>元/张(→ ÷ 理论单重)</option><option>元/支(→ ÷ 理论支重)</option></select></span><span class="arrow">→ 统一为 元/吨 含税</span></div>
+              <div class="rule"><span>价格表达</span><span><code>4180</code> <code>4,180</code> <code>4180/吨</code> <code>+30</code>(相对基价)<code>电议</code></span><span class="arrow">→ 数值 / 相对价 / 需询价</span></div>
+              <div class="rule" style="border-bottom:none"><span>缺省值</span><span class="small">材质空 → <b>Q235B</b> · 长度空 → <b>6m</b> · 仓库空 → 供应商默认库 · 有效期空 → <b>当日 17:00</b></span><span></span></div>
+            </div>
+          </div>
+          <div class="think">
+            <div class="h"><span class="ai">系统识别说明</span></div>
+            <div class="small" id="aiNote"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-foot">
+      <div><div class="small dim">文件</div><b id="footFile">—</b></div>
+      <div><div class="small dim">识别行数</div><b class="num" id="footRows">—</b></div>
+      <div><div class="small dim">映射置信度</div><b class="num" id="footConf">—</b></div>
+      <div><div class="small dim">模板</div><b id="footTpl">—</b></div>
+      <div style="margin-left:auto" class="row">
+        <button class="btn" data-toast="已回到上传步骤">上一步</button>
+        <button class="btn primary lg" data-toast="进入校验:规格解析 100% · 价格异常 2 行待核对">下一步:规格解析与校验 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+const LAY={
+  list:{file:'华东贸易商A_报价_0909.xlsx',sheets:['无缝管','焊管','镀锌管'],hdr:3,data:4,
+    grid:[['华东贸易商 A 今日报价  2026-09-09  无锡库现货  含税  电话 138xxxx','','','','','',''],['','','','','','',''],['品名','材质','规格','米数','仓库','含税价','备注'],['无缝管','20#','108*4.5','6','无锡','4380','过磅 现款'],['无缝管','20#','108*5','6','无锡','4410',''],['无缝管','20#','133*5','6','无锡','4460','12米加60'],['无缝管','Q345B','108*4.5','6','无锡','4610','理计'],['无缝管','20#','219*8','','','4530','厚壁 货少'],['无缝管','20#','4寸*3.75','6','无锡','4390','国标'],['','','','','','',''],['合计','','','','','','以上价格当日有效,量大电议']],
+    colClass:['map-spec','map-mat','map-spec','map-len','map-wh','map-price','map-note'],
+    map:[['A 品名','品种',100],['B 材质','材质',100],['C 规格','规格(自动解析)',98],['D 米数','长度(m)',99],['E 仓库','仓库 / 发货地',96],['F 含税价','价格 · 元/吨 · 含税',100],['G 备注','备注(NLP)',90]],
+    out:[['无缝管','20#','Φ108×4.5','6m','无锡','4,380','过磅 · 现款','✓'],['无缝管','20#','Φ108×5','6m','无锡','4,410','','✓'],['无缝管','20#','Φ133×5','6m','无锡','4,460','12m +60 → 生成 12m SKU 4,520','✓'],['无缝管','Q345B','Φ108×4.5','6m','无锡','4,610','理计 → 折算过磅 +1.5%','✓'],['无缝管','20#','Φ219×8','6m(缺省)','无锡(缺省)','4,530','厚壁 货少 → 可供量低','⚠ 缺省'],['无缝管','20#','Φ108×3.75(4寸)','6m','无锡','4,390','国标','✓']],
+    tip:'第 1 行是标题、第 2 / 10 行空、第 11 行「合计」→ 自动跳过。第 8 行米数 / 仓库为空 → 用缺省值补齐并标黄提醒。备注列用 NLP 抽取计重方式与加价规则。',
+    ai:'识别为 <b>纵向清单式</b>,表头在第 3 行(命中「品名 / 规格 / 价」关键词)。列映射与该供应商 8 月模板一致(置信 97%)。「4寸*3.75」按行话词典换算为 Φ108×3.75。',rows:'6 / 11',conf:'97%',tpl:'华东贸易商 A v3(匹配)'},
+  matrix:{file:'天津友发_无缝管价格矩阵_0909.xls',sheets:['20#','Q345B','16Mn'],hdr:2,data:3,
+    grid:[['天津友发钢管 无缝管 20# 出厂价(元/吨,含税,天津库) 2026/9/9','','','','','',''],['外径\\壁厚','3.5','4','4.5','5','6','8'],['57','4620','4640','','','',''],['76','4560','4560','4580','','',''],['89','4530','4530','4540','4560','',''],['108','','4500','4500','4520','4560',''],['133','','','4560','4580','4600',''],['159','','','','4620','4620','4680'],['219','','','','','4650','4650'],['备注:以上为 6 米,12 米加 60;起订 20 吨','','','','','','']],
+    colClass:['axis','map-price','map-price','map-price','map-price','map-price','map-price'],
+    map:[['A 列 · 行轴','外径(mm)',99],['第 2 行 · 列轴','壁厚(mm)',99],['B~G 单元格','价格 · 元/吨 · 含税',100],['Sheet 名','材质',95],['标题行','仓库 · 价格类型',92],['备注行','长度 / 起订(NLP)',88]],
+    out:[['无缝管','20#','Φ57×3.5','6m','天津','4,620','矩阵 [57,3.5]','✓'],['无缝管','20#','Φ76×4.5','6m','天津','4,580','矩阵 [76,4.5]','✓'],['无缝管','20#','Φ108×4.5','6m','天津','4,500','矩阵 [108,4.5]','✓'],['无缝管','20#','Φ108×4.5','12m','天津','4,560','备注规则 12m +60 → 派生','✓ 派生'],['无缝管','20#','Φ159×8','6m','天津','4,680','矩阵 [159,8]','✓'],['无缝管','20#','Φ219×6','6m','天津','—','空格 = 无货 → 不生成价格','— 无货']],
+    tip:'把二维矩阵「拆」成一维:每个非空单元格 = 一个 (外径, 壁厚) 规格的价格。空格表示无货,不生成。3 个 sheet 按材质各展开一遍,一个文件 = 3 × 27 = 81 条价格,再按备注规则派生 12m 长度。',
+    ai:'识别为 <b>横向价格矩阵</b>:A 列递增数值序列符合外径序列(57/76/89/108…),第 2 行为壁厚序列。Sheet 名匹配材质词典。标题含「出厂价 · 天津库」→ 价格类型 = 出厂价,比价时自动加运费。',rows:'27 × 3 sheet = 81',conf:'96%',tpl:'天津友发 v5(新建)'},
+  multi:{file:'沙钢_9月中板调价表.xlsx',sheets:['中板','热卷'],hdr:3,data:5,
+    grid:[['沙钢集团 中板 9 月 9 日价格(江苏玖隆库,含税,元/吨)','','','','','',''],['','','Q235B','','Q355B','',''],['厚度','宽度','6-12m','定尺','6-12m','定尺','备注'],['(mm)','(mm)','','(+30)','','(+30)',''],['8','2200','3610','3640','3760','3790','货少'],['10','2200','3540','3570','3690','3720',''],['12','2200','3480','3510','3630','3660',''],['14','2500','3470','3500','3620','3650',''],['16-20','2500','3450','3480','3600','3630','16/18/20 同价'],['22-30','2500','3470','3500','3620','3650','']],
+    colClass:['map-spec','map-spec','map-price','map-price','map-price','map-price','map-note'],
+    map:[['A 厚度','厚度(区间展开)',95],['B 宽度','宽度(mm)',99],['第 2 行 · 合并','材质(向右填充)',97],['第 3 行','长度类型',96],['C~F 单元格','价格 · 元/吨 · 含税',100],['G 备注','备注(NLP)',85]],
+    out:[['中板','Q235B','12×2200×L','6-12m','玖隆','3,480','[12,Q235B,6-12m]','✓'],['中板','Q235B','12×2200×L','定尺','玖隆','3,510','[12,Q235B,定尺]','✓'],['中板','Q355B','12×2200×L','6-12m','玖隆','3,630','[12,Q355B,6-12m]','✓'],['中板','Q235B','16×2500×L','6-12m','玖隆','3,450','区间 16-20 展开','✓ 展开'],['中板','Q235B','18×2500×L','6-12m','玖隆','3,450','区间 16-20 展开','✓ 展开'],['中板','Q235B','8×2200×L','6-12m','玖隆','3,610','备注「货少」→ 可供量低','✓']],
+    tip:'第 2 行合并单元格「Q235B」「Q355B」向右填充到所在列;第 3、4 行为两级表头合并成一个字段名(材质 + 长度类型)。A 列「16-20」为区间 → 按板材常用厚度展开 16 / 18 / 20 三条。',
+    ai:'识别为 <b>多级表头(2 行)+ 合并单元格</b>。列的字段名由第 2 行(材质)与第 3 行(长度类型)拼接。「定尺(+30)」括号加价与数值一致,校验通过。区间厚度按品类词典展开。',rows:'6 行 → 展开 32 条',conf:'94%',tpl:'沙钢中板调价表 v2(匹配)'}};
+let cur=LAY[location.hash.replace('#','')]?location.hash.replace('#',''):'list';
+const COLS='ABCDEFGHIJ';
+function render(){
+  const L=LAY[cur];
+  document.querySelectorAll('#lay a').forEach(a=>a.classList.toggle('on',a.dataset.l===cur));
+  document.getElementById('sheetSel').innerHTML=L.sheets.map((s,i)=>`<option>${s}${i===0?'(当前)':''}</option>`).join('');
+  document.getElementById('hdrRow').value=L.hdr; document.getElementById('dataRow').value=L.data;
+  document.getElementById('sheetSub').textContent=`${L.file} · ${L.sheets.length} sheet`;
+  const n=L.grid[0].length;
+  let h='<thead><tr><th></th>'+[...Array(n)].map((_,i)=>`<th>${COLS[i]}</th>`).join('')+'</tr></thead><tbody>';
+  L.grid.forEach((r,ri)=>{
+    const rowNo=ri+1; const isHdr=cur==='multi'?(rowNo>=2&&rowNo<=4):rowNo===L.hdr; const empty=r.every(c=>!c); const skip=!isHdr&&(rowNo<L.hdr||empty||/^合计|^备注/.test(r[0]));
+    h+=`<tr class="${isHdr?'hdr':(skip?'skip':'')}"><td class="rn">${rowNo}</td>`;
+    const single=skip&&r[0]&&r.slice(1).every(c=>!c);
+    if(single){ h+=`<td colspan="${n}">${r[0]}</td></tr>`; return; }
+    if(cur==='multi'&&rowNo===2){ h+=`<td></td><td></td><td colspan="2" style="text-align:center;background:#f3ecff">Q235B <span class="tiny muted">(合并 C:D)</span></td><td colspan="2" style="text-align:center;background:#f3ecff">Q355B <span class="tiny muted">(合并 E:F)</span></td><td></td></tr>`; return; }
+    r.forEach((c,ci)=>{ let cls=''; if(!isHdr&&!skip){ cls=L.colClass[ci]; if(cur==='matrix'&&ci>0&&!c) cls='ignore'; if(cur==='multi'&&ci===6&&!c) cls='map-note'; } if(isHdr&&cur==='matrix'&&ci>0) cls='axis'; h+=`<td class="${cls}">${c||(cur==='matrix'&&!isHdr&&!skip&&ci>0?'<span style="color:#c5ccd6">—</span>':'')}</td>`; });
+    h+='</tr>';
+  });
+  document.getElementById('sheet').innerHTML=h+'</tbody>';
+  document.getElementById('sheetTip').innerHTML=L.tip;
+  document.getElementById('mapBox').innerHTML=L.map.map(([c,f,conf])=>`<div class="maprow"><span class="col" style="background:${f.includes('价格')?'#e6f7ee':(f.includes('材质')?'#f3ecff':(f.includes('长度')?'#fff7e0':(f.includes('仓库')?'#e7f6fb':(f.includes('NLP')?'#f4f4f4':'#e8f0ff'))))}">${c}</span><span class="dim">→</span><select><option>${f}</option><option>品种</option><option>材质</option><option>规格(自动解析)</option><option>外径</option><option>壁厚</option><option>厚度</option><option>宽度</option><option>长度</option><option>仓库</option><option>价格</option><option>可供量</option><option>备注(NLP)</option><option>忽略此列</option></select><span class="conf">${conf}%</span></div>`).join('')+`<div class="row mt" style="gap:8px"><a class="btn xs" data-toast="已重新识别">重新识别</a><a class="btn xs" data-toast="拖动列头到字段可手工映射">手工拖拽映射</a><span class="small dim" style="margin-left:auto">${cur==='matrix'?'矩阵模式:轴 + 单元格':'清单模式:列 → 字段'}</span></div>`;
+  document.getElementById('out').innerHTML='<thead><tr><th>品种</th><th>材质</th><th>规格</th><th>长度</th><th>仓库</th><th class="r">元/吨 含税</th><th>来源 / 规则</th><th>状态</th></tr></thead><tbody>'+L.out.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="num"><b>${r[2]}</b></td><td>${r[3]}</td><td>${r[4]}</td><td class="r num"><b>${r[5]}</b></td><td class="small dim">${r[6]}</td><td><span class="tag ${r[7].startsWith('✓')?'green':(r[7].startsWith('⚠')?'yellow':'')}">${r[7]}</span></td></tr>`).join('')+'</tbody>';
+  document.getElementById('outSub').textContent=`识别 ${L.rows} 条 · 标准 SKU 编码自动生成 · 与价格库做差异比对`;
+  document.getElementById('aiNote').innerHTML=L.ai;
+  document.getElementById('footFile').textContent=L.file; document.getElementById('footRows').textContent=L.rows; document.getElementById('footConf').textContent=L.conf; document.getElementById('footTpl').textContent=L.tpl;
+}
+document.getElementById('lay').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; cur=a.dataset.l; render(); });
+render();
+</script>
+</body>
+</html>

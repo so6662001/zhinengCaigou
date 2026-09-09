@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>资源库存(自有+在途) · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .wh { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  .wh .n { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .wh .t { font-size: 20px; font-weight: 700; margin: 4px 0 2px; letter-spacing: -.4px; }
+  .wh .age { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .wh .age > i { display: block; height: 100%; }
+  .a1 { background: #12945a; } .a2 { background: #1f5eff; } .a3 { background: #c98a00; } .a4 { background: #d92d20; }
+  .avail { font-weight: 700; }
+  .tbl td:nth-child(2), .tbl td:nth-child(13) { white-space: nowrap; }
+  .days { display: inline-flex; align-items: center; gap: 5px; }
+  .days .bar { width: 46px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="资源库存(自有+在途)"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div><h1>资源库存(自有 + 在途)</h1><p>配货引擎的「第一资源池」:在库、在途、已锁定实时合一,按 <b>可用量 = 在库 + 在途 − 已锁定</b> 参与配货;库龄、浮盈亏、可售天数自动计算,呆滞与低于补货点自动预警。</p></div>
+        <div class="actions">
+          <span class="tag green"><i class="dot g pulse"></i> WMS / ERP 同步 09:41</span>
+          <div class="seg"><a class="on">按仓库</a><a>按品种</a><a>按钢厂</a></div>
+          <a class="btn" data-toast="盘点任务已下发 6 个仓库">发起盘点</a>
+          <a class="btn primary" href="safety-stock.html">◔ 安全库存运算</a>
+        </div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi hi"><div class="lbl">可用资源(在库+在途−锁定)</div><div class="val num">13,740<small>t</small></div><div class="delta">参与今日配货 · 覆盖需求池 <b>52%</b></div></div>
+        <div class="card kpi"><div class="lbl">自有在库</div><div class="val num">12,480<small>t</small></div><div class="delta dim">6 仓 · 4,860 SKU / 142 族 · 利用率 71%</div></div>
+        <div class="card kpi"><div class="lbl">在途</div><div class="val num">3,120<small>t</small></div><div class="delta dim">94 车 · 今日到 <b>1,140t</b> · 延迟 2 车</div></div>
+        <div class="card kpi"><div class="lbl">已锁定(已配货未发)</div><div class="val num">1,860<small>t</small></div><div class="delta dim">对应 12 张销售需求</div></div>
+        <div class="card kpi"><div class="lbl">库龄 &gt; 45 天</div><div class="val num up">1,240<small>t</small></div><div class="delta dim">占比 9.9% · 呆滞(&gt;90 天)<b class="up">210t</b></div></div>
+        <div class="card kpi"><div class="lbl">库存资金占用 / 浮动盈亏</div><div class="val num">¥ 43.6M</div><div class="delta"><span class="up">▲ ¥ 312,000</span> <span class="dim">按 Mysteel 今日价</span> · 周转 18.6 天</div></div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="wh"><div class="n"><i class="dot b"></i>太仓库 <span class="tag" style="margin-left:auto">主仓</span></div><div class="t num">4,210<span class="small muted"> t</span></div><div class="small dim">在途 +860 · 锁定 620 · 可用 <b class="avail">4,450</b></div><div class="bar mt" style="margin-top:8px"><i style="width:84%"></i></div><div class="tiny muted">利用率 84% / 5,000t</div><div class="age"><i class="a1" style="width:58%"></i><i class="a2" style="width:26%"></i><i class="a3" style="width:11%"></i><i class="a4" style="width:5%"></i></div></div>
+        <div class="wh"><div class="n"><i class="dot g"></i>常州库</div><div class="t num">2,860<span class="small muted"> t</span></div><div class="small dim">在途 +720 · 锁定 480 · 可用 <b class="avail">3,100</b></div><div class="bar" style="margin-top:8px"><i class="g" style="width:72%"></i></div><div class="tiny muted">利用率 72% / 4,000t</div><div class="age"><i class="a1" style="width:64%"></i><i class="a2" style="width:24%"></i><i class="a3" style="width:9%"></i><i class="a4" style="width:3%"></i></div></div>
+        <div class="wh"><div class="n"><i class="dot o"></i>上海宝杨库</div><div class="t num">1,940<span class="small muted"> t</span></div><div class="small dim">在途 +540 · 锁定 380 · 可用 <b class="avail">2,100</b></div><div class="bar" style="margin-top:8px"><i class="o" style="width:65%"></i></div><div class="tiny muted">利用率 65% / 3,000t</div><div class="age"><i class="a1" style="width:50%"></i><i class="a2" style="width:30%"></i><i class="a3" style="width:14%"></i><i class="a4" style="width:6%"></i></div></div>
+        <div class="wh"><div class="n"><i class="dot" style="background:#6e4cf5"></i>杭州库</div><div class="t num">1,520<span class="small muted"> t</span></div><div class="small dim">在途 +420 · 锁定 210 · 可用 <b class="avail">1,730</b></div><div class="bar" style="margin-top:8px"><i style="width:61%;background:#6e4cf5"></i></div><div class="tiny muted">利用率 61% / 2,500t</div><div class="age"><i class="a1" style="width:55%"></i><i class="a2" style="width:28%"></i><i class="a3" style="width:12%"></i><i class="a4" style="width:5%"></i></div></div>
+        <div class="wh"><div class="n"><i class="dot y"></i>南京库</div><div class="t num">1,180<span class="small muted"> t</span></div><div class="small dim">在途 +380 · 锁定 95 · 可用 <b class="avail">1,465</b></div><div class="bar" style="margin-top:8px"><i class="y" style="width:59%"></i></div><div class="tiny muted">利用率 59% / 2,000t</div><div class="age"><i class="a1" style="width:40%"></i><i class="a2" style="width:30%"></i><i class="a3" style="width:18%"></i><i class="a4" style="width:12%"></i></div></div>
+        <div class="wh"><div class="n"><i class="dot" style="background:#0d9488"></i>合肥库 <span class="tag yellow" style="margin-left:auto">呆滞偏高</span></div><div class="t num">770<span class="small muted"> t</span></div><div class="small dim">在途 +200 · 锁定 75 · 可用 <b class="avail">895</b></div><div class="bar" style="margin-top:8px"><i style="width:51%;background:#0d9488"></i></div><div class="tiny muted">利用率 51% / 1,500t</div><div class="age"><i class="a1" style="width:32%"></i><i class="a2" style="width:28%"></i><i class="a3" style="width:22%"></i><i class="a4" style="width:18%"></i></div></div>
+      </div>
+      <div class="legend mb" style="margin-top:-6px"><span><i class="a1"></i>库龄 0-15 天</span><span><i class="a2"></i>16-30 天</span><span><i class="a3"></i>31-60 天</span><span><i class="a4"></i>&gt; 60 天</span></div>
+
+      <div class="grid" style="grid-template-columns: minmax(0,1fr) 340px; gap:14px">
+        <div class="card">
+          <div class="card-h"><h3>库存明细</h3><span class="sub">仓库 × 品类 × 规格族 × SKU · 元/吨</span>
+            <div class="r"><div class="chips"><span class="chip on">全部</span><span class="chip">管材</span><span class="chip">型材</span><span class="chip">板材</span><span class="chip">低于补货点</span><span class="chip">呆滞</span><span class="chip">浮亏</span><span class="chip">在途延迟</span></div><input class="inp" placeholder="规格 / 钢厂" style="width:140px;height:28px"></div></div>
+          <div class="card-b tight" style="overflow:auto">
+            <table class="tbl compact">
+              <thead><tr><th>仓库</th><th>品名规格 · 钢厂</th><th class="r">在库</th><th class="r">在途</th><th class="r">锁定</th><th class="r">可用</th><th class="r">库龄</th><th class="r">成本</th><th class="r">市价</th><th class="r">浮盈亏</th><th class="r">日均销</th><th>可售天数</th><th>库存状态</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>无锡库</td><td><span class="tag" style="margin-right:4px">管</span><b>无缝管 20# Φ108×4.5 6m</b> · 衡钢</td><td class="r num">200</td><td class="r num">0</td><td class="r num">80</td><td class="r num avail up">120</td><td class="r num">14 天</td><td class="r num">4,372</td><td class="r num">4,420</td><td class="r num up">+48</td><td class="r num">28</td><td><span class="days"><span class="bar"><i class="o" style="width:30%"></i></span>4.3</span></td><td><span class="tag red">低于补货点 ROP 145</span></td><td><span class="tag purple">RPL-0909-04 198t</span></td></tr>
+                <tr><td>无锡库</td><td><span class="tag" style="margin-right:4px">管</span><b>无缝管 20# Φ159×6 6m</b> · 衡钢</td><td class="r num">150</td><td class="r num">+66 <span class="tiny muted">9/11</span></td><td class="r num">40</td><td class="r num avail">176</td><td class="r num">9 天</td><td class="r num">4,498</td><td class="r num">4,540</td><td class="r num up">+42</td><td class="r num">12</td><td><span class="days"><span class="bar"><i class="g" style="width:90%"></i></span>14.7</span></td><td><span class="tag green">健康</span></td><td></td></tr>
+                <tr><td>天津库</td><td><span class="tag" style="margin-right:4px">管</span><b>焊管 Q235B 4寸×3.75 6m</b> · 友发</td><td class="r num">360</td><td class="r num">0</td><td class="r num">60</td><td class="r num avail">300</td><td class="r num">11 天</td><td class="r num">3,905</td><td class="r num">4,180</td><td class="r num up">+275</td><td class="r num">45</td><td><span class="days"><span class="bar"><i class="g" style="width:45%"></i></span>6.7</span></td><td><span class="tag green">健康</span></td><td></td></tr>
+                <tr style="background:#fff8f0"><td>天津库</td><td><span class="tag" style="margin-right:4px">管</span><b>镀锌管 Q235B DN50×3.5 6m</b> · 友发</td><td class="r num">70</td><td class="r num">0</td><td class="r num">30</td><td class="r num avail up">40</td><td class="r num">18 天</td><td class="r num">4,830</td><td class="r num">4,860</td><td class="r num up">+30</td><td class="r num">14</td><td><span class="days"><span class="bar"><i class="o" style="width:20%"></i></span>2.9</span></td><td><span class="tag orange">低于补货点 ROP 46</span></td><td><span class="tag purple">RPL-0909-05 拼车</span></td></tr>
+                <tr><td>无锡库</td><td><span class="tag" style="margin-right:4px">管</span><b>无缝管 20# Φ325×10 6m</b> · 长尾</td><td class="r num">0</td><td class="r num">0</td><td class="r num">0</td><td class="r num avail">0</td><td class="r num">—</td><td class="r num">—</td><td class="r num">4,780</td><td class="r num">—</td><td class="r num">0.6</td><td><span class="days">—</span></td><td><span class="tag">C-Z 按单</span></td><td></td></tr>
+                <tr><td>杭州库</td><td><span class="tag" style="margin-right:4px">型</span><b>H型钢 Q355B 400×200 12m</b> · 马钢</td><td class="r num">380</td><td class="r num">+120 <span class="tiny muted">9/11 · 90t 直供</span></td><td class="r num">120</td><td class="r num avail">290</td><td class="r num">18 天</td><td class="r num">3,672</td><td class="r num">3,700</td><td class="r num up">+28</td><td class="r num">26</td><td><span class="days"><span class="bar"><i class="g" style="width:75%"></i></span>11.2</span></td><td><span class="tag green">健康</span></td><td></td></tr>
+                <tr style="background:#fff8f0"><td>杭州库</td><td><span class="tag" style="margin-right:4px">型</span><b>角钢 Q235B 63×6 6m</b> · 马钢</td><td class="r num">40</td><td class="r num">0</td><td class="r num">12</td><td class="r num avail up">28</td><td class="r num">22 天</td><td class="r num">3,690</td><td class="r num">3,690</td><td class="r num">0</td><td class="r num">6.8</td><td><span class="days"><span class="bar"><i class="o" style="width:28%"></i></span>4.1</span></td><td><span class="tag orange">低于补货点 ROP 33</span></td><td><a class="btn xs primary" data-toast="调拨单已生成:合肥→杭州 角钢 63×6 38t">合肥调拨 38t</a></td></tr>
+                <tr style="background:var(--danger-2)"><td>合肥库</td><td><span class="tag" style="margin-right:4px">型</span><b>角钢 Q235B 63×6 6m</b> · 马钢</td><td class="r num">96</td><td class="r num">0</td><td class="r num">0</td><td class="r num avail">96</td><td class="r num up">112 天</td><td class="r num">3,780</td><td class="r num">3,690</td><td class="r num down">-90</td><td class="r num">1.2</td><td><span class="days"><span class="bar"><i class="r" style="width:100%"></i></span>80</span></td><td><span class="tag red">呆滞 · 浮亏 ¥8,640</span></td><td><span class="tag green">调拨杭州 38t</span></td></tr>
+                <tr style="background:var(--danger-2)"><td>合肥库</td><td><span class="tag" style="margin-right:4px">型</span><b>槽钢 Q235B 10# 6m</b> · 马钢</td><td class="r num">114</td><td class="r num">0</td><td class="r num">0</td><td class="r num avail">114</td><td class="r num up">96 天</td><td class="r num">3,720</td><td class="r num">3,660</td><td class="r num down">-60</td><td class="r num">2.0</td><td><span class="days"><span class="bar"><i class="r" style="width:100%"></i></span>57</span></td><td><span class="tag red">呆滞</span></td><td><a class="btn xs">调拨 / 促销</a></td></tr>
+                <tr><td>上海宝杨库</td><td><span class="tag" style="margin-right:4px">板</span><b>中板 Q235B 12×2000×8000</b> · 敬业</td><td class="r num">260</td><td class="r num">+50 <span class="tiny muted">9/10</span></td><td class="r num">100</td><td class="r num avail">210</td><td class="r num">16 天</td><td class="r num">3,668</td><td class="r num">3,704</td><td class="r num up">+36</td><td class="r num">38</td><td><span class="days"><span class="bar"><i class="g" style="width:40%"></i></span>5.5</span></td><td><span class="tag green">健康 · 族 SS 共享</span></td><td></td></tr>
+                <tr><td>上海宝杨库</td><td><span class="tag" style="margin-right:4px">板</span><b>中板 Q235B 12×2200×10000</b> · 敬业</td><td class="r num">180</td><td class="r num">0</td><td class="r num">0</td><td class="r num avail">180</td><td class="r num">24 天</td><td class="r num">3,690</td><td class="r num">3,724</td><td class="r num up">+34</td><td class="r num">9</td><td><span class="days"><span class="bar"><i class="g" style="width:100%"></i></span>20</span></td><td><span class="tag blue">可切割 → 5 个 SKU</span></td><td></td></tr>
+                <tr><td>上海宝杨库</td><td><span class="tag" style="margin-right:4px">板</span><b>热卷 Q235B 5.75×1500×C</b> · 日照</td><td class="r num">540</td><td class="r num up">+198 <span class="tiny">晚 2.5h</span></td><td class="r num">180</td><td class="r num avail">558</td><td class="r num">21 天</td><td class="r num">3,528</td><td class="r num">3,580</td><td class="r num up">+52</td><td class="r num">62</td><td><span class="days"><span class="bar"><i class="g" style="width:64%"></i></span>9.0</span></td><td><span class="tag green">健康</span></td><td></td></tr>
+                <tr><td>上海宝杨库</td><td><span class="tag" style="margin-right:4px">板</span><b>热卷 Q235B 3.0×1500×C</b> · 日照</td><td class="r num">260</td><td class="r num">0</td><td class="r num">0</td><td class="r num avail">260</td><td class="r num">48 天</td><td class="r num">3,612</td><td class="r num">3,600</td><td class="r num down">-12</td><td class="r num">14</td><td><span class="days"><span class="bar"><i class="y" style="width:100%"></i></span>18.6</span></td><td><span class="tag yellow">C-Z 过高 · 浮亏</span></td><td><a class="btn xs" data-toast="已推送销售:热卷 3.0 优先出货,让利 10 元">促销</a></td></tr>
+                <tr><td>南京库</td><td><span class="tag" style="margin-right:4px">板</span><b>冷轧 SPCC 1.0×1250×C</b> · 鞍钢</td><td class="r num">210</td><td class="r num">+95 <span class="tiny muted">9/12</span></td><td class="r num">95</td><td class="r num avail">210</td><td class="r num">26 天</td><td class="r num">4,196</td><td class="r num">4,230</td><td class="r num up">+34</td><td class="r num">12</td><td><span class="days"><span class="bar"><i class="g" style="width:100%"></i></span>17.5</span></td><td><span class="tag green">健康</span></td><td></td></tr>
+                <tr><td colspan="14" class="center muted small">… 共 4,860 个 SKU(管 1,860 · 型 1,240 · 板 1,370)· 142 个规格族 · <a href="#">展开全部</a></td></tr>
+              </tbody>
+              <tfoot><tr><td colspan="2">合计</td><td class="r num">12,480</td><td class="r num">3,120</td><td class="r num">1,860</td><td class="r num">13,740</td><td class="r num">19 天</td><td colspan="2"></td><td class="r num up">+¥312,000</td><td colspan="4"></td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>在途车辆</h3><span class="sub">GPS · 今日到 34 车</span><div class="r"><a class="small" href="orders.html">执行跟踪 →</a></div></div>
+            <div class="card-b">
+              <ul class="tl">
+                <li class="done"><div class="t">09:38 已到 · 太仓库</div>沙钢 Φ20 · 3 车 99.2t · 磅差 -0.06% ✓ 已入库转「在库」</li>
+                <li><div class="t">预计 10:40 · 苏州园区(直送客户)</div>沙钢 Φ22/25 · 苏A·8K21H · 距 18 km</li>
+                <li class="warn"><div class="t">预计 15:30(晚 2.5h)· 上海宝杨库</div>日照 热卷 · 鲁B·3D7L9 · 高速拥堵 · 可用量按延后重算</li>
+                <li><div class="t">预计 14:20 · 杭州库</div>马钢 H型钢 · 皖A·9Q3M2 · 33.1t</li>
+                <li><div class="t">9/11 · 常州库</div>中天 直发 盘螺 Φ8 · 4 车 130t · 钢厂已装车</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card mb">
+            <div class="card-h"><h3>库龄结构</h3><span class="sub">按吨位</span></div>
+            <div class="card-b row" style="gap:16px">
+              <div id="donut"></div>
+              <table class="mini-table"><tr><td><i class="dot g"></i> 0-15 天</td><td>54%</td></tr><tr><td><i class="dot b"></i> 16-30 天</td><td>27%</td></tr><tr><td><i class="dot y"></i> 31-60 天</td><td>12%</td></tr><tr><td><i class="dot r"></i> &gt; 60 天</td><td>7%</td></tr></table>
+            </div>
+          </div>
+          <div class="think">
+            <div class="h"><span class="ai">库存洞察</span></div>
+            <ul style="margin:0;padding-left:16px">
+              <li>无缝管 Φ108×4.5 与镀锌管 DN50 低于补货点,安全库存引擎 05:30 已生成 <b>RPL-0909-04 / 05</b>(&gt; 100t 待确认),并按价格库建议拆分供应商与拼车。</li>
+              <li>杭州角钢 63×6 缺 38t,<b>不采购</b>:合肥库同规格呆滞 96t 调拨即可,短驳 ¥28/t,同时化解合肥呆滞。</li>
+              <li>中板 12mm 大板 180t 可切割为 5 个小规格 SKU,族内共享安全库存,较逐 SKU 少备 75t。</li>
+              <li>型材长尾 890 个 C 类 SKU 现库 640t、呆滞 420t,是资金占用主因;本月已按「按单 + 替代」减 180t。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById('donut').innerHTML = donut([{v:54,color:'#12945a'},{v:27,color:'#1f5eff'},{v:12,color:'#c98a00'},{v:7,color:'#d92d20'}],{size:110,stroke:14,center:'19 天',sub:'平均库龄'});
+</script>
+</body>
+</html>

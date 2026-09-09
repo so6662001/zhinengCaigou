@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>价格速查 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .lookup { background: linear-gradient(135deg, var(--side) 0%, #1f2c47 100%); border-radius: var(--r-lg); padding: 22px 24px; color: #fff; }
+  .lookup .box { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 12px; padding: 6px 8px 6px 16px; margin-top: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+  .lookup .box input { flex: 1; border: none; outline: none; font-size: 16px; padding: 10px 0; color: var(--text); background: transparent; font-family: inherit; }
+  .lookup .box .tok { display: flex; gap: 6px; }
+  .lookup .box .tok span { background: var(--primary-2); color: var(--primary); border-radius: 6px; padding: 5px 9px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+  .lookup .box .tok span b { color: var(--text-3); font-weight: 500; margin-right: 3px; }
+  .lookup .quick { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; font-size: 12px; color: rgba(255,255,255,.7); }
+  .lookup .quick a { background: rgba(255,255,255,.12); color: #fff; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-size: 12px; }
+  .lookup .quick a:hover { background: rgba(255,255,255,.22); }
+  .lookup .sw { display: flex; gap: 6px; margin-top: 12px; }
+  .lookup .sw a { padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); color: #fff; font-size: 12.5px; cursor: pointer; }
+  .lookup .sw a.on { background: var(--accent); border-color: var(--accent); font-weight: 700; }
+  .res { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .res th { text-align: left; font-size: 11.5px; color: var(--text-3); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .res td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+  .res tr:first-child td { background: #f3fbf6; }
+  .res .pb { display: flex; align-items: center; gap: 10px; min-width: 260px; }
+  .res .pb .track { flex: 1; height: 22px; background: #eef1f5; border-radius: 5px; overflow: hidden; position: relative; }
+  .res .pb .track i { position: absolute; left: 0; top: 0; height: 100%; border-radius: 5px; background: var(--primary); }
+  .res .pb .track i.g { background: var(--success); } .res .pb .track i.o { background: var(--accent); } .res .pb .track i.gr { background: #b8c2d0; }
+  .res .pb .track span { position: absolute; left: 8px; line-height: 22px; font-size: 11px; color: #fff; font-weight: 600; }
+  .res .pb .v { font-family: var(--mono); font-weight: 800; font-size: 15px; width: 60px; text-align: right; }
+  .res .dif { font-family: var(--mono); font-size: 12px; }
+  .near { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .near th, .near td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: right; font-family: var(--mono); white-space: nowrap; }
+  .near th { font-family: inherit; color: var(--text-2); background: #f8fafc; font-weight: 600; }
+  .near th:first-child, .near td:first-child { text-align: left; font-family: inherit; font-weight: 600; }
+  .near td.min { color: var(--success); font-weight: 700; }
+  .near tr.cur td { background: var(--primary-2); }
+  .near td { cursor: pointer; }
+  .stat { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .stat .s { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .stat .s .l { font-size: 11.5px; color: var(--text-3); }
+  .stat .s .v { font-size: 20px; font-weight: 800; font-family: var(--mono); letter-spacing: -.5px; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="智能比价 / 价格速查"></header>
+    <div class="content">
+
+      <div class="lookup mb">
+        <div class="row between">
+          <div><div style="font-size:18px;font-weight:800">价格速查 <span class="small" style="opacity:.7;font-weight:400">— 一个规格 · 一种材质 · 所有厂家,一屏看完</span></div></div>
+          <div class="small" style="opacity:.75">价格库 6,120 条 · 最近更新 08:42 · 覆盖 23 家供应商</div>
+        </div>
+        <div class="box">
+          <span style="font-size:18px;color:var(--text-3)">⌕</span>
+          <div class="tok" id="tok"></div>
+          <input id="q" placeholder="像说话一样输入:无缝管 20# 108*4.5 到无锡 …(支持 108×4.5 / 108*4.5 / DN100 / 4寸)">
+          <button class="btn primary" onclick="doSearch()">查价</button>
+        </div>
+        <div class="row between" style="flex-wrap:wrap;gap:8px">
+          <div class="quick">最近:<a onclick="pick('无缝管 20# Φ108×4.5 6m 无锡')">无缝管 20# 108×4.5</a><a onclick="pick('无缝管 Q345B Φ108×4.5 6m 无锡')">无缝管 Q345B 108×4.5</a><a onclick="pick('无缝管 16Mn Φ108×4.5 6m 无锡')">无缝管 16Mn 108×4.5</a><a onclick="pick('H型钢 Q355B 400×200 12m 无锡')">H型钢 Q355B 400×200</a><a onclick="pick('中板 Q235B 12mm 2200×L 无锡')">中板 Q235B 12mm</a></div>
+          <div class="sw"><a class="on" data-m="landed">到厂价(到无锡)</a><a data-m="raw">挂牌价</a><a data-m="hist">近 30 天走势</a></div>
+        </div>
+      </div>
+
+      <div class="stat mb" id="stat"></div>
+
+      <div class="grid" style="grid-template-columns: minmax(0,1fr) 380px; gap:14px">
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3 id="resTitle">—</h3><span class="sub" id="resSub"></span><div class="r"><a class="btn xs" data-toast="已加入比价单 RFQ-260909-05">加入比价单</a><a class="btn xs primary" data-toast="已向前 3 家发起一键询价(微信 + 邮件)">一键询价前 3 家</a></div></div>
+            <div class="card-b tight" style="overflow:auto"><table class="res" id="res"></table></div>
+            <div class="row small dim" style="padding:10px 14px;border-top:1px solid var(--line)">灰色 = 报价超过 24h 未刷新,系统已自动催报 · 斜体 = 非协议供应商 · 点供应商名进入画像</div>
+          </div>
+          <div class="card" id="histCard" style="display:none">
+            <div class="card-h"><h3>近 30 天到厂价走势</h3><span class="sub">最低报价 vs 我司成交 vs Mysteel 无锡</span></div>
+            <div class="card-b"><svg id="hist" viewBox="0 0 800 220" width="100%" height="220"></svg>
+              <div class="row small" style="gap:16px;margin-top:6px"><span><i class="dot" style="background:var(--primary)"></i> 最低到厂报价</span><span><i class="dot" style="background:var(--accent)"></i> 我司成交均价</span><span><i class="dot" style="background:#94a3b8"></i> Mysteel 无锡</span></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>相邻规格价格带</h3><span class="sub">同材质 · 换个壁厚 / 口径谁最便宜</span></div>
+            <div class="card-b tight"><table class="near" id="near"></table></div>
+            <div class="small dim" style="padding:8px 14px;border-top:1px solid var(--line)">点任一格切换主查询 · 用于「客户可接受 ±1 壁厚」时找替代</div>
+          </div>
+          <div class="think">
+            <div class="h"><span class="ai">引擎解读</span></div>
+            <div id="advice" class="small"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+const DB={
+  '无缝管':{unit:'元/吨',mat:{'20#':0,'Q345B':230,'16Mn':210},specs:[['Φ108×4',-40],['Φ108×4.5',0],['Φ108×5',30],['Φ108×6',90],['Φ114×4.5',10],['Φ133×5',80]],cur:'Φ108×4.5',len:'6m',
+    sups:[{n:'衡钢代理 A',w:'无锡库 · 即提',base:4380,fr:28,oth:0,age:'08:12',stock:'126t',cred:'A',agree:1},{n:'天津大无缝 B',w:'天津直发 · 2 天',base:4290,fr:112,oth:7,age:'昨 17:40',stock:'600t+',cred:'A',agree:1},{n:'烟宝代理 C',w:'上海库 · 次日',base:4420,fr:36,oth:4,age:'08:30',stock:'48t',cred:'B+',agree:1},{n:'找钢 · 贸易商 F',w:'苏州库 · 次日',base:4380,fr:40,oth:12,age:'08:40(API)',stock:'32t',cred:'B',agree:0},{n:'无锡贸易商 D',w:'无锡库 · 即提',base:4392,fr:28,oth:0,age:'2 天前',stock:'—',cred:'B+',agree:1,stale:1},{n:'包钢代理 G',w:'济南库 · 2 天',base:4340,fr:96,oth:5,age:'07:55',stock:'210t',cred:'A-',agree:1}]},
+  'H型钢':{unit:'元/吨',mat:{'Q355B':0,'Q235B':-120},specs:[['300×150',-30],['350×175',-10],['400×200',0],['450×200',20],['500×200',40]],cur:'400×200',len:'12m',
+    sups:[{n:'马钢 · 华东代理',w:'无锡库 · 即提',base:3560,fr:26,oth:0,age:'08:20',stock:'320t',cred:'A',agree:1},{n:'日照 · 贸易商 B',w:'上海库 · 次日',base:3520,fr:38,oth:6,age:'08:05',stock:'180t',cred:'A-',agree:1},{n:'津西 · 北方资源',w:'唐山直发 · 3 天',base:3410,fr:168,oth:9,age:'昨 16:00',stock:'800t+',cred:'B+',agree:1},{n:'莱钢代理',w:'南京库 · 次日',base:3550,fr:52,oth:3,age:'08:35',stock:'96t',cred:'A',agree:1}]},
+  '中板':{unit:'元/吨',mat:{'Q235B':0,'Q355B':160},specs:[['10mm',30],['12mm',0],['14mm',-10],['16mm',-20],['20mm',-30]],cur:'12mm',len:'2200×L',
+    sups:[{n:'沙钢 · 江苏玖隆',w:'张家港库 · 次日',base:3480,fr:34,oth:0,age:'08:10',stock:'420t',cred:'A',agree:1},{n:'南钢代理',w:'南京库 · 次日',base:3470,fr:48,oth:2,age:'08:22',stock:'260t',cred:'A',agree:1},{n:'鞍钢 · 华东贸易商',w:'上海库 · 次日',base:3510,fr:38,oth:4,age:'昨 18:10',stock:'150t',cred:'B+',agree:1},{n:'敬业 · 北方资源',w:'河北直发 · 3 天',base:3340,fr:172,oth:8,age:'08:00',stock:'1000t+',cred:'B',agree:1},{n:'找钢 · 贸易商 K',w:'无锡库 · 即提',base:3505,fr:22,oth:12,age:'08:41(API)',stock:'40t',cred:'B',agree:0}]}};
+let Q={cat:'无缝管',mat:'20#',spec:'Φ108×4.5',mode:'landed'};
+const fmt=n=>n.toLocaleString('zh-CN');
+function parse(s){ s=s.replace(/\*/g,'×').replace(/x/gi,'×'); const cat=Object.keys(DB).find(c=>s.includes(c))||Q.cat; const mat=Object.keys(DB[cat].mat).find(m=>s.toUpperCase().includes(m.toUpperCase()))||Object.keys(DB[cat].mat)[0]; const m=s.match(/Φ?(\d{2,3}×\d+(\.\d+)?)/)||s.match(/(\d{2,3}×\d{3})/)||s.match(/(\d{1,2}mm)/); let spec=m?(cat==='无缝管'?'Φ'+m[1]:m[1]):DB[cat].cur; if(!DB[cat].specs.find(x=>x[0]===spec)) spec=DB[cat].cur; if(/DN100|4寸/.test(s)) spec='Φ108×4.5'; return {cat,mat,spec}; }
+function pick(s){ document.getElementById('q').value=s; doSearch(); }
+function doSearch(){ Object.assign(Q,parse(document.getElementById('q').value)); render(); }
+document.getElementById('q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
+document.querySelector('.sw').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; document.querySelectorAll('.sw a').forEach(x=>x.classList.remove('on')); a.classList.add('on'); Q.mode=a.dataset.m; render(); });
+function priceOf(su,cat,mat,spec,mode){ const d=DB[cat]; const add=d.specs.find(x=>x[0]===spec)[1]; const p=su.base+d.mat[mat]+add; return mode==='raw'?p:p+su.fr+su.oth; }
+function render(){
+  const d=DB[Q.cat], mode=Q.mode==='raw'?'raw':'landed';
+  document.getElementById('tok').innerHTML=`<span><b>品名</b>${Q.cat}</span><span><b>材质</b>${Q.mat}</span><span><b>规格</b>${Q.spec}</span><span><b>长度</b>${d.len}</span><span><b>到货</b>无锡</span>`;
+  const rows=d.sups.map(su=>({su,p:priceOf(su,Q.cat,Q.mat,Q.spec,mode),landed:priceOf(su,Q.cat,Q.mat,Q.spec,'landed')})).sort((a,b)=>a.p-b.p);
+  const fresh=rows.filter(r=>!r.su.stale), min=fresh[0].p, max=rows[rows.length-1].p, avg=Math.round(fresh.reduce((a,r)=>a+r.landed,0)/fresh.length);
+  const ms=min+38, deal=min+6;
+  document.getElementById('stat').innerHTML=`<div class="s"><div class="l">最低到厂价</div><div class="v" style="color:var(--success)">${fmt(fresh[0].landed)}</div><div class="tiny muted">${fresh[0].su.n}</div></div><div class="s"><div class="l">有效报价 / 供应商</div><div class="v">${fresh.length}<span class="small dim"> / ${d.sups.length}</span></div><div class="tiny muted">${d.sups.length-fresh.length} 家超 24h 未刷新</div></div><div class="s"><div class="l">价差(最高−最低)</div><div class="v">${fmt(rows[rows.length-1].landed-fresh[0].landed)}</div><div class="tiny muted">均价 ${fmt(avg)}</div></div><div class="s"><div class="l">我司近 30 天成交均价</div><div class="v">${fmt(deal)}</div><div class="tiny muted">最低价低于成交 ${deal-fresh[0].landed} 元</div></div><div class="s"><div class="l">Mysteel 无锡 ${Q.cat}</div><div class="v">${fmt(ms)}</div><div class="tiny muted">最低价处于 22 分位 · <span class="down">−${ms-fresh[0].landed}</span></div></div>`;
+  document.getElementById('resTitle').textContent=`${Q.cat} · ${Q.mat} · ${Q.spec} · ${d.len} — ${mode==='raw'?'挂牌价':'到厂价(到无锡)'}`;
+  document.getElementById('resSub').textContent=`${d.unit} 含税 · ${rows.length} 家报价 · 按${mode==='raw'?'挂牌':'到厂'}价升序`;
+  const span=Math.max(1,max-min*0.985);
+  document.getElementById('res').innerHTML=`<thead><tr><th>#</th><th>供应商</th><th>仓库 / 交期</th><th>${mode==='raw'?'挂牌价':'到厂价'}</th><th>较最低</th><th>${mode==='raw'?'折算到厂':'挂牌价'}</th><th>库存</th><th>信用</th><th>报价时间</th><th></th></tr></thead><tbody>`+rows.map((r,i)=>{ const raw=priceOf(r.su,Q.cat,Q.mat,Q.spec,'raw'); const w=Math.max(40,((r.p-min*0.985)/span)*100); const cls=r.su.stale?'gr':(i===0?'g':(r.su.fr>90?'o':'')); return `<tr><td class="num">${i+1}</td><td><a href="supplier-detail.html" style="font-weight:700;${r.su.agree?'':'font-style:italic'}">${r.su.n}</a>${r.su.agree?'':'<div class="tiny muted">非协议</div>'}</td><td class="small">${r.su.w}</td><td><div class="pb"><div class="track"><i class="${cls}" style="width:${w.toFixed(0)}%"></i></div><div class="v">${fmt(r.p)}</div></div>${mode==='raw'?'':'<div class="tiny muted" style="margin-top:2px">基价 '+fmt(r.su.base+d.mat[Q.mat])+' + 运费 '+r.su.fr+(r.su.oth?' + 账期/风险 '+r.su.oth:'')+'</div>'}</td><td class="dif ${i===0?'down':'up'}">${i===0?'最低':'+'+(r.p-min)}</td><td class="num dim">${fmt(mode==='raw'?r.landed:raw)}</td><td class="num">${r.su.stock}</td><td><span class="tag ${r.su.cred[0]==='A'?'green':'yellow'}">${r.su.cred}</span></td><td class="small ${r.su.stale?'up':'dim'}">${r.su.age}${r.su.stale?' ⚠':''}</td><td><a class="btn xs" data-toast="已向 ${r.su.n} 发起询价">询价</a></td></tr>`; }).join('')+'</tbody>';
+  // nearby
+  const sups=d.sups.filter(s=>!s.stale).slice(0,4);
+  document.getElementById('near').innerHTML=`<thead><tr><th>${Q.mat}</th>${sups.map(s=>`<th>${s.n.split(' ')[0]}</th>`).join('')}</tr></thead><tbody>`+d.specs.map(([sp])=>{ const ps=sups.map(s=>priceOf(s,Q.cat,Q.mat,sp,'landed')); const mn=Math.min(...ps); return `<tr class="${sp===Q.spec?'cur':''}" data-sp="${sp}"><td>${sp}</td>${ps.map(p=>`<td class="${p===mn?'min':''}">${fmt(p)}</td>`).join('')}</tr>`; }).join('')+'</tbody>';
+  document.getElementById('advice').innerHTML=`<p style="margin:0 0 6px"><b>${fresh[0].su.n}</b> 到厂最低 ${fmt(fresh[0].landed)},${fresh[0].su.w.includes('即提')?'本地即提,可直接下单。':'需 '+fresh[0].su.w.split(' · ')[1]+',急单请看第 2 名。'}</p><p style="margin:0 0 6px">${rows.find(r=>r.su.fr>90)?'<b>'+rows.find(r=>r.su.fr>90).su.n+'</b> 挂牌最低但运费 '+rows.find(r=>r.su.fr>90).su.fr+' 元,折算后不占优 —— 手工比价最常踩的坑。':''}</p><p style="margin:0">材质切换:${Object.entries(d.mat).filter(([m])=>m!==Q.mat).map(([m,v])=>`${m} ${v-d.mat[Q.mat]>=0?'+':''}${v-d.mat[Q.mat]}`).join(' · ')}(相对 ${Q.mat})。${d.sups.length-fresh.length?'已自动催报 '+(d.sups.length-fresh.length)+' 家过期价格。':''}</p>`;
+  document.getElementById('histCard').style.display=Q.mode==='hist'?'':'none';
+  if(Q.mode==='hist') drawHist(min);
+}
+document.getElementById('near').addEventListener('click',e=>{ const tr=e.target.closest('tr[data-sp]'); if(!tr) return; Q.spec=tr.dataset.sp; render(); });
+function drawHist(base){
+  const svg=document.getElementById('hist'); const W=800,H=220,L=50,R=20,Tp=14,B=28; const n=30;
+  const rnd=i=>Math.sin(i*.7)*18+Math.cos(i*.23)*30-i*1.6;
+  const s1=[...Array(n)].map((_,i)=>base+40+rnd(i)), s2=s1.map((v,i)=>v+6+Math.sin(i)*4), s3=s1.map((v,i)=>v+38+Math.cos(i*.5)*6);
+  const all=[...s1,...s2,...s3], mn=Math.min(...all)-20, mx=Math.max(...all)+20;
+  const x=i=>L+i*(W-L-R)/(n-1), y=v=>Tp+(H-Tp-B)*(1-(v-mn)/(mx-mn));
+  const path=(a,c,w,dash)=>`<path d="${a.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)).join(' ')}" fill="none" stroke="${c}" stroke-width="${w}" ${dash?'stroke-dasharray="4 4"':''}/>`;
+  let g=''; for(let k=0;k<5;k++){ const v=mn+(mx-mn)*k/4; g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#eef1f5"/><text x="${L-6}" y="${y(v)+4}" font-size="10" text-anchor="end" fill="#8a97a8">${Math.round(v)}</text>`; }
+  for(let i=0;i<n;i+=5) g+=`<text x="${x(i)}" y="${H-8}" font-size="10" text-anchor="middle" fill="#8a97a8">${8}/${10+i>31?(i-21):10+i}</text>`;
+  svg.innerHTML=g+path(s3,'#94a3b8',1.5,1)+path(s2,'#f0842c',2)+path(s1,'#1f5eff',2.5)+`<circle cx="${x(n-1)}" cy="${y(s1[n-1])}" r="4" fill="#1f5eff"/><text x="${x(n-1)-8}" y="${y(s1[n-1])-8}" font-size="11" text-anchor="end" fill="#1f5eff" font-weight="700">今日 ${Math.round(s1[n-1])}</text>`;
+}
+pick('无缝管 20# Φ108×4.5 6m 无锡');
+</script>
+</body>
+</html>

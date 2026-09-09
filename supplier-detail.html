@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>供应商详情 · 江苏玖隆(沙钢一级) · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .hero { background: linear-gradient(135deg, var(--side) 0%, #1f2c47 100%); border-radius: var(--r-lg); padding: 20px 24px; color: #fff; display: grid; grid-template-columns: 1fr auto; gap: 20px; }
+  .hero .big-av { width: 64px; height: 64px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; font-weight: 800; color: #fff; background: #1f5eff; flex: 0 0 auto; }
+  .hero .name { font-size: 22px; font-weight: 800; letter-spacing: -.3px; }
+  .hero .meta { font-size: 12.5px; opacity: .75; margin-top: 4px; }
+  .hero .tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .hero .tags span { background: rgba(255,255,255,.12); padding: 3px 9px; border-radius: 20px; font-size: 11.5px; }
+  .hero .tags span.g { background: rgba(18,148,90,.35); } .hero .tags span.y { background: rgba(240,132,44,.35); }
+  .hero .score { text-align: center; padding: 0 10px; }
+  .hero .score .v { font-size: 46px; font-weight: 800; font-family: var(--mono); line-height: 1; color: #7CFFB2; }
+  .hero .score .l { font-size: 11.5px; opacity: .75; margin-top: 4px; }
+  .hero .contacts { display: grid; grid-template-columns: repeat(3, auto); gap: 8px 22px; font-size: 12.5px; margin-top: 12px; }
+  .hero .contacts b { display: block; font-weight: 600; }
+  .hero .contacts .l { opacity: .6; font-size: 11px; }
+  .subs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .subs .s { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+  .subs .s .l { font-size: 11.5px; color: var(--text-3); }
+  .subs .s .v { font-size: 20px; font-weight: 800; font-family: var(--mono); margin-top: 2px; }
+  .subs .s .w { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+  .subs .s .bar { margin-top: 6px; }
+  .pane { display: none; } .pane.on { display: block; }
+  .ev { display: grid; grid-template-columns: 70px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 12.5px; }
+  .ev .t { color: var(--text-3); font-family: var(--mono); font-size: 11.5px; }
+  .doc { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 12.5px; }
+  .doc .x { width: 34px; height: 34px; border-radius: 6px; background: #e8f0ff; color: var(--primary); display: grid; place-items: center; font-size: 10px; font-weight: 800; }
+  .hm { display: grid; grid-template-columns: 90px repeat(8, 1fr); gap: 3px; font-size: 11px; align-items: center; }
+  .hm .h { color: var(--text-3); text-align: center; }
+  .hm .lab { color: var(--text-2); font-weight: 600; }
+  .hm .c { height: 26px; border-radius: 4px; display: grid; place-items: center; font-family: var(--mono); color: #fff; font-weight: 600; }
+  .price-cmp td { white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="供应商画像 / 江苏玖隆"></header>
+    <div class="content">
+
+      <div class="row mb" style="gap:8px"><a class="btn sm" href="suppliers.html">← 供应商榜</a><span class="small dim">排名 #1 / 86 · 上次评分刷新 今日 06:00 · 数据来源:ERP 成交 · 询价回复 · 到货过磅 · 质保书 OCR · 财务回款</span></div>
+
+      <div class="hero mb">
+        <div>
+          <div class="row" style="gap:16px;align-items:flex-start">
+            <div class="big-av">沙</div>
+            <div>
+              <div class="name">江苏玖隆钢铁物流有限公司 <span class="small" style="opacity:.7;font-weight:400">(沙钢一级代理)</span></div>
+              <div class="meta">代理商 · 主营 沙钢 螺纹 / 盘螺 / 线材 / 中板 · 仓库 张家港玖隆库 · 苏州库 · 合作 6 年 3 个月 · 累计成交 <b>21.4 万吨</b> · 统一社会信用代码 9132058****</div>
+              <div class="tags"><span class="g">核心供应商</span><span class="g">协议户(2026 年度)</span><span>授信 ¥2,000 万</span><span>现款 / 30 天承兑</span><span>过磅结算</span><span class="y">近 30 天报价上调 3 次</span></div>
+              <div class="contacts">
+                <div><span class="l">销售经理</span><b>周明 · 138****2210</b></div>
+                <div><span class="l">开票 / 对账</span><b>财务部 · 0512-58****</b></div>
+                <div><span class="l">报价渠道</span><b>API(15min)+ 企微</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="gap:6px;align-items:center">
+          <div class="score"><div class="v">96</div><div class="l">综合评分 · A</div><div class="small" style="color:#7CFFB2;margin-top:4px">↑ 1 · 近 90 天</div></div>
+          <div style="border-left:1px solid rgba(255,255,255,.15);padding-left:18px;display:flex;flex-direction:column;gap:6px">
+            <a class="btn primary" data-toast="已向玖隆发起询价(自动带入当前需求池匹配规格 6 项)">发起询价</a>
+            <a class="btn" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)" data-toast="已调出玖隆价格库 1,204 条">查价格库</a>
+            <a class="btn" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)" data-toast="已打开评分调整(需审批)">人工调分</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="subs mb">
+        <div class="s"><div class="l">价格竞争力 <span class="tiny">权重 30%</span></div><div class="v">92</div><div class="w">近 90 天报价低于中位数 <b>78%</b> 次</div><div class="bar"><i class="g" style="width:92%"></i></div></div>
+        <div class="s"><div class="l">履约准时 <span class="tiny">25%</span></div><div class="v">99<span class="small">%</span></div><div class="w">312 单 · 延迟 3 单 · 均延 0.4 天</div><div class="bar"><i class="g" style="width:99%"></i></div></div>
+        <div class="s"><div class="l">磅差 / 质量 <span class="tiny">20%</span></div><div class="v">−0.05<span class="small">%</span></div><div class="w">阈值 −0.3% · 质量异议 0</div><div class="bar"><i class="g" style="width:96%"></i></div></div>
+        <div class="s"><div class="l">响应速度 <span class="tiny">10%</span></div><div class="v">6<span class="small">分</span></div><div class="w">询价 → 报价中位数 · API 秒回</div><div class="bar"><i class="g" style="width:94%"></i></div></div>
+        <div class="s"><div class="l">资金条件 <span class="tiny">10%</span></div><div class="v">90</div><div class="w">30 天承兑 · 授信 2,000 万 · 已用 41%</div><div class="bar"><i class="g" style="width:90%"></i></div></div>
+        <div class="s"><div class="l">合规 / 资质 <span class="tiny">5%</span></div><div class="v">100</div><div class="w">证照齐全 · 质保书 100% · 无涉诉</div><div class="bar"><i class="g" style="width:100%"></i></div></div>
+      </div>
+
+      <div class="card mb">
+        <div class="tabs" id="tabs"><a class="on" data-p="ov">概览</a><a data-p="price">报价与价格竞争力</a><a data-p="deal">成交与履约</a><a data-p="qc">磅差与质量</a><a data-p="fin">账期 / 授信 / 合同</a><a data-p="doc">资质文件</a><a data-p="ev">事件流</a></div>
+
+        <!-- 概览 -->
+        <div class="pane on" id="p-ov">
+          <div class="card-b">
+            <div class="grid" style="grid-template-columns: 260px 1fr 1fr; gap:18px">
+              <div>
+                <div class="bold small" style="margin-bottom:6px">六维评分</div>
+                <div style="display:flex;justify-content:center" id="radar"></div>
+                <div class="small dim" style="text-align:center">蓝 = 玖隆 · 灰 = 86 家均值</div>
+              </div>
+              <div>
+                <div class="bold small" style="margin-bottom:6px">评分趋势 · 近 12 个月</div>
+                <div id="trend"></div>
+                <div class="small dim mt">评分每日 06:00 重算;权重来自「配货规则 / 权重」页,可按品类差异化。</div>
+              </div>
+              <div>
+                <div class="bold small" style="margin-bottom:6px">近 30 天业务概况</div>
+                <table class="mini-table">
+                  <tr><td>询价 / 回复</td><td class="num">48 / 47(98%)</td></tr>
+                  <tr><td>成交单 / 吨位</td><td class="num">26 单 · 3,120t</td></tr>
+                  <tr><td>成交金额</td><td class="num">¥ 1,092 万</td></tr>
+                  <tr><td>占我司采购</td><td class="num">17.8%(上限 35%)</td></tr>
+                  <tr><td>成交均价 vs 市场</td><td class="num down">−22 元/吨</td></tr>
+                  <tr><td>索赔 / 争议</td><td class="num">0</td></tr>
+                  <tr><td>在执行采购单</td><td class="num">4 单 · 620t · 全部准时</td></tr>
+                </table>
+              </div>
+            </div>
+            <div class="think mt">
+              <div class="h"><span class="ai">AI 供应商洞察</span><span class="small dim">基于 6 年 312 单成交 + 1,204 条报价</span></div>
+              <ul style="margin:0;padding-left:16px" class="small">
+                <li><b>最优使用场景:</b>螺纹 Φ12~25 张家港 / 苏州 200km 内即提;盘螺大批量。中板 Q235B 12~20mm 价格在沙钢代理中排第 1。</li>
+                <li><b>价格规律:</b>沙钢调价后 30~60 分钟同步更新报价,上调滞后、下调即时 —— 沙钢公告上调当日上午下单最划算(已写入配货规则「钢厂调价窗口」)。</li>
+                <li><b>注意:</b>月末 3 天承兑额度紧张,曾 2 次要求改现款;近 30 天报价上调 3 次幅度均 &gt; 沙钢公告,建议本周议价 20~30 元。</li>
+                <li><b>可替代性:</b>同品种备选 中天(直发)/ 永钢;但即提能力与磅差表现玖隆最稳,建议保持 15~25% 份额。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 报价与价格竞争力 -->
+        <div class="pane" id="p-price">
+          <div class="card-b">
+            <div class="grid" style="grid-template-columns: 1.1fr 1fr; gap:18px">
+              <div>
+                <div class="row between" style="margin-bottom:6px"><div class="bold small">价格竞争力热力图 · 品种 × 规格族(近 90 天)</div><span class="small dim">格内 = 相对全部报价中位数 元/吨 · 绿低红高</span></div>
+                <div class="hm" id="hm"></div>
+                <div class="small dim mt">玖隆在 螺纹 Φ12~25、中板 12~20mm 持续低于中位;盘螺 Φ6 与 中板 ≥30mm 偏高 —— 引擎在这些规格族自动降低其推荐权重。</div>
+              </div>
+              <div>
+                <div class="bold small" style="margin-bottom:6px">近 90 天报价 vs 我司成交 vs Mysteel · 螺纹 Φ20</div>
+                <div id="pline"></div>
+                <div class="row small" style="gap:14px;margin-top:4px"><span><i class="dot b"></i> 玖隆报价</span><span><i class="dot o"></i> 我司最终成交</span><span><i class="dot"></i> Mysteel 张家港</span></div>
+                <table class="mini-table mt">
+                  <tr><td>报价条数(有效)</td><td class="num">1,204 · 覆盖 SKU 1,030</td></tr>
+                  <tr><td>报价渠道 / 新鲜度</td><td class="num">API 15min · 98% 在有效期内</td></tr>
+                  <tr><td>报价中标率</td><td class="num">54%(行业 31%)</td></tr>
+                  <tr><td>议价让步中位数</td><td class="num">−18 元/吨(3 轮内)</td></tr>
+                  <tr><td>报价 → 成交价偏差</td><td class="num">≤ 5 元(不玩「先低后高」)</td></tr>
+                </table>
+              </div>
+            </div>
+            <div class="bold small mt" style="margin-bottom:6px">最近 8 次报价</div>
+            <div style="overflow:auto"><table class="tbl compact price-cmp">
+              <thead><tr><th>时间</th><th>询价单</th><th>规格</th><th class="r">原始报价</th><th class="r">到厂价</th><th class="r">同单排名</th><th class="r">vs 最低</th><th>结果</th><th>备注</th></tr></thead>
+              <tbody>
+                <tr><td class="num">09-09 08:12</td><td class="num">RFQ-260909-01</td><td>螺纹 HRB400E Φ20 12m</td><td class="r num">3,425</td><td class="r num">3,447</td><td class="r num">2 / 7</td><td class="r num up">+5</td><td><span class="tag yellow">比价中</span></td><td class="small">承兑价,现款 −15</td></tr>
+                <tr><td class="num">09-08 09:30</td><td class="num">RFQ-260908-03</td><td>盘螺 HRB400E Φ8/10</td><td class="r num">3,560</td><td class="r num">3,582</td><td class="r num">1 / 6</td><td class="r num down">最低</td><td><span class="tag green">中标 150t</span></td><td class="small">—</td></tr>
+                <tr><td class="num">09-08 08:05</td><td class="num">RFQ-260908-01</td><td>中板 Q235B 12mm</td><td class="r num">3,480</td><td class="r num">3,514</td><td class="r num">1 / 5</td><td class="r num down">最低</td><td><span class="tag green">中标 85t</span></td><td class="small">拼车 RPL-03</td></tr>
+                <tr><td class="num">09-05 10:20</td><td class="num">RFQ-260905-02</td><td>螺纹 HRB400E Φ25</td><td class="r num">3,440</td><td class="r num">3,462</td><td class="r num">3 / 8</td><td class="r num up">+18</td><td><span class="tag">未中</span></td><td class="small">中天直发更优</td></tr>
+                <tr><td class="num">09-04 08:40</td><td class="num">RFQ-260904-01</td><td>线材 Q235 Φ6.5</td><td class="r num">3,610</td><td class="r num">3,632</td><td class="r num">2 / 4</td><td class="r num up">+8</td><td><span class="tag green">中标 60t</span></td><td class="small">最低价供应商可供量不足</td></tr>
+                <tr><td class="num">09-03 09:15</td><td class="num">RFQ-260903-02</td><td>中板 Q355B 20mm</td><td class="r num">3,690</td><td class="r num">3,724</td><td class="r num">2 / 5</td><td class="r num up">+12</td><td><span class="tag">未中</span></td><td class="small">—</td></tr>
+                <tr><td class="num">09-02 08:30</td><td class="num">RFQ-260902-01</td><td>螺纹 HRB400E Φ16</td><td class="r num">3,395</td><td class="r num">3,417</td><td class="r num">1 / 7</td><td class="r num down">最低</td><td><span class="tag green">中标 200t</span></td><td class="small">—</td></tr>
+                <tr><td class="num">09-01 08:10</td><td class="num">RFQ-260901-01</td><td>盘螺 HRB400E Φ6</td><td class="r num">3,640</td><td class="r num">3,662</td><td class="r num">4 / 5</td><td class="r num up">+45</td><td><span class="tag">未中</span></td><td class="small">Φ6 非其优势</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- 成交与履约 -->
+        <div class="pane" id="p-deal">
+          <div class="card-b">
+            <div class="grid g4 mb" style="gap:10px">
+              <div class="card kpi"><div class="lbl">累计成交</div><div class="val num">312<small>单</small></div><div class="delta dim">21.4 万吨 · ¥ 7.6 亿</div></div>
+              <div class="card kpi"><div class="lbl">准时到货率</div><div class="val num">99.0<small>%</small></div><div class="delta dim">延迟 3 单 · 均延 0.4 天 · 最长 1 天</div></div>
+              <div class="card kpi"><div class="lbl">整单履约率</div><div class="val num">99.7<small>%</small></div><div class="delta dim">缺量 1 单(2024-11 · 12t)</div></div>
+              <div class="card kpi"><div class="lbl">提货 / 装车效率</div><div class="val num">42<small>min</small></div><div class="delta dim">玖隆库排队中位数 · 行业 75min</div></div>
+            </div>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:18px">
+              <div>
+                <div class="bold small" style="margin-bottom:6px">月度成交吨位与占比 · 近 12 个月</div>
+                <div id="bars"></div>
+                <div class="small dim">红线 = 单家集中度上限 35%;玖隆稳定在 15~20%。</div>
+              </div>
+              <div>
+                <div class="bold small" style="margin-bottom:6px">在执行采购单</div>
+                <table class="tbl compact">
+                  <thead><tr><th>采购单</th><th>规格</th><th class="r">吨位</th><th>约定到货</th><th>状态</th></tr></thead>
+                  <tbody>
+                    <tr><td class="num">PO-260908-11</td><td>盘螺 Φ8/10</td><td class="r num">150</td><td>9/12</td><td><span class="tag blue">已提 60%</span></td></tr>
+                    <tr><td class="num">PO-260908-07</td><td>中板 Q235B 12mm</td><td class="r num">85</td><td>9/16</td><td><span class="tag">待提</span></td></tr>
+                    <tr><td class="num">PO-260905-03</td><td>螺纹 Φ16</td><td class="r num">200</td><td>9/10</td><td><span class="tag green">在途 · GPS 正常</span></td></tr>
+                    <tr><td class="num">PO-260903-02</td><td>线材 Φ6.5</td><td class="r num">185</td><td>9/09</td><td><span class="tag green">今日到 2 车</span></td></tr>
+                  </tbody>
+                </table>
+                <div class="bold small mt" style="margin-bottom:6px">履约异常记录(近 12 个月)</div>
+                <div class="ev"><span class="t">2026-06-18</span><div>PO-260615-04 螺纹 Φ22 延迟 1 天(库区停电)· 主动通知 · 无损失</div></div>
+                <div class="ev"><span class="t">2026-03-02</span><div>PO-260228-09 中板 少发 1 张(约 2.1t)· 次日补齐</div></div>
+                <div class="ev" style="border-bottom:none"><span class="t">2025-11-24</span><div>PO-251120-01 盘螺 缺量 12t · 沙钢排产变动 · 自动改配中天</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 磅差与质量 -->
+        <div class="pane" id="p-qc">
+          <div class="card-b">
+            <div class="grid" style="grid-template-columns: 1.2fr 1fr; gap:18px">
+              <div>
+                <div class="bold small" style="margin-bottom:6px">每车磅差分布 · 近 90 天 218 车</div>
+                <div id="wdiff"></div>
+                <div class="small dim">红虚线 = 索赔阈值 −0.3% · 超阈值 2 车(均已自动索赔并结清)· 均值 −0.05% · 标准差 0.08%</div>
+              </div>
+              <div>
+                <table class="mini-table">
+                  <tr><td>计重方式</td><td class="num">过磅结算(理计品种按 −0.3% 折算)</td></tr>
+                  <tr><td>磅差均值 / 最差</td><td class="num">−0.05% / −0.38%</td></tr>
+                  <tr><td>超阈值车次</td><td class="num">2 / 218(0.9%)</td></tr>
+                  <tr><td>索赔金额 / 回收</td><td class="num">¥ 3,120 / 100%</td></tr>
+                  <tr><td>质保书到位率</td><td class="num">100%(OCR 自动核对炉号)</td></tr>
+                  <tr><td>质量异议</td><td class="num">0(6 年)</td></tr>
+                  <tr><td>复检抽样</td><td class="num">12 次 · 全部合格</td></tr>
+                </table>
+                <div class="alert green mt"><span class="ic">✓</span><div>磅差风险溢价 = <b>0 元/吨</b>(比价归一化时不加风险项)。对比:日照贸易商 B 近 30 天 −0.42% → 溢价 +14 元/吨。</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 账期 / 授信 / 合同 -->
+        <div class="pane" id="p-fin">
+          <div class="card-b">
+            <div class="grid g4 mb" style="gap:10px">
+              <div class="card kpi"><div class="lbl">授信额度</div><div class="val num">¥ 2,000<small>万</small></div><div class="delta dim">已用 ¥ 820 万(41%)· 可用 ¥ 1,180 万</div></div>
+              <div class="card kpi"><div class="lbl">付款条件</div><div class="val">现款 / 30 天承兑</div><div class="delta dim">承兑贴息 承担方:我司 · 折算 +7 元/吨</div></div>
+              <div class="card kpi"><div class="lbl">年度协议</div><div class="val">2026 框架协议</div><div class="delta dim">有效至 2026-12-31 · 年量 3 万吨 · 返利 8 元/吨</div></div>
+              <div class="card kpi"><div class="lbl">返利累计</div><div class="val num">¥ 18.6<small>万</small></div><div class="delta dim">已完成年量 78% · 预计 11 月达标</div></div>
+            </div>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:18px">
+              <div>
+                <div class="bold small" style="margin-bottom:6px">对账与开票</div>
+                <table class="mini-table">
+                  <tr><td>开票及时率</td><td class="num">100% · 平均 T+1</td></tr>
+                  <tr><td>对账差异</td><td class="num">近 12 月 2 笔 · 均 3 日内解决</td></tr>
+                  <tr><td>预付款余额</td><td class="num">¥ 0</td></tr>
+                  <tr><td>逾期应付</td><td class="num">¥ 0</td></tr>
+                  <tr><td>价格条款</td><td class="num">协议价 = 沙钢挂牌 − 20 · 月结</td></tr>
+                </table>
+              </div>
+              <div>
+                <div class="bold small" style="margin-bottom:6px">合同 / 协议文件</div>
+                <div class="doc mb"><div class="x">PDF</div><div style="flex:1"><b>2026 年度采购框架协议</b><div class="tiny muted">签署 2025-12-20 · 电子签 · 有效至 2026-12-31</div></div><span class="tag green">有效</span></div>
+                <div class="doc mb"><div class="x">PDF</div><div style="flex:1"><b>质量与磅差补充协议</b><div class="tiny muted">阈值 −0.3% · 自动索赔条款</div></div><span class="tag green">有效</span></div>
+                <div class="doc"><div class="x">PDF</div><div style="flex:1"><b>授信与结算协议</b><div class="tiny muted">额度 2,000 万 · 30 天承兑 · 2026-03 复核</div></div><span class="tag yellow">12 月复核</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 资质文件 -->
+        <div class="pane" id="p-doc">
+          <div class="card-b">
+            <div class="grid g3" style="gap:10px">
+              <div class="doc"><div class="x">证</div><div style="flex:1"><b>营业执照</b><div class="tiny muted">9132058**** · 长期</div></div><span class="tag green">有效</span></div>
+              <div class="doc"><div class="x">证</div><div style="flex:1"><b>沙钢一级代理授权书</b><div class="tiny muted">2026 年度 · 至 2026-12-31</div></div><span class="tag green">有效</span></div>
+              <div class="doc"><div class="x">证</div><div style="flex:1"><b>一般纳税人资格</b><div class="tiny muted">税率 13%</div></div><span class="tag green">有效</span></div>
+              <div class="doc"><div class="x">证</div><div style="flex:1"><b>开户许可 / 银行信息</b><div class="tiny muted">中国银行张家港支行 · 已核验</div></div><span class="tag green">有效</span></div>
+              <div class="doc"><div class="x">证</div><div style="flex:1"><b>ISO 9001 质量体系</b><div class="tiny muted">至 2027-05-10</div></div><span class="tag green">有效</span></div>
+              <div class="doc"><div class="x">证</div><div style="flex:1"><b>仓储安全生产许可</b><div class="tiny muted">至 2026-10-30</div></div><span class="tag yellow">51 天后到期 · 已提醒</span></div>
+            </div>
+            <div class="alert blue mt"><span class="ic">✦</span><div>证照到期前 60 天自动提醒供应商上传新件;到期未更新 → 评分「合规」项扣分并在比价中标灰显。天眼查 / 裁判文书接口每日巡检:<b>无涉诉 · 无经营异常 · 无股权冻结</b>。</div></div>
+          </div>
+        </div>
+
+        <!-- 事件流 -->
+        <div class="pane" id="p-ev">
+          <div class="card-b">
+            <div class="ev"><span class="t">09-09 08:12</span><div>回复 RFQ-260909-01 螺纹 Φ20 报价 3,425(API 自动)· 同单排名 2</div></div>
+            <div class="ev"><span class="t">09-09 06:00</span><div>综合评分重算 96(↑1):近 30 天磅差 −0.05% 优于均值</div></div>
+            <div class="ev"><span class="t">09-08 16:40</span><div>报价上调 +30(跟随沙钢 9/8 公告 +30)· 系统标注「上调与公告一致」</div></div>
+            <div class="ev"><span class="t">09-08 09:35</span><div><b>中标</b> RFQ-260908-03 盘螺 Φ8/10 150t · 生成 PO-260908-11 · 电子签完成</div></div>
+            <div class="ev"><span class="t">09-06 10:20</span><div>PO-260903-02 线材 到货 3 车 · 磅差 −0.04% / −0.06% / −0.02% · 质保书 OCR 炉号匹配</div></div>
+            <div class="ev"><span class="t">09-05 15:00</span><div>议价:RFQ-260905-02 Φ25 让步 −15 后仍 +3 于中天直发 · 未中</div></div>
+            <div class="ev"><span class="t">09-02 09:00</span><div><b>中标</b> RFQ-260902-01 螺纹 Φ16 200t</div></div>
+            <div class="ev"><span class="t">08-30 17:30</span><div>月末承兑额度紧张 · 销售经理提出 PO-260828-05 改现款 · 已协商维持承兑</div></div>
+            <div class="ev"><span class="t">08-28 11:00</span><div>索赔 PO-260825-02 第 2 车磅差 −0.38% → 自动索赔 ¥1,560 · 9/1 结清</div></div>
+            <div class="ev" style="border-bottom:none"><span class="t">08-15 09:00</span><div>年度协议年量完成 70% · 返利预估更新</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById('tabs').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; document.querySelectorAll('#tabs a').forEach(x=>x.classList.toggle('on',x===a)); document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+a.dataset.p)); });
+  document.getElementById('radar').innerHTML = radar(['价格','履约','磅差/质量','响应','资金条件','合规'], [{ data: [0.72,0.86,0.8,0.7,0.78,0.9], color: '#b8c2d0' },{ data: [0.92,0.99,0.97,0.96,0.9,1], color: '#1f5eff' }], { size: 220 });
+  document.getElementById('trend').innerHTML = lineChart([{ data: [91,92,92,93,93,94,94,95,95,95,95,96], color: '#1f5eff', marker: true },{ data: [82,82,83,83,83,84,84,84,85,85,85,85], color: '#b8c2d0', dash: true }], { w: 420, h: 170, pad: 30, labels: ['10','11','12','1','2','3','4','5','6','7','8','9'] });
+  document.getElementById('pline').innerHTML = lineChart([{ data: [3480,3475,3470,3462,3455,3450,3440,3445,3430,3420,3428,3425], color: '#1f5eff', marker: true },{ data: [3472,3470,3462,3455,3450,3445,3438,3440,3425,3418,3422,3420], color: '#f0842c' },{ data: [3510,3505,3498,3490,3485,3480,3472,3475,3462,3455,3460,3458], color: '#b8c2d0', dash: true }], { w: 420, h: 170, pad: 34, labels: ['6/15','','6/30','','7/15','','7/31','','8/15','','8/31','9/9'] });
+  // heatmap
+  (function(){ const cols=['Φ8/10 盘螺','Φ6 盘螺','Φ12~14','Φ16~20','Φ22~25','Φ28~32','中板 12~20','中板 ≥30']; const rows=[['螺纹/盘螺',[-12,+38,-18,-22,-15,+6,null,null]],['中板',[null,null,null,null,null,null,-20,+25]],['线材',[-8,null,null,null,null,null,null,null]]];
+    const col=v=>{ if(v==null) return '#eef1f5'; const a=Math.min(1,Math.abs(v)/40); return v<0?`rgba(18,148,90,${0.35+a*0.6})`:`rgba(209,47,47,${0.3+a*0.6})`; };
+    let h='<div></div>'+cols.map(c=>`<div class="h">${c}</div>`).join(''); rows.forEach(([l,v])=>{ h+=`<div class="lab">${l}</div>`+v.map(x=>`<div class="c" style="background:${col(x)};color:${x==null?'#b0b9c6':'#fff'}">${x==null?'—':(x>0?'+':'')+x}</div>`).join(''); }); document.getElementById('hm').innerHTML=h; })();
+  // bars
+  (function(){ const d=[2100,2350,1800,2600,2900,2400,2800,3100,2700,2950,3300,3120], sh=[16,17,15,18,19,17,18,20,17,18,19,17.8]; const W=420,H=170,L=34,B=22,T=10; const mx=3600; let g=`<svg width="100%" viewBox="0 0 ${W} ${H}" style="font-family:var(--mono);font-size:10px">`; const bw=(W-L-10)/12; d.forEach((v,i)=>{ const h=(v/mx)*(H-B-T); g+=`<rect x="${L+i*bw+4}" y="${H-B-h}" width="${bw-8}" height="${h}" rx="3" fill="#1f5eff" opacity=".85"/><text x="${L+i*bw+bw/2}" y="${H-8}" text-anchor="middle" fill="#8a97a8">${['10','11','12','1','2','3','4','5','6','7','8','9'][i]}</text>`; }); const y=p=>T+(H-B-T)*(1-p/40); g+=`<line x1="${L}" x2="${W-6}" y1="${y(35)}" y2="${y(35)}" stroke="#d12f2f" stroke-dasharray="4 3"/><text x="${W-6}" y="${y(35)-3}" text-anchor="end" fill="#d12f2f">35% 上限</text>`; g+=`<path d="${sh.map((p,i)=>(i?'L':'M')+(L+i*bw+bw/2)+' '+y(p)).join(' ')}" fill="none" stroke="#f0842c" stroke-width="2"/>`; g+='</svg>'; document.getElementById('bars').innerHTML=g; })();
+  // weight diff histogram
+  (function(){ const bins=[['≤−0.3',2],['−0.3~−0.2',9],['−0.2~−0.15',24],['−0.15~−0.1',46],['−0.1~−0.05',58],['−0.05~0',49],['0~+0.05',22],['>+0.05',8]]; const W=460,H=170,L=10,B=30,T=14,mx=64; const bw=(W-L*2)/bins.length; let g=`<svg width="100%" viewBox="0 0 ${W} ${H}" style="font-family:var(--mono);font-size:10px">`; bins.forEach(([l,v],i)=>{ const h=(v/mx)*(H-B-T); g+=`<rect x="${L+i*bw+6}" y="${H-B-h}" width="${bw-12}" height="${h}" rx="3" fill="${i===0?'#d12f2f':'#1f5eff'}" opacity=".85"/><text x="${L+i*bw+bw/2}" y="${H-B-h-4}" text-anchor="middle" fill="#3a4658">${v}</text><text x="${L+i*bw+bw/2}" y="${H-10}" text-anchor="middle" fill="#8a97a8">${l}</text>`; }); g+=`<line x1="${L+bw}" x2="${L+bw}" y1="${T}" y2="${H-B}" stroke="#d12f2f" stroke-dasharray="4 3"/></svg>`; document.getElementById('wdiff').innerHTML=g; })();
+</script>
+</body>
+</html>

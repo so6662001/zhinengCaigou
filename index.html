@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>采购驾驭舱 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="采购驾驭舱"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div>
+          <h1>早上好,陈总监 · 9月9日(周三)</h1>
+          <p>今日有 <b>12 张销售需求</b> 待配货(1,860 吨),<b>5 个比价单</b> 已收齐报价,系统已在 06:00 完成夜间预配货,等待您一键确认。</p>
+        </div>
+        <div class="actions">
+          <a class="btn" href="compare.html">⚖ 发起比价</a>
+          <a class="btn primary" href="allocation.html">⇶ 一键自动配货 <span class="tag" style="background:#fff;color:var(--primary);margin-left:4px">12 单</span></a>
+        </div>
+      </div>
+
+      <!-- AI 晨报 -->
+      <div class="think mb">
+        <div class="h"><span class="ai">AI 采购晨报</span><span class="muted small" style="font-weight:400">基于 Mysteel 行情、上期所夜盘、钢厂调价公告、自有库存与销售需求池自动生成 · 09:40</span></div>
+        <div class="grid g3" style="gap:18px">
+          <div><b>行情判断:</b> 夜盘 rb2601 收涨 18 元,现货华东螺纹钢报 3,450 持稳,沙钢 9 月下旬预计上调 30 元/吨(概率 78%)。<b class="up">建议:今日完成 12 单配货,提前锁定 1,860 吨。</b></div>
+          <div><b>成本机会:</b> 中天钢铁 Φ12-Φ14 螺纹钢理计报价比磅计低 42 元/吨,且中天理计负差稳定在 -3.8%,折算到厂价比最优磅计货便宜 <b class="down">≈ 71 元/吨</b>。系统已优先分配至 4 单小规格需求。</div>
+          <div><b>风险提示:</b> 日照钢铁昨日 2 车热卷磅差 -0.42%(阈值 -0.3%),已自动扣减其信用分 3 分并在配货中降权;永钢账期由 30 天缩至现款,资金成本已重算。</div>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="grid g6 mb">
+        <div class="card kpi hi">
+          <div class="lbl">本月比价 & 配货节省</div>
+          <div class="val num">¥ 1,286,400</div>
+          <div class="delta">较传统人工估算 <b>↑ 27.6 元/吨</b> · 累计 46,600 吨</div>
+          <div class="spark" id="sp1"></div>
+        </div>
+        <div class="card kpi">
+          <div class="lbl">采购均价 vs 市场均价</div>
+          <div class="val num down">-23<small>元/吨</small></div>
+          <div class="delta"><span class="tag green">低于 Mysteel 华东均价</span></div>
+          <div class="spark" id="sp2"></div>
+        </div>
+        <div class="card kpi">
+          <div class="lbl">单张需求配货耗时</div>
+          <div class="val num">4.2<small>分钟</small></div>
+          <div class="delta dim">传统人工 <s>3.5 小时</s> · 效率 <b class="up">×50</b></div>
+        </div>
+        <div class="card kpi">
+          <div class="lbl">比价覆盖率</div>
+          <div class="val num">100<small>%</small></div>
+          <div class="delta dim">每单 ≥ <b>5</b> 家有效报价 · 人工均 2.1 家</div>
+        </div>
+        <div class="card kpi">
+          <div class="lbl">到货准时率</div>
+          <div class="val num">98.4<small>%</small></div>
+          <div class="delta"><span class="down">▲ 6.2%</span> <span class="dim">较上季度</span></div>
+          <div class="spark" id="sp3"></div>
+        </div>
+        <div class="card kpi">
+          <div class="lbl">磅差 / 质量异议率</div>
+          <div class="val num">0.11<small>%</small></div>
+          <div class="delta dim">超阈值自动索赔 <b>3 笔</b> · ¥18,620</div>
+        </div>
+      </div>
+
+      <!-- 行情 + 调价 -->
+      <div class="grid g3 mb">
+        <div class="card span2">
+          <div class="card-h">
+            <h3>价格走势与买入时机</h3><span class="sub">华东 · 螺纹钢 HRB400E Φ20 · 元/吨(含税)</span>
+            <div class="r">
+              <div class="seg"><a class="on">30天</a><a>90天</a><a>1年</a></div>
+            </div>
+          </div>
+          <div class="card-b" style="padding-top:8px">
+            <div class="legend mb"><span><i style="background:#1f5eff"></i>Mysteel 华东均价</span><span><i style="background:#ff6a1a"></i>我司实际采购均价</span><span><i style="background:#8a97a8"></i>rb2601 盘面(折现货)</span><span><i style="background:#6e4cf5"></i>AI 5 日预测</span></div>
+            <div id="chart1"></div>
+            <div class="row mt" style="gap:12px">
+              <span class="tag purple">✦ 买入时机指数 <b class="num">82 / 100</b></span>
+              <span class="dim small">盘面升水收敛 + 钢厂挺价 + 社会库存连续 3 周去化 → 建议本周完成 70% 月度计划量。</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>钢厂调价追踪</h3><span class="sub">自动抓取公告</span><div class="r"><a class="small" href="market.html">全部 →</a></div></div>
+          <div class="card-b tight">
+            <table class="tbl compact">
+              <thead><tr><th>钢厂</th><th>品种</th><th class="r">调整</th><th>生效</th></tr></thead>
+              <tbody>
+                <tr><td class="bold">沙钢</td><td>建材</td><td class="r num up">+30 <span class="tag yellow">预测</span></td><td class="small">9/11 下旬</td></tr>
+                <tr><td class="bold">中天</td><td>螺纹/盘螺</td><td class="r num up">+20</td><td class="small">9/09 今日</td></tr>
+                <tr><td class="bold">永钢</td><td>建材</td><td class="r num">0</td><td class="small">9/09</td></tr>
+                <tr><td class="bold">日照</td><td>热卷</td><td class="r num up">+30</td><td class="small">9/08</td></tr>
+                <tr><td class="bold">鞍钢</td><td>冷轧/镀锌</td><td class="r num up">+50</td><td class="small">10 月订货</td></tr>
+                <tr><td class="bold">马钢</td><td>H型钢</td><td class="r num down">-20</td><td class="small">9/07</td></tr>
+                <tr><td class="bold">敬业</td><td>中厚板</td><td class="r num">0</td><td class="small">9/08</td></tr>
+              </tbody>
+            </table>
+            <div class="alert orange" style="margin:12px;border-radius:8px"><span class="ic">⚑</span><div><b>沙钢下旬涨价预测 78%</b> —— 影响待配货中 6 单 / 920 吨螺纹钢。系统建议今日锁价,预计规避成本 <b>¥27,600</b>。</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 待办 + 配货流水 -->
+      <div class="grid g3 mb">
+        <div class="card">
+          <div class="card-h"><h3>今日待处理</h3><span class="tag red">7 项需人工</span></div>
+          <div class="card-b">
+            <ul class="tl">
+              <li class="warn"><div class="t">09:35 · 配货引擎</div><b>需求 SO-260909-03 无法全配</b><div class="dim small">上海宝山工地 Φ32 螺纹 120 吨,本地资源仅 80 吨,建议 40 吨改由永钢直发(+2 天)</div><div class="row mt" style="margin-top:6px"><a class="btn xs primary" href="allocation.html">处理</a><a class="btn xs" data-toast="已通知销售确认交期">通知销售</a></div></li>
+              <li class="warn"><div class="t">09:12 · 比价引擎</div><b>RFQ-0908-02 热卷 最低报价偏离 -68 元</b><div class="dim small">润忠(南通)报价显著低于市场,系统标记「疑似非标/资源不实」,需人工核验质保书</div></li>
+              <li><div class="t">08:50 · 风控</div><b>采购单 PO-260908-17 金额超授权</b><div class="dim small">¥2,180,000 &gt; 单笔 ¥2,000,000,待总经理审批(已推送企微)</div></li>
+              <li><div class="t">08:20 · 到货核验</div><b>日照钢铁 2 车磅差超限</b><div class="dim small">磅差 -0.42%,系统已生成索赔单 ¥6,240,待确认</div></li>
+              <li class="done"><div class="t">06:00 · 夜间任务</div><b>夜间预配货完成:12 单 / 1,860 吨</b><div class="dim small">生成 3 套方案,推荐方案 A(成本最优)较 B 省 ¥41,300</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card span2">
+          <div class="card-h"><h3>今日配货流水</h3><span class="sub">销售需求 → 自动配货 → 采购单 · 全链路可追溯</span>
+            <div class="r"><span class="tag green">已自动生成 8 单</span><span class="tag yellow">待确认 3</span><span class="tag red">异常 1</span></div></div>
+          <div class="card-b tight">
+            <table class="tbl compact">
+              <thead><tr><th>需求单</th><th>客户 / 到货地</th><th>品名规格</th><th class="r">吨位</th><th>配货来源</th><th class="r">到厂价</th><th class="r">vs 市场</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td class="num">SO-260909-01</td><td>中建八局 · 苏州工业园</td><td>螺纹 HRB400E Φ20/22/25</td><td class="r num">260</td><td><span class="tag blue">沙钢·太仓库</span> <span class="tag">中天·常州库</span></td><td class="r num">3,438</td><td class="r num down">-12</td><td><span class="tag green">PO 已生成</span></td></tr>
+                <tr><td class="num">SO-260909-02</td><td>三一重工 · 昆山</td><td>热卷 Q235B 5.75*1500*C</td><td class="r num">180</td><td><span class="tag blue">日照·上海库</span></td><td class="r num">3,562</td><td class="r num down">-18</td><td><span class="tag green">PO 已生成</span></td></tr>
+                <tr><td class="num">SO-260909-03</td><td>上海建工 · 宝山</td><td>螺纹 HRB400E Φ32</td><td class="r num">120</td><td><span class="tag blue">自有库存 80t</span> <span class="tag red">缺 40t</span></td><td class="r num">3,470</td><td class="r num">—</td><td><span class="tag red">需人工</span></td></tr>
+                <tr><td class="num">SO-260909-04</td><td>中铁四局 · 无锡</td><td>盘螺 HRB400E Φ8/10</td><td class="r num">150</td><td><span class="tag blue">中天·常州库</span></td><td class="r num">3,612</td><td class="r num down">-27</td><td><span class="tag green">PO 已生成</span></td></tr>
+                <tr><td class="num">SO-260909-05</td><td>格力电器 · 南京</td><td>冷轧 SPCC 1.0*1250*C</td><td class="r num">95</td><td><span class="tag blue">鞍钢·南京库</span></td><td class="r num">4,215</td><td class="r num down">-9</td><td><span class="tag yellow">待确认</span></td></tr>
+                <tr><td class="num">SO-260909-06</td><td>浙江交工 · 嘉兴</td><td>H型钢 Q355B 400*200</td><td class="r num">210</td><td><span class="tag blue">马钢·杭州库</span> <span class="tag">津西·直发</span></td><td class="r num">3,690</td><td class="r num down">-35</td><td><span class="tag green">PO 已生成</span></td></tr>
+                <tr><td class="num">SO-260909-07</td><td>徐工集团 · 徐州</td><td>中板 Q355B 20*2200*10000</td><td class="r num">160</td><td><span class="tag blue">敬业·直发</span></td><td class="r num">3,745</td><td class="r num down">-41</td><td><span class="tag yellow">待确认</span></td></tr>
+                <tr><td class="num">SO-260909-08</td><td>万科 · 合肥</td><td>螺纹 HRB400E Φ12/14/16</td><td class="r num">340</td><td><span class="tag blue">中天·理计</span> <span class="tag">马钢·合肥库</span></td><td class="r num">3,395</td><td class="r num down">-71</td><td><span class="tag green">PO 已生成</span></td></tr>
+              </tbody>
+            </table>
+            <div class="row between" style="padding:10px 12px;border-top:1px solid var(--line)">
+              <span class="small dim">共 12 单 · 1,860 吨 · 预计总采购额 <b class="num">¥6,542,000</b> · 较市场均价节省 <b class="num down">¥52,780</b></span>
+              <a class="btn sm primary" href="allocation.html">进入配货工作台 →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 人机对比 -->
+      <div class="grid g3">
+        <div class="card span2">
+          <div class="card-h"><h3>为什么必须用它 —— 传统手工 vs 钢采智配</h3><span class="sub">数据来自本公司 2026 年 Q2 上线前后对比</span></div>
+          <div class="card-b tight">
+            <table class="tbl">
+              <thead><tr><th style="width:24%">环节</th><th>传统手工(上线前)</th><th>钢采智配(上线后)</th><th class="r">提升</th></tr></thead>
+              <tbody>
+                <tr><td class="bold">需求汇总</td><td class="dim">销售微信/电话报需求,采购 Excel 手抄,漏单、错规格常见</td><td>ERP 销售订单 + 安全库存预警自动汇入需求池,规格标准化(品名/材质/规格/定尺/计重方式)</td><td class="r"><span class="tag green">漏单 0</span></td></tr>
+                <tr><td class="bold">询价比价</td><td class="dim">打 5-8 个电话,平均 2.1 家报价,记在本子上,无法算「到厂真实成本」</td><td>一键群发 20+ 供应商小程序/企微/邮件,报价自动结构化,<b>归一化到厂价</b>(磅计/理计、运费、账期资金成本、磅差风险)</td><td class="r"><span class="tag green">5+ 家 / 3 分钟</span></td></tr>
+                <tr><td class="bold">配货决策</td><td class="dim">凭经验挑「老关系」,多品规拆单全凭手算,常出现「高价配齐」</td><td>约束求解引擎:成本 / 时效 / 配齐率 / 供应商集中度多目标优化,输出 3 套方案供选择</td><td class="r"><span class="tag green">-23 元/吨</span></td></tr>
+                <tr><td class="bold">耗时</td><td class="dim">单张需求 3.5 小时,月度 2 人全职</td><td>单张需求 4.2 分钟,采购员只做「确认 + 异常处理」</td><td class="r"><span class="tag green">×50</span></td></tr>
+                <tr><td class="bold">风控</td><td class="dim">事后发现磅差、质保书缺失、超预算</td><td>事前:价格偏离 / 授权额度 / 黑名单拦截;事中:磅单 OCR 自动比对;事后:自动索赔</td><td class="r"><span class="tag green">索赔回收 100%</span></td></tr>
+                <tr><td class="bold">知识沉淀</td><td class="dim">老采购离职,供应商关系和价格记忆一起走</td><td>供应商画像、历史成交价、履约记录全部结构化,新人上手 1 天</td><td class="r"><span class="tag green">资产化</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>本月配货来源结构</h3><span class="sub">按吨位</span></div>
+          <div class="card-b">
+            <div class="row" style="gap:18px">
+              <div id="donut1"></div>
+              <table class="mini-table">
+                <tr><td><i class="dot b"></i> 钢厂直发(协议)</td><td>38%</td></tr>
+                <tr><td><i class="dot g"></i> 一级代理 · 库提</td><td>29%</td></tr>
+                <tr><td><i class="dot o"></i> 自有库存调拨</td><td>18%</td></tr>
+                <tr><td><i class="dot" style="background:#6e4cf5"></i> 市场现货(比价)</td><td>12%</td></tr>
+                <tr><td><i class="dot y"></i> 期现套保交割</td><td>3%</td></tr>
+              </table>
+            </div>
+            <div class="divider"></div>
+            <div class="small dim">供应商集中度 HHI <b class="num">0.14</b>(健康),前三家占比 46%,系统在配货时自动限制单一供应商 ≤ 35%。</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById('sp1').innerHTML = spark([62,68,71,80,84,92,97,105,118,128], {color:'#8fb3ff'});
+  document.getElementById('sp2').innerHTML = spark([-8,-12,-10,-15,-19,-17,-21,-20,-24,-23], {color:'#12945a'});
+  document.getElementById('sp3').innerHTML = spark([91,92,93,95,94,96,97,98,98,98.4], {color:'#1f5eff'});
+  const labels = Array.from({length:30},(_,i)=>`${i<21?'8/'+(i+11):'9/'+(i-20)}`);
+  const mk = (b,amp)=>Array.from({length:30},(_,i)=>Math.round(b+Math.sin(i/4)*amp+i*1.6+(i%5)*3));
+  const mys = mk(3380,28);
+  const ours = mys.map((v,i)=>v-14-(i>12?9:0)-(i%3));
+  const fut = mys.map((v,i)=>v-40+Math.sin(i/2)*22+i*0.8);
+  // AI 预测段:最近 5 天沿趋势外推,前段与实际重合以便绘制
+  const pred = mys.map((v,i)=> i<25 ? v : mys[24] + (i-24)*7);
+  const series=[{data:mys,color:'#1f5eff',marker:true},{data:ours,color:'#ff6a1a',marker:true},{data:fut,color:'#8a97a8',dash:true},{data:pred,color:'#6e4cf5',dash:true,marker:true}];
+  document.getElementById('chart1').innerHTML = lineChart(series,{labels});
+  document.getElementById('donut1').innerHTML = donut([{v:38,color:'#1f5eff'},{v:29,color:'#12945a'},{v:18,color:'#ff6a1a'},{v:12,color:'#6e4cf5'},{v:3,color:'#c98a00'}],{center:'46,600',sub:'吨 / 本月'});
+</script>
+</body>
+</html>

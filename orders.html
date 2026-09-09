@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>采购执行跟踪 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .kanban { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .col { background: #eef1f5; border-radius: 10px; padding: 8px; }
+  .col .h { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12.5px; padding: 4px 6px 8px; }
+  .col .h .c { margin-left: auto; background: #fff; border-radius: 10px; padding: 0 7px; font-size: 11px; color: var(--text-2); }
+  .po { background: #fff; border-radius: 8px; padding: 9px 10px; margin-bottom: 8px; border: 1px solid var(--line); font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+  .po .id { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+  .po .t { font-weight: 600; margin: 2px 0; }
+  .po .m { color: var(--text-2); font-size: 11.5px; }
+  .po.warn { border-color: #f5c6c2; background: #fff8f7; }
+  .po.auto { border-left: 3px solid var(--primary); }
+  .diff { font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="采购执行跟踪"></header>
+    <div class="content">
+      <div class="page-head">
+        <div><h1>采购执行跟踪</h1><p>配货确认后,合同、审批、付款、提货、运输、到货、磅单核验、质保书、索赔全流程自动推进,采购员只处理红色异常卡片。</p></div>
+        <div class="actions"><div class="seg"><a class="on">看板</a><a>列表</a><a>地图(在途车辆)</a></div><a class="btn">导出</a></div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi"><div class="lbl">本周采购单</div><div class="val num">47</div><div class="delta dim">自动生成 <b>44</b> · 人工 3 · 8,920 t</div></div>
+        <div class="card kpi"><div class="lbl">在途车辆</div><div class="val num">31<small>车</small></div><div class="delta dim">GPS 接入 29 · 预计今日到 18 车</div></div>
+        <div class="card kpi"><div class="lbl">待审批</div><div class="val num">2</div><div class="delta dim">超授权 1 · 价格偏离 1 · 平均审批 <b>26 分</b></div></div>
+        <div class="card kpi"><div class="lbl">磅单自动核验</div><div class="val num">96<small>/98</small></div><div class="delta dim">OCR 识别率 99.2% · 2 张待人工</div></div>
+        <div class="card kpi"><div class="lbl">本周磅差索赔</div><div class="val num">¥ 6,240</div><div class="delta dim">1 笔 · 日照 · 已自动发函</div></div>
+        <div class="card kpi"><div class="lbl">付款计划</div><div class="val num">¥ 21.6M</div><div class="delta dim">现款 62% · 承兑 38% · 资金占用 ↓ 4.1 天</div></div>
+      </div>
+
+      <div class="kanban mb">
+        <div class="col"><div class="h"><i class="dot b"></i>合同待签 <span class="c">5</span></div>
+          <div class="po auto"><div class="id">PO-260909-21</div><div class="t">中天 · 螺纹 Φ20 200t</div><div class="m">3,442 到厂 · 电子签已推送 · 王经理已读</div><span class="tag blue">自动生成</span></div>
+          <div class="po auto"><div class="id">PO-260909-22</div><div class="t">沙钢玖隆 · Φ22/25 160t</div><div class="m">3,436 · 待供方盖章</div><span class="tag blue">自动生成</span></div>
+          <div class="po auto"><div class="id">PO-260909-24</div><div class="t">马钢合肥 · Φ16 100t</div><div class="m">3,658 · 电子签待发</div></div>
+        </div>
+        <div class="col"><div class="h"><i class="dot y"></i>审批中 <span class="c">2</span></div>
+          <div class="po warn"><div class="id">PO-260909-23</div><div class="t">中天 · Φ12/14 理计 240t</div><div class="m">¥ 2,180,000 &gt; 单笔授权 200 万</div><div class="m">总经理 · 已提醒 2 次 · 等待 41 分</div><span class="tag red">超授权</span> <a class="btn xs" data-toast="已再次推送企微催办">催办</a></div>
+          <div class="po warn"><div class="id">PO-260908-31</div><div class="t">敬业 · 中板 20mm 160t</div><div class="m">到厂价高于基准 +41 · 需说明</div><span class="tag yellow">价格偏离</span></div>
+        </div>
+        <div class="col"><div class="h"><i class="dot o"></i>待提货/发运 <span class="c">7</span></div>
+          <div class="po"><div class="id">PO-260908-17</div><div class="t">日照上海库 · 热卷 180t</div><div class="m">提货委托已发 · 6 车 · 物流:满帮返程车 ¥36/t</div><span class="tag green">已配车</span></div>
+          <div class="po"><div class="id">PO-260908-19</div><div class="t">津西 · H型钢 90t 直发</div><div class="m">钢厂排产 9/11 · 预计 9/13 到</div><span class="tag">钢厂直发</span></div>
+          <div class="po"><div class="id">PO-260908-20</div><div class="t">自有太仓库 · Φ32 80t</div><div class="m">调拨单 · 今日 13:00 装车</div><span class="tag purple">库存调拨</span></div>
+        </div>
+        <div class="col"><div class="h"><i class="dot g"></i>在途 <span class="c">31</span></div>
+          <div class="po"><div class="id">PO-260908-12 · 苏A·8K21H</div><div class="t">沙钢太仓 → 苏州园区</div><div class="m">32.6t · 距目的地 18 km · 预计 10:40</div><span class="tag green">正常</span></div>
+          <div class="po warn"><div class="id">PO-260908-14 · 鲁B·3D7L9</div><div class="t">日照 → 上海宝杨库</div><div class="m">高速拥堵 · 预计晚 2.5 h · 已通知客户</div><span class="tag red">延迟</span></div>
+          <div class="po"><div class="id">PO-260908-15 · 皖A·9Q3M2</div><div class="t">马钢 → 嘉兴</div><div class="m">33.1t · 预计 14:20</div></div>
+        </div>
+        <div class="col"><div class="h"><i class="dot" style="background:#6e4cf5"></i>到货核验 <span class="c">4</span></div>
+          <div class="po warn"><div class="id">PO-260907-09</div><div class="t">日照 · 热卷 2 车</div><div class="m">合同 66.0t · 实磅 65.72t · <span class="diff up">磅差 -0.42%</span></div><div class="m">索赔单 ¥6,240 已生成 · 待确认</div><a class="btn xs primary" data-toast="索赔函已发送日照贸易商 B,信用分 -3 已生效">确认索赔</a></div>
+          <div class="po"><div class="id">PO-260907-11</div><div class="t">玖隆 · Φ25 3 车</div><div class="m">合同 99.0t · 实磅 98.93t · <span class="diff">-0.07%</span> ✓</div><div class="m">质保书 沙钢 #SG26090812 自动匹配 ✓</div><span class="tag green">自动通过</span></div>
+          <div class="po"><div class="id">PO-260907-12</div><div class="t">中天 · 理计 Φ12 4 车</div><div class="m">理计 132.0t · 实磅 127.1t · 负差 -3.71%(画像 -3.8%)✓</div><span class="tag green">自动通过</span></div>
+        </div>
+        <div class="col"><div class="h"><i class="dot"></i>结算/归档 <span class="c">38</span></div>
+          <div class="po"><div class="id">PO-260905-02</div><div class="t">玖隆 · Φ20 200t</div><div class="m">付款 ¥687,200 · 9/12 现款</div><div class="m">发票已收 · 三单匹配 ✓</div></div>
+          <div class="po"><div class="id">PO-260904-08</div><div class="t">中天 · 盘螺 150t</div><div class="m">30 天承兑 · 到期 10/05</div><div class="m">已归档 · 复盘:比市场省 ¥4,050</div></div>
+        </div>
+      </div>
+
+      <div class="grid g3">
+        <div class="card span2">
+          <div class="card-h"><h3>PO-260907-09 磅单自动核验详情</h3><span class="tag red">磅差超限</span><div class="r"><a class="btn xs">查看磅单原图</a><a class="btn xs">查看合同</a></div></div>
+          <div class="card-b tight">
+            <table class="tbl compact">
+              <thead><tr><th>车牌</th><th>磅单号(OCR)</th><th class="r">发货磅重</th><th class="r">收货磅重</th><th class="r">磅差</th><th class="r">磅差率</th><th>质保书</th><th>判定</th><th class="r">索赔金额</th></tr></thead>
+              <tbody>
+                <tr><td class="num">鲁B·5H8K3</td><td class="num">RZ-260907-0412</td><td class="r num">33.02</td><td class="r num">32.86</td><td class="r num up">-0.16</td><td class="r num up">-0.48%</td><td><span class="tag green">✓ 匹配</span></td><td><span class="tag red">超阈值 -0.30%</span></td><td class="r num">¥ 3,520</td></tr>
+                <tr><td class="num">鲁B·2M6P1</td><td class="num">RZ-260907-0413</td><td class="r num">32.98</td><td class="r num">32.86</td><td class="r num up">-0.12</td><td class="r num up">-0.36%</td><td><span class="tag green">✓ 匹配</span></td><td><span class="tag red">超阈值</span></td><td class="r num">¥ 2,720</td></tr>
+              </tbody>
+              <tfoot><tr><td colspan="2">合计 · 按合同约定「超 -0.3% 部分按到厂价 3,562 × 短少吨位 + 运费」</td><td class="r num">66.00</td><td class="r num">65.72</td><td class="r num up">-0.28</td><td class="r num up">-0.42%</td><td></td><td></td><td class="r num bold">¥ 6,240</td></tr></tfoot>
+            </table>
+            <div class="row" style="padding:10px 14px;gap:8px;border-top:1px solid var(--line)">
+              <span class="small dim">系统动作:① 生成索赔函(套用合同条款)② 供应商信用分 -3 ③ 该供应商后续配货加 +14 元/吨风险溢价 ④ 财务付款自动扣减 ¥6,240(待确认)</span>
+              <button class="btn sm primary" style="margin-left:auto" data-toast="索赔已确认,付款计划已扣减 ¥6,240">确认并扣款</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>本周采购复盘</h3><span class="sub">自动生成</span></div>
+          <div class="card-b">
+            <table class="mini-table">
+              <tr><td>采购吨位</td><td>8,920 t</td></tr>
+              <tr><td>加权到厂均价 vs Mysteel</td><td class="down">-24.6 元/吨</td></tr>
+              <tr><td>节省金额(vs 市场)</td><td class="down">¥ 219,400</td></tr>
+              <tr><td>避免「表面低价」陷阱</td><td>6 单 · ¥ 38,200</td></tr>
+              <tr><td>配货人工耗时</td><td>3.1 h(全周)</td></tr>
+              <tr><td>交期达成</td><td>98.4%</td></tr>
+              <tr><td>磅差索赔回收</td><td>¥ 6,240 / 6,240</td></tr>
+              <tr><td>资金占用天数</td><td class="down">↓ 4.1 天</td></tr>
+            </table>
+            <div class="divider"></div>
+            <div class="think"><div class="h"><span class="ai">复盘洞察</span></div>
+              <ul style="margin:0;padding-left:16px"><li>周三配货成本最低(供应商周中出货压力),建议大单集中周三锁价。</li><li>理计资源占比提升至 27%,贡献节省的 41%。</li><li>日照磅差连续 2 周偏负,建议启动供应商约谈。</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>
