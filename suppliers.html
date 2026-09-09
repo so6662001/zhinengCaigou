@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>供应商画像 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .sup-head { display: flex; gap: 16px; align-items: center; }
+  .sup-head .big-av { width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; font-weight: 800; color: #fff; }
+  .metric { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }
+  .metric .l { color: var(--text-3); font-size: 11.5px; }
+  .metric .v { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .metric .d { font-size: 11px; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="供应商画像"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div><h1>供应商画像</h1><p>每一次报价、成交、到货、磅差、质保书、回款账期都自动沉淀为评分,配货与比价引擎实时调用,老采购的「人脉记忆」变成公司的数据资产。</p></div>
+        <div class="actions"><a class="btn">导入供应商</a><a class="btn primary" data-toast="已重新计算 86 家供应商评分">⟳ 重算评分</a></div>
+      </div>
+
+      <div class="grid g5 mb">
+        <div class="card kpi"><div class="lbl">供应商总数</div><div class="val num">86</div><div class="delta dim">协议 34 · 备选 41 · 黑名单 <b class="up">2</b> · 观察 9</div></div>
+        <div class="card kpi"><div class="lbl">本月有效报价率</div><div class="val num">83<small>%</small></div><div class="delta dim">询价 412 次 · 回复 342 次 · 中位响应 <b>11 分钟</b></div></div>
+        <div class="card kpi"><div class="lbl">到货准时率(加权)</div><div class="val num">98.4<small>%</small></div><div class="delta"><span class="down">▲ 1.2%</span></div></div>
+        <div class="card kpi"><div class="lbl">平均磅差</div><div class="val num">-0.11<small>%</small></div><div class="delta dim">超限 3 次 · 索赔 ¥18,620 · 回收率 100%</div></div>
+        <div class="card kpi"><div class="lbl">画像驱动的配货降权</div><div class="val num">14<small>次 / 月</small></div><div class="delta dim">规避潜在损失估算 <b class="down">¥46,000</b></div></div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 1fr 380px; gap:14px">
+        <div class="card">
+          <div class="card-h"><h3>供应商评分榜</h3><span class="sub">综合分 = 价格竞争力 30 + 履约 25 + 质量/磅差 20 + 响应 10 + 资金条件 10 + 合规 5</span>
+            <div class="r"><div class="seg"><a class="on">建材</a><a>板材</a><a>型材</a><a>管材</a></div><input class="inp" placeholder="搜索供应商" style="width:160px;height:28px"></div></div>
+          <div class="card-b tight" style="overflow:auto">
+            <table class="tbl compact">
+              <thead><tr><th>#</th><th>供应商</th><th>类型</th><th>主营 / 钢厂</th><th class="r">综合分</th><th style="min-width:110px">价格竞争力</th><th class="r">履约</th><th class="r">磅差</th><th class="r">响应</th><th class="r">近30天成交</th><th>账期</th><th>标签</th><th></th></tr></thead>
+              <tbody>
+                <tr class="sel"><td><span class="rank r1">1</span></td><td><span class="mill"><span class="avatar" style="background:#1f5eff">沙</span><b>江苏玖隆(沙钢一级)</b></span></td><td>代理</td><td>沙钢 · 螺纹/盘螺/线材</td><td class="r num bold">96</td><td><div class="cmp-bar"><div class="bar"><i class="g" style="width:92%"></i></div><span class="num small">92</span></div></td><td class="r num">99%</td><td class="r num">-0.05%</td><td class="r num">6 分</td><td class="r num">3,120t</td><td>现款 / 承兑</td><td><span class="tag green">核心</span></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank r2">2</span></td><td><span class="mill"><span class="avatar" style="background:#12945a">中</span><b>中天钢铁 · 苏南办</b></span></td><td>钢厂直销</td><td>中天 · 螺纹/盘螺(理计)</td><td class="r num bold">94</td><td><div class="cmp-bar"><div class="bar"><i class="g" style="width:96%"></i></div><span class="num small">96</span></div></td><td class="r num">98%</td><td class="r num">-0.08%</td><td class="r num">9 分</td><td class="r num">4,860t</td><td>30 天承兑</td><td><span class="tag green">核心</span><span class="tag purple">理计稳</span></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank r3">3</span></td><td><span class="mill"><span class="avatar" style="background:#c98a00">永</span><b>永钢集团 · 华东销售</b></span></td><td>钢厂直销</td><td>永钢 · 螺纹/中板</td><td class="r num bold">92</td><td><div class="cmp-bar"><div class="bar"><i class="g" style="width:88%"></i></div><span class="num small">88</span></div></td><td class="r num">97%</td><td class="r num">-0.06%</td><td class="r num">15 分</td><td class="r num">2,240t</td><td><span class="up">现款(收紧)</span></td><td><span class="tag yellow">账期变动</span></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank">4</span></td><td><span class="mill"><span class="avatar" style="background:#c98a00">马</span><b>马钢 · 杭州/合肥库</b></span></td><td>钢厂库</td><td>马钢 · H型钢/螺纹</td><td class="r num bold">90</td><td><div class="cmp-bar"><div class="bar"><i style="width:80%"></i></div><span class="num small">80</span></div></td><td class="r num">99%</td><td class="r num">-0.04%</td><td class="r num">22 分</td><td class="r num">1,780t</td><td>现款</td><td></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank">5</span></td><td><span class="mill"><span class="avatar" style="background:#0d9488">津</span><b>津西钢铁 · 华东办</b></span></td><td>钢厂直销</td><td>津西 · H型钢</td><td class="r num bold">88</td><td><div class="cmp-bar"><div class="bar"><i class="g" style="width:90%"></i></div><span class="num small">90</span></div></td><td class="r num">94%</td><td class="r num">-0.10%</td><td class="r num">30 分</td><td class="r num">920t</td><td>预付</td><td></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank">6</span></td><td><span class="mill"><span class="avatar" style="background:#6e4cf5">鞍</span><b>鞍钢 · 南京加工中心</b></span></td><td>钢厂库</td><td>鞍钢 · 冷轧/镀锌</td><td class="r num bold">87</td><td><div class="cmp-bar"><div class="bar"><i style="width:74%"></i></div><span class="num small">74</span></div></td><td class="r num">98%</td><td class="r num">-0.03%</td><td class="r num">45 分</td><td class="r num">610t</td><td>现款</td><td></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank">7</span></td><td><span class="mill"><span class="avatar" style="background:#ff6a1a">日</span><b>日照钢铁 · 上海贸易商 B</b></span></td><td>贸易商</td><td>日照 · 热卷</td><td class="r num bold up">78 <span class="tiny">↓3</span></td><td><div class="cmp-bar"><div class="bar"><i class="g" style="width:91%"></i></div><span class="num small">91</span></div></td><td class="r num">95%</td><td class="r num up">-0.42%</td><td class="r num">8 分</td><td class="r num">2,050t</td><td>30 天承兑</td><td><span class="tag red">磅差观察</span></td><td><a class="btn xs">详情</a></td></tr>
+                <tr><td><span class="rank">8</span></td><td><span class="mill"><span class="avatar" style="background:#6e4cf5">萋</span><b>华东贸易商 A(萋钢)</b></span></td><td>贸易商</td><td>萋钢 · 螺纹(理计)</td><td class="r num bold">81</td><td><div class="cmp-bar"><div class="bar"><i class="y" style="width:70%"></i></div><span class="num small">70</span></div></td><td class="r num">92%</td><td class="r num">-0.18%</td><td class="r num">18 分</td><td class="r num">430t</td><td>现款</td><td><span class="tag yellow">负差波动</span></td><td><a class="btn xs">详情</a></td></tr>
+                <tr style="opacity:.6"><td>–</td><td><span class="mill"><span class="avatar" style="background:#d92d20">黑</span><b>某贸易商 X(黑名单)</b></span></td><td>贸易商</td><td>—</td><td class="r num bold">—</td><td colspan="6" class="small">2026-05 质保书造假 · 自动加入黑名单 · 配货与比价引擎永久排除</td><td><span class="tag red">黑名单</span></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 右侧:单供应商画像 -->
+        <div class="card">
+          <div class="card-b">
+            <div class="sup-head">
+              <div class="big-av" style="background:#1f5eff">沙</div>
+              <div><div class="row"><b style="font-size:16px">江苏玖隆(沙钢一级代理)</b><span class="tag green">核心</span></div><div class="dim small">合作 8 年 · 累计 186,000 吨 · 联系人:李经理 · 太仓库 / 张家港库</div></div>
+              <div style="margin-left:auto;text-align:center"><div class="num" style="font-size:30px;font-weight:800;color:var(--primary)">96</div><div class="tiny muted">综合分 · 排名 1</div></div>
+            </div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:center" id="radar"></div>
+            <div class="grid g3" style="gap:8px;margin-top:8px">
+              <div class="metric"><div class="l">报价 vs 市场</div><div class="v num down">-6.2</div><div class="d muted">元/吨 · 近 90 天均</div></div>
+              <div class="metric"><div class="l">履约准时</div><div class="v num">99.1%</div><div class="d muted">118 / 119 车</div></div>
+              <div class="metric"><div class="l">平均磅差</div><div class="v num">-0.05%</div><div class="d muted">最大 -0.19%</div></div>
+              <div class="metric"><div class="l">响应中位</div><div class="v num">6 分</div><div class="d muted">有效报价率 97%</div></div>
+              <div class="metric"><div class="l">质保书齐全</div><div class="v num">100%</div><div class="d muted">电子质保书直连</div></div>
+              <div class="metric"><div class="l">议价接受率</div><div class="v num">41%</div><div class="d muted">均降 8 元/吨</div></div>
+            </div>
+            <div class="divider"></div>
+            <div class="bold mb" style="margin-bottom:8px">近期事件流</div>
+            <ul class="tl">
+              <li class="done"><div class="t">9/09 09:05</div>报价 RFQ-260909-01 Φ20 3,425(排名 2)</li>
+              <li class="done"><div class="t">9/08</div>到货 6 车 / 198.6t · 磅差 -0.07% · 质保书自动匹配 ✓</li>
+              <li class="done"><div class="t">9/06</div>接受议价 3,455 → 3,448(-7)</li>
+              <li><div class="t">9/01</div>账期政策更新:承兑贴息 +3 元/吨(系统已同步到折算规则)</li>
+              <li class="done"><div class="t">8/28</div>沙钢下旬调价 +20 · 玖隆同步上调 · 提前 6 小时预警</li>
+            </ul>
+            <div class="divider"></div>
+            <div class="think">
+              <div class="h"><span class="ai">画像洞察</span></div>
+              <ul style="margin:0;padding-left:16px">
+                <li>Φ20-Φ25 大规格价格竞争力最强(-9 元),Φ12-Φ14 偏弱(+4),配货引擎已按规格分层加权。</li>
+                <li>周一、周四上午报价通常最低(库存出货压力),建议询价窗口设在 08:30-09:30。</li>
+                <li>沙钢调价前 1 天该代理封盘概率 62%,系统在预测涨价时自动提前 1 天锁量。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById('radar').innerHTML = radar(['价格','履约','磅差/质量','响应','资金条件','合规'], [{ data: [0.92,0.99,0.97,0.96,0.9,1], color: '#1f5eff' }], { size: 220 });
+</script>
+</body>
+</html>

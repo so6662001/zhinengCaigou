@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能配货工作台 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .demand { border-bottom: 1px solid var(--line); padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  .demand:hover { background: #fafbfd; }
+  .demand.on { background: var(--primary-2); }
+  .demand input { margin-top: 3px; }
+  .demand .t { font-weight: 600; }
+  .demand .m { color: var(--text-3); font-size: 11.5px; margin-top: 2px; }
+  .demand .q { margin-left: auto; text-align: right; white-space: nowrap; }
+  .src-row td { background: #fbfcfe; font-size: 12px; color: var(--text-2); }
+  .src-row td:first-child { padding-left: 34px; }
+  .engine-log { background: #0b1526; color: #b9d0ff; font-family: var(--mono); font-size: 11px; border-radius: 8px; padding: 10px 12px; line-height: 1.7; max-height: 150px; overflow: auto; }
+  .engine-log .ok { color: #58d68d; } .engine-log .wn { color: #ffb86b; } .engine-log .dm { color: #6d82a6; }
+  .obj { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; align-items: center; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="智能配货工作台"></header>
+    <div class="content" style="padding-bottom:90px">
+
+      <div class="page-head">
+        <div>
+          <h1>智能配货工作台 <span class="tag purple" style="vertical-align:middle">✦ 约束求解引擎 v3.2</span></h1>
+          <p>把销售需求自动拆解为「向谁买、买多少、从哪个库 / 钢厂发、什么价、哪天到」的最优采购组合;采购员只需确认与处理异常。</p>
+        </div>
+        <div class="actions">
+          <div class="steps">
+            <div class="st done"><span class="n">✓</span>需求汇总</div><div class="ln done"></div>
+            <div class="st done"><span class="n">✓</span>资源匹配</div><div class="ln done"></div>
+            <div class="st on"><span class="n">3</span>方案确认</div><div class="ln"></div>
+            <div class="st"><span class="n">4</span>生成采购单</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 300px 1fr; gap:14px">
+
+        <!-- 左:需求池 -->
+        <div>
+          <div class="card">
+            <div class="card-h"><h3>需求池</h3><span class="tag blue">12 单 · 1,860 t</span><div class="r"><a class="btn xs" data-toast="已从 ERP 同步 2 张新销售订单">⟳ 同步 ERP</a></div></div>
+            <div style="padding:10px 12px;border-bottom:1px solid var(--line)">
+              <div class="chips">
+                <span class="chip on">全部</span><span class="chip">今日交货</span><span class="chip">缺资源</span><span class="chip">安全库存补货</span>
+              </div>
+            </div>
+            <div style="max-height:640px;overflow:auto">
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-01 <span class="tag green">已配齐</span></div><div class="m">中建八局 · 苏州工业园 · 9/11 到</div><div class="m">螺纹 HRB400E Φ20×100t / Φ22×80t / Φ25×80t</div></div><div class="q"><b class="num">260</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-02 <span class="tag green">已配齐</span></div><div class="m">三一重工 · 昆山 · 9/10 到</div><div class="m">热卷 Q235B 5.75*1500*C</div></div><div class="q"><b class="num">180</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-03 <span class="tag red">缺 40t</span></div><div class="m">上海建工 · 宝山 · 9/10 到 · <b style="color:var(--danger)">急</b></div><div class="m">螺纹 HRB400E Φ32 12m 定尺</div></div><div class="q"><b class="num">120</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-04 <span class="tag green">已配齐</span></div><div class="m">中铁四局 · 无锡 · 9/12 到</div><div class="m">盘螺 HRB400E Φ8×70t / Φ10×80t</div></div><div class="q"><b class="num">150</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-05 <span class="tag yellow">待确认</span></div><div class="m">格力电器 · 南京 · 9/13 到</div><div class="m">冷轧 SPCC 1.0*1250*C</div></div><div class="q"><b class="num">95</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-06 <span class="tag green">已配齐</span></div><div class="m">浙江交工 · 嘉兴 · 9/14 到</div><div class="m">H型钢 Q355B 400*200*8*13</div></div><div class="q"><b class="num">210</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-07 <span class="tag yellow">待确认</span></div><div class="m">徐工集团 · 徐州 · 9/15 到</div><div class="m">中板 Q355B 20*2200*10000</div></div><div class="q"><b class="num">160</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-08 <span class="tag green">已配齐</span></div><div class="m">万科 · 合肥 · 9/12 到</div><div class="m">螺纹 HRB400E Φ12/14/16 · 允许理计</div></div><div class="q"><b class="num">340</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-09 <span class="tag green">已配齐</span></div><div class="m">绿地控股 · 杭州 · 9/13 到</div><div class="m">螺纹 HRB400E Φ18/20</div></div><div class="q"><b class="num">150</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-10 <span class="tag green">已配齐</span></div><div class="m">中船 · 南通 · 9/16 到</div><div class="m">中板 Q235B 12*2000*8000</div></div><div class="q"><b class="num">85</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-11 <span class="tag green">已配齐</span></div><div class="m">比亚迪 · 常州 · 9/14 到</div><div class="m">镀锌 DX51D+Z 0.8*1250*C</div></div><div class="q"><b class="num">60</b> t</div></label>
+              <label class="demand on"><input type="checkbox" checked><div><div class="t">RPL-0909-01 <span class="tag purple">补库</span></div><div class="m">太仓库安全库存预警 · 自动生成</div><div class="m">螺纹 HRB400E Φ14/16 · 库存 3 天用量</div></div><div class="q"><b class="num">50</b> t</div></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右:引擎 + 方案 -->
+        <div>
+          <!-- 引擎参数 -->
+          <div class="card mb">
+            <div class="card-h"><h3>配货策略与约束</h3><span class="sub">采购员可调,策略模板可保存 · 当前:<b>华东-建材-月中锁价</b></span>
+              <div class="r"><a class="btn xs">载入模板</a><a class="btn xs" data-toast="策略已保存为模板">保存为模板</a></div></div>
+            <div class="card-b">
+              <div class="grid" style="grid-template-columns: 1.2fr 1fr 1fr; gap:22px">
+                <div>
+                  <div class="field"><label>优化目标权重</label></div>
+                  <div class="obj" style="margin-top:6px">
+                    <div><div class="row between small"><span>综合到厂成本</span><b class="num">55%</b></div><input class="slider" type="range" value="55"></div><span class="muted small">主目标</span>
+                    <div><div class="row between small"><span>交期达成 / 到货时效</span><b class="num">25%</b></div><input class="slider" type="range" value="25"></div><span class="muted small">硬约束+加权</span>
+                    <div><div class="row between small"><span>供应商履约信用</span><b class="num">15%</b></div><input class="slider" type="range" value="15"></div><span class="muted small">画像评分</span>
+                    <div><div class="row between small"><span>库存周转 / 自有库消化</span><b class="num">5%</b></div><input class="slider" type="range" value="5"></div><span class="muted small"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="field"><label>硬约束</label></div>
+                  <div class="obj" style="margin-top:8px">
+                    <span>单一供应商占比 ≤ <b class="num">35%</b></span><span class="switch on"></span>
+                    <span>优先消化自有库存(≤ 库龄 45 天)</span><span class="switch on"></span>
+                    <span>允许钢厂直发(交期 +1~3 天)</span><span class="switch on"></span>
+                    <span>允许理计资源(自动折算负差)</span><span class="switch on"></span>
+                    <span>允许跨库短驳(≤ 80 km)</span><span class="switch on"></span>
+                    <span>仅协议供应商 / 排除黑名单</span><span class="switch on"></span>
+                    <span>价格上限:销售合同价 − 最低毛利 <b class="num">45</b> 元/吨</span><span class="switch on"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="field"><label>价格与资金参数</label></div>
+                  <div class="grid g2" style="gap:8px;margin-top:8px">
+                    <div class="field"><label class="small">资金年化成本</label><input class="inp" value="7.2 %"></div>
+                    <div class="field"><label class="small">磅差容忍阈值</label><input class="inp" value="-0.30 %"></div>
+                    <div class="field"><label class="small">理计负差(默认)</label><input class="inp" value="按钢厂画像"></div>
+                    <div class="field"><label class="small">价格基准</label><select class="sel"><option>Mysteel 华东当日均价</option><option>钢厂出厂挂牌价</option></select></div>
+                  </div>
+                  <div class="row mt" style="gap:6px"><span class="tag yellow">⚑ 涨价预警模式</span><span class="small dim">沙钢下旬涨 30 概率 78% → 时效权重自动 +5%</span></div>
+                </div>
+              </div>
+              <div class="row mt" style="gap:10px">
+                <button class="btn primary" data-toast="已重新求解:1,860 吨 · 0.8 秒 · 生成 3 套方案">▶ 重新求解</button>
+                <span class="small dim">上次求解 06:00:12 · 耗时 0.8 s · 评估 1,284 种组合 · 候选资源 3,652 条(自有库存 412 / 供应商挂牌 2,860 / 钢厂协议 380)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 方案对比 -->
+          <div class="grid g3 mb" style="margin-top:18px">
+            <div class="plan rec" data-plan="A">
+              <span class="ribbon">✦ 系统推荐</span>
+              <div class="ttl">方案 A · 成本最优</div>
+              <div class="big num">¥ 6,542,000</div>
+              <div class="small dim">加权到厂均价 <b class="num">3,517</b> 元/吨 · 低于市场 <b class="down num">-28.4</b></div>
+              <div class="kv">
+                <span>配齐率</span><b>97.8% <span class="tag red">缺 40t</span></b>
+                <span>交期达成</span><b>11/12 单准时</b>
+                <span>供应商数</span><b>9 家 · 最高占比 31%</b>
+                <span>直发比例</span><b>34%</b>
+                <span>自有库消化</span><b>330 t(库龄 &gt; 30 天优先)</b>
+                <span>信用加权分</span><b>91.2</b>
+              </div>
+            </div>
+            <div class="plan" data-plan="B">
+              <div class="ttl">方案 B · 时效优先</div>
+              <div class="big num">¥ 6,583,300</div>
+              <div class="small dim">加权到厂均价 <b class="num">3,539</b> · 比 A 贵 <b class="up num">+41,300</b></div>
+              <div class="kv">
+                <span>配齐率</span><b>100%</b>
+                <span>交期达成</span><b>12/12 单准时</b>
+                <span>供应商数</span><b>7 家 · 最高占比 35%</b>
+                <span>直发比例</span><b>12%(全库提)</b>
+                <span>自有库消化</span><b>330 t</b>
+                <span>信用加权分</span><b>93.0</b>
+              </div>
+            </div>
+            <div class="plan" data-plan="C">
+              <div class="ttl">方案 C · 均衡 / 分散风险</div>
+              <div class="big num">¥ 6,561,900</div>
+              <div class="small dim">加权到厂均价 <b class="num">3,528</b> · 比 A 贵 <b class="up num">+19,900</b></div>
+              <div class="kv">
+                <span>配齐率</span><b>100%</b>
+                <span>交期达成</span><b>12/12 单准时</b>
+                <span>供应商数</span><b>11 家 · 最高占比 24%</b>
+                <span>直发比例</span><b>28%</b>
+                <span>自有库消化</span><b>380 t</b>
+                <span>信用加权分</span><b>92.1</b>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid mb" style="grid-template-columns: 1fr 340px; gap:14px">
+            <div class="think">
+              <div class="h"><span class="ai">引擎决策说明</span><span class="small muted" style="font-weight:400">为什么是方案 A —— 每一条都可点开看数据</span></div>
+              <ul style="margin:0;padding-left:16px">
+                <li><b>SO-08 万科合肥 340t 小规格螺纹</b>:中天理计 3,340 − 负差 3.8% 折算 ≈ 3,213 磅计等价,加运费 68 → 到厂 3,395,比马钢合肥库磅计货便宜 <b class="down">71 元/吨</b>,单笔节省 <b>¥24,140</b>。</li>
+                <li><b>SO-01 苏州 260t</b>:Φ25 沙钢太仓库 3,430 最优,但太仓库 Φ20 仅 60t → 补配中天常州库 40t(短驳 62 km,+18 元),仍比全部从常州提便宜 9 元/吨。</li>
+                <li><b>SO-06 嘉兴 H型钢 210t</b>:马钢杭州库 3,700 vs 津西直发 3,655+运费 52=3,707,但津西直发可 9/13 到且现款有 15 元贴息 → 拆 120t 库提 + 90t 直发,组合到厂 3,690。</li>
+                <li><b>日照钢铁降权</b>:昨日磅差 -0.42% 超阈值,信用 -3 分,热卷仍为最优(价差 18 元 &gt; 风险溢价 6 元),保留但标记「到货必过磅复核」。</li>
+                <li class="wn" style="color:var(--danger)"><b>SO-03 宝山 Φ32 120t 缺 40t</b>:本地磅计资源 80t;永钢直发需 9/12(晚 2 天)。请选择:① 接受晚 2 天(省 ¥3,600) ② 改用方案 B 高价资源(市场现货 +90 元) ③ 通知销售分批交货。</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div class="card-h"><h3>求解日志</h3><span class="sub">可审计</span></div>
+              <div class="card-b" style="padding:10px">
+                <div class="engine-log">
+<span class="dm">06:00:11</span> 载入需求 12 / 1860.0t,标准化规格 ✓<br>
+<span class="dm">06:00:11</span> 拉取资源 3652 条(库存 412 · 挂牌 2860 · 协议 380)<br>
+<span class="dm">06:00:11</span> 归一化到厂价:计重/运费/资金/磅差 ✓<br>
+<span class="dm">06:00:12</span> 过滤:黑名单 2 家 · 质保书缺失 37 条 · 库龄 &gt;90 天 5 条<br>
+<span class="dm">06:00:12</span> MILP 求解 1284 组合,gap 0.3% <span class="ok">✓ optimal</span><br>
+<span class="dm">06:00:12</span> <span class="wn">WARN</span> SO-03 Φ32 缺口 40t,生成 3 个替代<br>
+<span class="dm">06:00:12</span> 输出方案 A/B/C · 推荐 A(Δ成本 -41.3k)<br>
+<span class="dm">09:35:02</span> 行情更新 rb2601 +18 → 复算 <span class="ok">方案不变</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 配货明细 -->
+          <div class="card mt">
+            <div class="card-h"><h3>方案 A 配货明细</h3><span class="sub">需求 → 来源拆分 · 每一行都可替换来源</span>
+              <div class="r">
+                <div class="seg"><a class="on">按需求</a><a>按供应商</a><a>按到货日</a></div>
+                <a class="btn xs">导出 Excel</a>
+              </div></div>
+            <div class="card-b tight" style="overflow:auto">
+              <table class="tbl compact">
+                <thead><tr>
+                  <th>需求 / 来源</th><th>品名规格</th><th>供应商 · 仓库/直发</th><th>计重</th><th class="r">报价</th><th class="r">运费</th><th class="r">资金/其他</th><th class="r">到厂价</th><th class="r">吨位</th><th>到货</th><th class="r">vs 市场</th><th></th>
+                </tr></thead>
+                <tbody>
+                  <tr><td class="bold num">SO-260909-01</td><td>螺纹 HRB400E Φ20/22/25</td><td colspan="4"><div class="alloc-viz" style="width:260px"><div class="c1" style="width:62%">沙钢·太仓 160t</div><div class="c2" style="width:38%">中天·常州 100t</div></div></td><td></td><td class="r num bold">3,438</td><td class="r num bold">260</td><td>9/11</td><td class="r num down">-12</td><td></td></tr>
+                  <tr class="src-row"><td>└ 来源 1</td><td>Φ22×80 / Φ25×80</td><td><span class="mill"><span class="avatar" style="background:#1f5eff">沙</span>沙钢 · 太仓库(自提 8 km)</span></td><td>磅计</td><td class="r num">3,430</td><td class="r num">6</td><td class="r num">+0(现款)</td><td class="r num">3,436</td><td class="r num">160</td><td>9/10</td><td class="r num down">-14</td><td><a class="btn xs">换源</a></td></tr>
+                  <tr class="src-row"><td>└ 来源 2</td><td>Φ20×100</td><td><span class="mill"><span class="avatar" style="background:#12945a">中</span>中天 · 常州库(短驳 62 km)</span></td><td>磅计</td><td class="r num">3,410</td><td class="r num">28</td><td class="r num">+4(30天承兑)</td><td class="r num">3,442</td><td class="r num">100</td><td>9/11</td><td class="r num down">-8</td><td><a class="btn xs">换源</a></td></tr>
+
+                  <tr><td class="bold num">SO-260909-02</td><td>热卷 Q235B 5.75*1500*C</td><td colspan="4"><div class="alloc-viz" style="width:260px"><div class="c3" style="width:100%">日照·上海库 180t</div></div></td><td></td><td class="r num bold">3,562</td><td class="r num bold">180</td><td>9/10</td><td class="r num down">-18</td><td></td></tr>
+                  <tr class="src-row"><td>└ 来源 1</td><td>5.75*1500*C</td><td><span class="mill"><span class="avatar" style="background:#ff6a1a">日</span>日照 · 上海宝杨库 <span class="tag red">磅差降权</span></span></td><td>磅计</td><td class="r num">3,520</td><td class="r num">36</td><td class="r num">+6 风险溢价</td><td class="r num">3,562</td><td class="r num">180</td><td>9/10</td><td class="r num down">-18</td><td><a class="btn xs">换源</a></td></tr>
+
+                  <tr style="background:var(--danger-2)"><td class="bold num">SO-260909-03</td><td>螺纹 HRB400E Φ32 12m</td><td colspan="4"><div class="alloc-viz" style="width:260px"><div class="c4" style="width:67%">自有·太仓 80t</div><div style="width:33%;background:repeating-linear-gradient(45deg,#f3d0cc,#f3d0cc 4px,#fff 4px,#fff 8px);color:var(--danger)">缺 40t</div></div></td><td></td><td class="r num bold">3,470</td><td class="r num bold">80 <span class="muted">/120</span></td><td>9/10</td><td class="r num">—</td><td><a class="btn xs accent" data-toast="已采纳:永钢直发 40t,9/12 到,已通知销售确认交期">采纳①</a></td></tr>
+                  <tr class="src-row"><td>└ 来源 1</td><td>Φ32×80</td><td><span class="mill"><span class="avatar" style="background:#6e4cf5">库</span>自有库存 · 太仓库(库龄 38 天)</span></td><td>磅计</td><td class="r num">3,464 <span class="tiny muted">成本</span></td><td class="r num">6</td><td class="r num">0</td><td class="r num">3,470</td><td class="r num">80</td><td>9/10</td><td class="r num">—</td><td></td></tr>
+                  <tr class="src-row"><td>└ 替代 ①</td><td>Φ32×40</td><td><span class="mill"><span class="avatar" style="background:#c98a00">永</span>永钢 · 钢厂直发(晚 2 天)</span></td><td>磅计</td><td class="r num">3,395</td><td class="r num">58</td><td class="r num">+7(现款)</td><td class="r num">3,460</td><td class="r num">40</td><td class="up">9/12</td><td class="r num down">-10</td><td><span class="tag green">省 ¥3,600</span></td></tr>
+                  <tr class="src-row"><td>└ 替代 ②</td><td>Φ32×40</td><td><span class="mill"><span class="avatar" style="background:#8a97a8">市</span>市场现货 · 上海某贸易商(非协议)</span></td><td>磅计</td><td class="r num">3,540</td><td class="r num">18</td><td class="r num">+2</td><td class="r num up">3,560</td><td class="r num">40</td><td>9/10</td><td class="r num up">+90</td><td><span class="tag yellow">需核验</span></td></tr>
+
+                  <tr><td class="bold num">SO-260909-08</td><td>螺纹 HRB400E Φ12/14/16</td><td colspan="4"><div class="alloc-viz" style="width:260px"><div class="c2" style="width:71%">中天·理计 240t</div><div class="c5" style="width:29%">马钢·合肥 100t</div></div></td><td></td><td class="r num bold">3,395</td><td class="r num bold">340</td><td>9/12</td><td class="r num down">-71</td><td></td></tr>
+                  <tr class="src-row"><td>└ 来源 1</td><td>Φ12×120 / Φ14×120</td><td><span class="mill"><span class="avatar" style="background:#12945a">中</span>中天 · 钢厂直发 <span class="tag purple">理计</span></span></td><td>理计 <span class="tiny muted">负差 -3.8%</span></td><td class="r num">3,340 <span class="tiny muted">→3,213 等价</span></td><td class="r num">68</td><td class="r num">+5</td><td class="r num">3,286</td><td class="r num">240</td><td>9/12</td><td class="r num down">-98</td><td><a class="btn xs">换源</a></td></tr>
+                  <tr class="src-row"><td>└ 来源 2</td><td>Φ16×100</td><td><span class="mill"><span class="avatar" style="background:#c98a00">马</span>马钢 · 合肥库(自提 12 km)</span></td><td>磅计</td><td class="r num">3,650</td><td class="r num">8</td><td class="r num">+0</td><td class="r num">3,658</td><td class="r num">100</td><td>9/11</td><td class="r num down">-6</td><td><a class="btn xs">换源</a></td></tr>
+
+                  <tr><td class="bold num">SO-260909-06</td><td>H型钢 Q355B 400*200</td><td colspan="4"><div class="alloc-viz" style="width:260px"><div class="c5" style="width:57%">马钢·杭州 120t</div><div class="c6" style="width:43%">津西·直发 90t</div></div></td><td></td><td class="r num bold">3,690</td><td class="r num bold">210</td><td>9/13-14</td><td class="r num down">-35</td><td></td></tr>
+                  <tr class="src-row"><td colspan="12" class="center muted">… 其余 7 单明细已折叠 · <a href="#">展开全部 21 条来源行</a></td></tr>
+                </tbody>
+                <tfoot><tr><td colspan="7">合计(方案 A,含 SO-03 替代①)</td><td class="r num">3,517</td><td class="r num">1,860</td><td></td><td class="r num down">-28.4</td><td></td></tr></tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- 供应商集中度 -->
+          <div class="grid g2 mt">
+            <div class="card">
+              <div class="card-h"><h3>方案 A 供应商分布</h3><span class="sub">硬约束:单家 ≤ 35%</span></div>
+              <div class="card-b">
+                <table class="mini-table">
+                  <tr><td><i class="dot" style="background:#12945a"></i> 中天钢铁(直发 + 常州库)</td><td>31% · 580t</td></tr>
+                  <tr><td><i class="dot b"></i> 沙钢(太仓库)</td><td>18% · 330t</td></tr>
+                  <tr><td><i class="dot" style="background:#6e4cf5"></i> 自有库存调拨</td><td>18% · 330t</td></tr>
+                  <tr><td><i class="dot o"></i> 日照钢铁(上海库)</td><td>10% · 180t</td></tr>
+                  <tr><td><i class="dot y"></i> 马钢(杭州 / 合肥库)</td><td>12% · 220t</td></tr>
+                  <tr><td><i class="dot" style="background:#0d9488"></i> 津西 / 敬业 / 鞍钢 / 永钢</td><td>11% · 220t</td></tr>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-h"><h3>确认后自动执行</h3><span class="sub">采购员只做一次点击</span></div>
+              <div class="card-b">
+                <ul class="tl">
+                  <li><div class="t">T+0 秒</div>生成 <b>9 张采购合同</b>(按供应商合并),套用协议模板,推送供应商企微 / 邮箱电子签</li>
+                  <li><div class="t">T+0 秒</div>超授权 1 单(中天 ¥2.18M)自动进入 <b>审批流</b>,其余 8 单直接下达</li>
+                  <li><div class="t">T+1 分</div>向 3 家仓库发送 <b>提货委托</b>,向物流平台发布 6 条运单(自动匹配返程车)</li>
+                  <li><div class="t">T+1 分</div>向财务推送付款计划(现款 / 承兑分列),资金占用预演</li>
+                  <li><div class="t">到货</div>磅单 OCR → 自动比对合同吨位、磅差、质保书;超限自动生成索赔</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-foot">
+      <div><div class="small dim">已选方案</div><b>方案 A · 成本最优</b> <span class="tag red">1 项待决策</span></div>
+      <div class="divider" style="width:1px;height:30px;margin:0 6px"></div>
+      <div><div class="small dim">总吨位</div><b class="num">1,860 t</b></div>
+      <div><div class="small dim">预计采购额</div><b class="num">¥ 6,542,000</b></div>
+      <div><div class="small dim">较市场均价节省</div><b class="num down">¥ 52,780</b></div>
+      <div><div class="small dim">较方案 B 节省</div><b class="num down">¥ 41,300</b></div>
+      <div style="margin-left:auto" class="row">
+        <button class="btn" data-toast="已生成对比 PDF 并发送至企微">导出方案对比</button>
+        <button class="btn" data-toast="已推送给销售确认 SO-03 交期">推送销售确认</button>
+        <button class="btn primary lg" data-toast="已生成 9 张采购合同,1 张进入审批,8 张已下达供应商">✓ 确认方案 A,生成 9 张采购单</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  window.onPlanSelect = function (p) {
+    const map = { A: ['方案 A · 成本最优', '¥ 6,542,000', '¥ 52,780', '¥ 41,300'], B: ['方案 B · 时效优先', '¥ 6,583,300', '¥ 11,480', '—'], C: ['方案 C · 均衡', '¥ 6,561,900', '¥ 32,880', '¥ 21,400'] };
+    const f = document.querySelector('.sticky-foot');
+    const bs = f.querySelectorAll('b');
+    bs[0].textContent = map[p][0]; bs[2].textContent = map[p][1]; bs[3].textContent = map[p][2]; bs[4].textContent = map[p][3];
+    toast('已切换至' + map[p][0] + ',明细表已刷新');
+  };
+</script>
+</body>
+</html>

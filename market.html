@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行情与钢厂调价 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  .quote .n { font-size: 12px; color: var(--text-2); }
+  .quote .p { font-size: 22px; font-weight: 700; margin-top: 2px; letter-spacing: -.5px; }
+  .quote .c { font-size: 12px; margin-top: 2px; }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 11px; }
+  .cal .d { border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; min-height: 58px; }
+  .cal .d .n { color: var(--text-3); font-weight: 600; }
+  .cal .d.hd { min-height: 0; padding: 3px; border-color: transparent; background: none; }
+  .cal .d.today { border-color: var(--primary); background: var(--primary-2); }
+  .cal .ev { margin-top: 3px; padding: 1px 4px; border-radius: 3px; font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ev.up { background: var(--danger-2); color: var(--danger); } .ev.dn { background: var(--success-2); color: var(--success); } .ev.pr { background: var(--warn-2); color: var(--warn); } .ev.nt { background: var(--purple-2); color: var(--purple); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="行情与钢厂调价"></header>
+    <div class="content">
+      <div class="page-head">
+        <div><h1>行情与钢厂调价中心</h1><p>汇聚 Mysteel / 找钢 / 钢银 现货行情、上期所盘面、钢厂调价公告、社会库存与到货量,自动生成买入时机指数,直接驱动配货引擎的「涨价预警模式」。</p></div>
+        <div class="actions"><span class="tag green"><i class="dot g pulse"></i> 数据源 6/6 正常 · 最近更新 09:42:10</span><a class="btn">订阅推送</a></div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="quote"><div class="n">上海 螺纹 HRB400E Φ20</div><div class="p num">3,450</div><div class="c muted">— 持平 · Mysteel</div></div>
+        <div class="quote"><div class="n">杭州 螺纹 HRB400E Φ20</div><div class="p num">3,470</div><div class="c up">▲ 10</div></div>
+        <div class="quote"><div class="n">上海 热卷 Q235B 4.75</div><div class="p num">3,580</div><div class="c up">▲ 20</div></div>
+        <div class="quote"><div class="n">上海 冷轧 SPCC 1.0</div><div class="p num">4,230</div><div class="c up">▲ 10</div></div>
+        <div class="quote"><div class="n">rb2601 主力</div><div class="p num">3,412</div><div class="c up">▲ 18 (+0.53%) · 基差 +38</div></div>
+        <div class="quote"><div class="n">hc2601 主力</div><div class="p num">3,563</div><div class="c up">▲ 22 (+0.62%) · 基差 +17</div></div>
+      </div>
+
+      <div class="grid g3 mb">
+        <div class="card span2">
+          <div class="card-h"><h3>价格 · 库存 · 基差 联动</h3><span class="sub">华东螺纹 Φ20 · 近 60 天</span><div class="r"><div class="seg"><a>螺纹</a><a class="on">螺纹 Φ20</a><a>热卷</a><a>冷轧</a><a>中板</a><a>H型钢</a></div></div></div>
+          <div class="card-b" style="padding-top:8px">
+            <div class="legend mb"><span><i style="background:#1f5eff"></i>现货均价</span><span><i style="background:#8a97a8"></i>盘面折现货</span><span><i style="background:#6e4cf5"></i>AI 5 日预测(置信区间 ±25)</span></div>
+            <div id="chart"></div>
+            <div class="grid g4 mt" style="gap:10px">
+              <div class="metric card" style="padding:10px 12px;box-shadow:none"><div class="tiny muted">社会库存(螺纹)</div><b class="num">512 万吨</b> <span class="down small">▼ 3.1% 连续 3 周去化</span></div>
+              <div class="metric card" style="padding:10px 12px;box-shadow:none"><div class="tiny muted">上海建材日成交</div><b class="num">1.84 万吨</b> <span class="up small">▲ 12% vs 5 日均</span></div>
+              <div class="metric card" style="padding:10px 12px;box-shadow:none"><div class="tiny muted">钢厂螺纹周产量</div><b class="num">218 万吨</b> <span class="small muted">▼ 1.2%</span></div>
+              <div class="metric card" style="padding:10px 12px;box-shadow:none"><div class="tiny muted">唐山钢坯</div><b class="num">3,120</b> <span class="up small">▲ 20</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>买入时机指数</h3><span class="ai">AI</span></div>
+          <div class="card-b" style="text-align:center">
+            <div id="gauge"></div>
+            <div class="bold" style="font-size:15px;margin-top:-6px">82 · 积极买入</div>
+            <div class="small dim">建议本周完成月度计划量 70%,今日锁定待配货 1,860t</div>
+            <div class="divider"></div>
+            <table class="mini-table" style="text-align:left">
+              <tr><td>盘面动能(rb2601 夜盘 +18,5 日线上穿)</td><td class="up">+18</td></tr>
+              <tr><td>钢厂挺价(沙钢/中天 本旬上调)</td><td class="up">+15</td></tr>
+              <tr><td>库存去化(社会库存 3 周 ▼)</td><td class="up">+14</td></tr>
+              <tr><td>成交放量(日成交 +12%)</td><td class="up">+10</td></tr>
+              <tr><td>基差(现货升水 38,偏高)</td><td class="down">-6</td></tr>
+              <tr><td>宏观 / 政策(专项债发行加速)</td><td class="up">+8</td></tr>
+              <tr><td>季节性(9 月旺季 · 历史同期上涨 7/10 年)</td><td class="up">+9</td></tr>
+            </table>
+            <div class="divider"></div>
+            <div class="alert blue" style="text-align:left"><span class="ic">✦</span><div>指数 &gt; 75 时,配货引擎自动开启「涨价预警模式」:时效权重 +5%,优先锁定可即时提货资源,并提示销售缩短报价有效期。</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid g3">
+        <div class="card span2">
+          <div class="card-h"><h3>钢厂调价日历 · 2026 年 9 月</h3><span class="sub">公告自动抓取 + 预测</span><div class="r"><span class="legend"><span><i style="background:var(--danger-2)"></i>上调</span><span><i style="background:var(--success-2)"></i>下调</span><span><i style="background:var(--warn-2)"></i>AI 预测</span><span><i style="background:var(--purple-2)"></i>期货交割/宏观</span></span></div></div>
+          <div class="card-b">
+            <div class="cal">
+              <div class="d hd muted center">一</div><div class="d hd muted center">二</div><div class="d hd muted center">三</div><div class="d hd muted center">四</div><div class="d hd muted center">五</div><div class="d hd muted center">六</div><div class="d hd muted center">日</div>
+              <div class="d"><div class="n">8/31</div><div class="ev up">沙钢 上旬 +20</div><div class="ev up">中天 +20</div></div>
+              <div class="d"><div class="n">9/1</div><div class="ev up">永钢 +20</div><div class="ev nt">PMI 公布</div></div>
+              <div class="d"><div class="n">2</div></div>
+              <div class="d"><div class="n">3</div><div class="ev up">日照 热卷 +30</div></div>
+              <div class="d"><div class="n">4</div></div>
+              <div class="d"><div class="n">5</div></div>
+              <div class="d"><div class="n">6</div></div>
+              <div class="d"><div class="n">7</div><div class="ev dn">马钢 H型钢 -20</div></div>
+              <div class="d"><div class="n">8</div><div class="ev up">日照 +30</div><div class="ev">敬业 平</div></div>
+              <div class="d today"><div class="n">9 今天</div><div class="ev up">中天 +20</div><div class="ev">永钢 平</div></div>
+              <div class="d"><div class="n">10</div><div class="ev nt">CPI / 社融</div></div>
+              <div class="d"><div class="n">11</div><div class="ev pr">沙钢 中旬 +30 (78%)</div><div class="ev pr">永钢 跟涨 (65%)</div></div>
+              <div class="d"><div class="n">12</div></div>
+              <div class="d"><div class="n">13</div></div>
+              <div class="d"><div class="n">14</div></div>
+              <div class="d"><div class="n">15</div><div class="ev pr">鞍钢 10 月订货 +50</div><div class="ev nt">rb2509 最后交易日</div></div>
+              <div class="d"><div class="n">16</div></div>
+              <div class="d"><div class="n">17</div></div>
+              <div class="d"><div class="n">18</div><div class="ev nt">美联储 FOMC</div></div>
+              <div class="d"><div class="n">19</div></div>
+              <div class="d"><div class="n">20</div></div>
+              <div class="d"><div class="n">21</div><div class="ev pr">沙钢 下旬 (待定)</div></div>
+              <div class="d"><div class="n">22</div></div>
+              <div class="d"><div class="n">23</div></div>
+              <div class="d"><div class="n">24</div></div>
+              <div class="d"><div class="n">25</div></div>
+              <div class="d"><div class="n">26</div></div>
+              <div class="d"><div class="n">27</div></div>
+              <div class="d"><div class="n">28</div><div class="ev nt">国庆前备货窗口</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>调价公告原文流</h3><span class="sub">自动抓取 · NLP 提取</span></div>
+          <div class="card-b" style="display:flex;flex-direction:column;gap:8px">
+            <div class="raw" style="background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px"><div class="tiny muted">中天钢铁 · 09:02 · 官网</div>「9 月 9 日起,螺纹钢、盘螺出厂价格上调 20 元/吨,其他品种不变。」<div class="row mt" style="gap:4px;margin-top:5px"><span class="tag up">螺纹 +20</span><span class="tag up">盘螺 +20</span><span class="tag">生效 9/9</span><span class="tag green">已同步至折算规则</span></div></div>
+            <div class="raw" style="background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px"><div class="tiny muted">日照钢铁 · 9/8 16:40 · 微信公众号</div>「热轧卷板出厂价上调 30 元/吨,冷轧维持不变…」<div class="row mt" style="gap:4px;margin-top:5px"><span class="tag up">热卷 +30</span><span class="tag">冷轧 平</span></div></div>
+            <div class="raw" style="background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px"><div class="tiny muted">马钢 · 9/7 · 销售通知</div>「H 型钢出厂价下调 20 元/吨,其余不变。」<div class="row mt" style="gap:4px;margin-top:5px"><span class="tag down">H型钢 -20</span></div></div>
+            <div class="alert orange"><span class="ic">✦</span><div><b>沙钢 9 月中旬(9/11)预测 +30</b>,依据:近 12 旬中 9 次跟随盘面 5 日涨幅 &gt; 1% 时上调;当前盘面 5 日 +1.4%。历史预测准确率 81%。</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+  const n=60, labels=Array.from({length:n},(_,i)=>{const d=new Date(2026,6,11+i);return (d.getMonth()+1)+'/'+d.getDate();});
+  const spot=Array.from({length:n},(_,i)=>Math.round(3330+Math.sin(i/6)*35+i*1.9+(i%7)*2));
+  const fut=spot.map((v,i)=>v-45+Math.sin(i/3)*20+i*0.3);
+  const pred=spot.map((v,i)=>i<n-5?v:spot[n-6]+(i-(n-6))*6);
+  document.getElementById('chart').innerHTML=lineChart([{data:spot,color:'#1f5eff',marker:true},{data:fut,color:'#8a97a8',dash:true},{data:pred,color:'#6e4cf5',dash:true,marker:true}],{labels,h:210});
+  // 仪表盘
+  const v=82, R=70, cx=90, cy=86;
+  const a=Math.PI*(1-v/100); const x=cx+Math.cos(a)*R, y=cy-Math.sin(a)*R;
+  document.getElementById('gauge').innerHTML=`<svg width="180" height="100" viewBox="0 0 180 100">
+    <path d="M20 86 A70 70 0 0 1 160 86" fill="none" stroke="#eceff4" stroke-width="14" stroke-linecap="round"/>
+    <path d="M20 86 A70 70 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="url(#g)" stroke-width="14" stroke-linecap="round"/>
+    <defs><linearGradient id="g"><stop offset="0" stop-color="#12945a"/><stop offset="1" stop-color="#ff6a1a"/></linearGradient></defs>
+    <text x="90" y="80" text-anchor="middle" font-size="30" font-weight="800" fill="#1a2433" font-family="var(--mono)">82</text>
+    <text x="20" y="100" font-size="9" fill="#8a97a8">观望</text><text x="160" y="100" font-size="9" fill="#8a97a8" text-anchor="end">积极买入</text></svg>`;
+</script>
+</body>
+</html>
