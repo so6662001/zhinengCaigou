@@ -220,7 +220,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 
 /* 步骤 */
 .steps { display: flex; align-items: center; gap: 0; }
-.steps .st { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12.5px; }
+.steps .st { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12.5px; white-space: nowrap; }
 .steps .st .n { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; font-size: 11.5px; font-weight: 700; }
 .steps .st.done .n { background: var(--success); border-color: var(--success); color: #fff; }
 .steps .st.on { color: var(--text); font-weight: 600; }

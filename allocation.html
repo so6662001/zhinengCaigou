@@ -226,6 +226,21 @@
             </div>
           </div>
 
+          <!-- 品类规则 -->
+          <div class="card mt">
+            <div class="card-h"><h3>品类配货规则 · 管材 / 型材 / 板材</h3><span class="sub">几千个规格的配货靠「规格族 + 替代 + 装车约束」而不是逐规格人工找货</span><div class="r"><a class="btn xs" href="rules.html">规则配置 →</a></div></div>
+            <div class="card-b tight" style="overflow:auto">
+              <table class="tbl compact">
+                <thead><tr><th style="width:70px">品类</th><th>规格替代(引擎自动,需销售确认的会标注)</th><th>装车 / 拼车约束</th><th>拆单与来源</th><th>今日应用</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="tag">板材</span></td><td>大板可切小板(12×2200×10000 → 12×2000×8000,切割费 +40,余料入库);卷板可开平(加工费 +40,LT +1 天);材质可向上替代(Q235B → Q355B 需确认)</td><td>板卷 25t/车,中板 33t/车;同库同族拼车</td><td>需求 1 单多厚度 → 先自有库存族内切割,再按价格库「基价 + 厚度加价」逐规格比价</td><td class="small">SO-07 中板 20mm 160t:自有 12mm 族不可替代 → 敬业直发;SO-10 中板 12mm 85t → 自有 12×2200 大板切割,<b class="down">免采购</b></td></tr>
+                  <tr><td><span class="tag">型材</span></td><td>12m 可切 9m(切割费 +20);同品种不同型号不可替代;Q235B → Q355B 需确认</td><td>车长 ≤ 13m;33t/车;同供应商多型号可拼</td><td>H型钢按「型号加价表」逐型号比,角槽钢按族整单比;非常用型号需排产(LT +7)</td><td class="small">SO-06 H型钢 210t:马钢杭州库 120t + 津西直发 90t;RPL 角钢 38t → 合肥呆滞调拨</td></tr>
+                  <tr><td><span class="tag">管材</span></td><td>外径不可替代;壁厚可向上替代(4.5 → 5,价差 +80,需确认);6m → 12m 不可替代,12m 可切 6m</td><td>33t/车;大口径薄壁按体积 ≤ 20t/车;同供应商同库多规格凑整车</td><td>一单多规格(常见 10~30 个)→ 按价格库逐规格算到厂价,允许拆 ≤ 3 家供应商(每多 1 家 +8 元/吨 对账装卸成本)</td><td class="small">RPL-0909-04 Φ108×4.5 198t:4 车天津大无缝 B + 2 车衡钢 A(急用)· 与 Φ159 / DN50 拼车 3 车</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- 供应商集中度 -->
           <div class="grid g2 mt">
             <div class="card">

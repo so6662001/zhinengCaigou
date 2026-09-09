@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>供应商价格库(Excel / API) · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .model { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .model .c { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fff; font-size: 12.5px; }
+  .model .c b.t { display: block; font-size: 13px; margin-bottom: 4px; }
+  .model .c ul { margin: 4px 0 0; padding-left: 16px; color: var(--text-2); }
+  .drop { border: 1.5px dashed var(--line-strong); border-radius: 10px; padding: 14px; text-align: center; background: #fafbfd; font-size: 12.5px; }
+  .drop b { display: block; font-size: 13px; }
+  .file { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: #fff; font-size: 12.5px; }
+  .file .x { width: 30px; height: 30px; border-radius: 6px; background: #1d6f42; color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 11px; }
+  .conf { display: inline-block; min-width: 38px; text-align: right; font-family: var(--mono); font-size: 11px; }
+  .src-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; padding: 1px 6px; border-radius: 4px; background: var(--bg); color: var(--text-2); }
+  .cell { text-align: right; font-family: var(--mono); font-weight: 600; white-space: nowrap; }
+  .cell small { display: block; font-weight: 400; font-size: 10px; color: var(--text-3); }
+  .surcharge { font-size: 12px; width: 100%; border-collapse: collapse; }
+  .surcharge td { padding: 4px 6px; border-bottom: 1px dashed var(--line); }
+  .surcharge td:last-child { text-align: right; font-family: var(--mono); font-weight: 600; }
+  .surcharge tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="供应商价格库"></header>
+    <div class="content" style="padding-bottom:90px">
+
+      <div class="page-head">
+        <div>
+          <h1>供应商价格库 <span class="tag purple" style="vertical-align:middle">✦ 基价 + 加价表 · 全 SKU 自动展开</span></h1>
+          <p>管材 / 型材 / 板材几千个规格,不可能逐条问价。系统按行业惯例把价格拆成 <b>基价(品种 × 材质 × 供应商 × 仓库)+ 规格加价表</b>,供应商只需给几十个基价或上传自己的 Excel,4,860 个 SKU 的价格全部自动生成,比价与配货直接调用。</p>
+        </div>
+        <div class="actions">
+          <a class="btn" data-toast="标准价格表模板(管材 / 型材 / 板材 三 sheet)已下载">⬇ 下载标准模板</a>
+          <a class="btn" data-toast="已向 6 家价格过期供应商发送催报">催报过期价格(6)</a>
+          <a class="btn primary" data-toast="Excel 导入向导已打开">⬆ 导入 Excel 价格表</a>
+        </div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi hi"><div class="lbl">SKU 价格覆盖</div><div class="val num">4,470<small>/ 4,860</small></div><div class="delta">92% 有有效价 · 管 1,860 · 型 1,240 · 板 1,370</div></div>
+        <div class="card kpi"><div class="lbl">供应商价格表</div><div class="val num">86<small>家</small></div><div class="delta dim">API 21 · Excel/邮件 31 · 小程序 29 · 企微 5</div></div>
+        <div class="card kpi"><div class="lbl">今日已更新</div><div class="val num">38<small>家</small></div><div class="delta dim">31,204 条价格 · 全自动 0 人工录入</div></div>
+        <div class="card kpi"><div class="lbl">价格过期(&gt; 有效期)</div><div class="val num up">6<small>家</small></div><div class="delta dim">已自动催报 · 比价中标灰显不参与</div></div>
+        <div class="card kpi"><div class="lbl">价格新鲜度</div><div class="val num">1.8<small>h</small></div><div class="delta dim">API 15min · Excel 每日 · 小程序 变动即报</div></div>
+        <div class="card kpi"><div class="lbl">节省录价人工</div><div class="val num">2<small>人 / 天</small></div><div class="delta dim">上线前 2 名专职录价 · 现 0</div></div>
+      </div>
+
+      <!-- 价格模型 -->
+      <div class="card mb">
+        <div class="card-h"><h3>价格模型:为什么几千个规格也不用逐条报</h3><span class="sub">SKU 价格 = 基价 + 规格加价 + 长度/加工加价 + 材质加价 → 再进入到厂价归一化</span></div>
+        <div class="card-b">
+          <div class="model">
+            <div class="c"><b class="t">管材 · 1,860 SKU</b>基价按「品种 × 材质 × 供应商」:无缝管 20# / 焊管 Q235B / 镀锌管 / 方矩管 各一个基价规格(如 Φ108×4.5 · 6m)<ul><li>外径 × 壁厚加价表(行业通用 + 供应商自定义)</li><li>长度:6m 基准,12m +60,定尺 +30</li><li>镀锌层 / 热镀 vs 冷镀差价</li></ul><div class="small mt"><span class="tag blue">28 个基价</span> → 1,860 SKU</div></div>
+            <div class="c"><b class="t">型材 · 1,240 SKU</b>基价按「品种 × 材质」:H型钢 / 工字钢 / 角钢 / 槽钢 基准型号(如 H 400×200 · Q235B · 12m)<ul><li>型号加价表(大规格 / 小规格 / 非常用 +50~+200)</li><li>材质 Q355B +150,Q355C +250</li><li>长度 9m / 12m,定尺 +30</li></ul><div class="small mt"><span class="tag blue">16 个基价</span> → 1,240 SKU</div></div>
+            <div class="c"><b class="t">板材 · 1,370 SKU</b>基价按「品种 × 材质 × 供应商」:中板 / 热卷 / 冷轧 / 镀锌 基准厚度(如 中板 Q235B 12mm)<ul><li>厚度加价表(6mm +150 … 50mm +200)</li><li>宽度 / 长度加价,开平 / 剪切 / 纵剪加工费</li><li>材质 Q355B +150,锌层 Z120/Z275 差价</li></ul><div class="small mt"><span class="tag blue">22 个基价</span> → 1,370 SKU</div></div>
+          </div>
+          <div class="alert blue mt"><span class="ic">✦</span><div><b>供应商三种报价方式任选:</b> ① 只报基价、加价表沿用行业通用表(贸易商最常见)② 报基价 + 上传自己的加价表(钢厂 / 大代理)③ 直接上传全规格 Excel,系统反推其基价与加价表并检查一致性。三种方式都能在 1 分钟内展开为该供应商的完整 SKU 价格矩阵。</div></div>
+        </div>
+      </div>
+
+      <div class="grid mb" style="grid-template-columns: minmax(0,1fr) 400px; gap:14px">
+        <!-- Excel 导入向导 -->
+        <div class="card">
+          <div class="card-h"><h3>Excel 价格表导入</h3><span class="sub">任何格式的供应商 Excel · 智能列映射 · 规格标准化 · 差异预览</span>
+            <div class="r"><div class="steps"><div class="st done"><span class="n">✓</span>上传</div><div class="ln done"></div><div class="st done"><span class="n">✓</span>列映射</div><div class="ln done"></div><div class="st on"><span class="n">3</span>校验</div><div class="ln"></div><div class="st"><span class="n">4</span>差异预览 · 入库</div></div></div></div>
+          <div class="card-b">
+            <div class="grid" style="grid-template-columns: 1fr 1.4fr; gap:14px">
+              <div>
+                <div class="file"><div class="x">XLS</div><div style="flex:1"><b>友发钢管_20260909_价格表.xlsx</b><div class="tiny muted">3 个 sheet(焊管 / 镀锌管 / 方矩管)· 842 行 · 来源:邮箱自动收件 price@steelbuy.cn · 08:20</div></div><span class="tag green">已解析</span></div>
+                <div class="drop mt"><b>拖入其他供应商 Excel / 图片价格表</b><span class="muted">支持 xlsx / xls / csv / 微信截图(OCR)· 一次可多文件</span></div>
+                <div class="mt bold small" style="margin-bottom:6px">智能列映射 <span class="muted" style="font-weight:400">(已按「友发」历史模板自动匹配)</span></div>
+                <table class="tbl compact">
+                  <thead><tr><th>Excel 列</th><th>→ 系统字段</th><th class="r">置信</th></tr></thead>
+                  <tbody>
+                    <tr><td class="num">A 品名</td><td>品种(焊管 / 镀锌管 / 方矩管)</td><td class="r"><span class="conf">100%</span></td></tr>
+                    <tr><td class="num">B 材质</td><td>材质(Q235B 缺省)</td><td class="r"><span class="conf">100%</span></td></tr>
+                    <tr><td class="num">C 规格</td><td>规格 → 解析 外径 × 壁厚(寸 / DN / mm 自动换算)</td><td class="r"><span class="conf">97%</span></td></tr>
+                    <tr><td class="num">D 米数</td><td>长度(默认 6m)</td><td class="r"><span class="conf">99%</span></td></tr>
+                    <tr><td class="num">E 仓库</td><td>仓库 / 发货地(空 → 天津库)</td><td class="r"><span class="conf">95%</span></td></tr>
+                    <tr><td class="num">F 含税价</td><td>价格(含税 13% · 元/吨)</td><td class="r"><span class="conf">100%</span></td></tr>
+                    <tr><td class="num">G 备注</td><td>计重方式 / 付款 / 有效期(NLP)</td><td class="r"><span class="conf">88%</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="bold small" style="margin-bottom:6px">校验结果 · 842 行</div>
+                <div class="grid g4" style="gap:8px">
+                  <div class="card" style="padding:8px 10px;box-shadow:none"><div class="tiny muted">标准化成功</div><b class="num" style="font-size:18px;color:var(--success)">839</b></div>
+                  <div class="card" style="padding:8px 10px;box-shadow:none"><div class="tiny muted">待人工映射</div><b class="num up" style="font-size:18px">3</b></div>
+                  <div class="card" style="padding:8px 10px;box-shadow:none"><div class="tiny muted">价格异常</div><b class="num up" style="font-size:18px">2</b></div>
+                  <div class="card" style="padding:8px 10px;box-shadow:none"><div class="tiny muted">新增 SKU</div><b class="num" style="font-size:18px">3</b></div>
+                </div>
+                <table class="tbl compact mt">
+                  <thead><tr><th>行</th><th>原文</th><th>系统解析</th><th>处理</th></tr></thead>
+                  <tbody>
+                    <tr><td class="num">#112</td><td class="small">4寸*3.75 镀锌</td><td class="small">PIPE-GAL-Q235B-DN100×3.75-6m</td><td><span class="tag green">自动</span></td></tr>
+                    <tr><td class="num">#233</td><td class="small">国标 6分 厚壁</td><td class="small">DN20 · 壁厚? <span class="tag yellow">2.75 / 3.25</span></td><td><a class="btn xs" data-toast="已选 3.25(友发「厚壁」历史=3.25),规则已学习">选择</a></td></tr>
+                    <tr><td class="num">#410</td><td class="small">方管 100*100*5 12米</td><td class="small">PIPE-SQ-Q235B-100×100×5-12m <span class="tag blue">新 SKU</span></td><td><span class="tag green">自动建档</span></td></tr>
+                    <tr><td class="num">#587</td><td class="small">焊管 4寸×3.75 · 4,180</td><td class="small">较上次 3,920 <b class="up">+6.6%</b>(&gt; 阈值 5%)</td><td><a class="btn xs" data-toast="已核对:友发 9/9 焊管公告 +30,+260 为录入错误,已通知供应商">核对</a></td></tr>
+                    <tr><td class="num">#612</td><td class="small">镀锌管 DN50 · 4,860</td><td class="small">较上次 5,120 <b class="down">−5.1%</b></td><td><a class="btn xs">核对</a></td></tr>
+                  </tbody>
+                </table>
+                <div class="bold small mt" style="margin-bottom:6px">差异预览 · vs 9/8 价格表</div>
+                <div class="row" style="gap:8px;flex-wrap:wrap"><span class="tag red">上调 612 行(+30 ~ +50)</span><span class="tag green">下调 1</span><span class="tag">持平 226</span><span class="tag blue">新增 3</span><span class="tag yellow">失效 0</span></div>
+                <div class="small dim mt">反推基价:焊管 Q235B 4寸×3.75 = <b>4,180</b>(vs 上次 3,920);加价表与友发 8 月模板一致(偏差 0 行)。入库后自动展开 842 → <b>1,120 SKU</b>(补齐未列长度 / 定尺组合)。</div>
+              </div>
+            </div>
+            <div class="row mt" style="gap:8px;border-top:1px solid var(--line);padding-top:12px">
+              <span class="small dim">映射模板:<b>友发钢管 v4</b>(自动匹配)· 下次同格式邮件将 <b>全自动入库</b>,仅异常行提醒</span>
+              <div style="margin-left:auto" class="row"><a class="btn sm" data-toast="映射模板已另存">保存映射模板</a><a class="btn sm" data-toast="已生成异常行反馈邮件发送至友发">反馈异常给供应商</a><a class="btn sm primary" data-toast="839 行已入库,展开 1,120 SKU 价格;比价矩阵已刷新">确认入库 839 行</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- API 取价 -->
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>API / 平台取价</h3><span class="sub">自动拉取 · 无需人工</span><div class="r"><a class="btn xs" href="integrations.html">接口中心 →</a></div></div>
+            <div class="card-b tight">
+              <table class="tbl compact">
+                <thead><tr><th>来源</th><th>品类</th><th class="r">频率</th><th class="r">今日条数</th><th class="c">启用</th></tr></thead>
+                <tbody>
+                  <tr><td><b>找钢网 开放平台</b><div class="tiny muted">平台挂牌 · 含贸易商</div></td><td class="small">管 / 型 / 板</td><td class="r small">30min</td><td class="r num">8,420</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td><b>钢银电商</b></td><td class="small">板 / 型</td><td class="r small">15min</td><td class="r num">3,160</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td><b>欧冶云商</b><div class="tiny muted">宝武系板材</div></td><td class="small">板</td><td class="r small">30min</td><td class="r num">1,880</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td><b>Mysteel</b><div class="tiny muted">市场基准价</div></td><td class="small">全部</td><td class="r small">09:00 / 14:00</td><td class="r num">640</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td><b>沙钢云 / 马钢 / 鞍钢</b><div class="tiny muted">钢厂挂牌 + 加价表</div></td><td class="small">型 / 板</td><td class="r small">15min ~ 日</td><td class="r num">2,960</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td><b>中天商城</b> <span class="tag red">Token</span></td><td class="small">建材</td><td class="r small">15min</td><td class="r num muted">RPA 兜底</td><td class="c"><span class="switch on"></span></td></tr>
+                  <tr><td><b>供应商小程序</b><div class="tiny muted">29 家自助填报基价</div></td><td class="small">全部</td><td class="r small">变动即报</td><td class="r num">1,240</td><td class="c"><span class="switch on"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>价格有效期与提醒</h3></div>
+            <div class="card-b tight">
+              <table class="tbl compact">
+                <tbody>
+                  <tr><td>润忠(南通)· 板材</td><td class="small up">过期 2 天</td><td><span class="tag yellow">已催 2 次</span></td></tr>
+                  <tr><td>无锡贸易商 D · 无缝管</td><td class="small up">过期 1 天</td><td><span class="tag yellow">已催</span></td></tr>
+                  <tr><td>杭州型钢 E · 角槽</td><td class="small up">过期 1 天</td><td><span class="tag yellow">已催</span></td></tr>
+                  <tr><td colspan="3" class="small muted">过期价格在比价矩阵中灰显、不参与自动配货;供应商连续 3 次过期自动下调「响应」评分。</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>今日价格变动</h3><span class="ai">自动</span></div>
+            <div class="card-b tight">
+              <table class="tbl compact">
+                <tbody>
+                  <tr><td>友发 焊管 / 镀锌管</td><td class="r num up">+30</td><td class="small dim">Excel 08:20</td></tr>
+                  <tr><td>鞍钢 冷轧 10 月订货</td><td class="r num up">+50</td><td class="small dim">API 08:10</td></tr>
+                  <tr><td>马钢 H型钢</td><td class="r num down">−20</td><td class="small dim">API 08:00</td></tr>
+                  <tr><td>烟宝 无缝管 20#</td><td class="r num up">+50</td><td class="small dim">小程序 09:12</td></tr>
+                  <tr><td>找钢网 中板 Q235B 华东最低</td><td class="r num">3,690</td><td class="small dim">API 09:30</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 价格矩阵 -->
+      <div class="card mb">
+        <div class="card-h"><h3>价格矩阵 · 规格族视图</h3><span class="sub">一次看完一个规格族在所有供应商的全部规格价格</span>
+          <div class="r">
+            <select class="sel" style="width:220px;height:28px"><option>无缝管 · 20# · 6m · 华东到货</option><option>焊管 · Q235B · 6m</option><option>H型钢 · Q355B · 12m</option><option>中板 · Q235B</option><option>热卷 · Q235B</option></select>
+            <div class="seg"><a>挂牌价</a><a class="on">到厂价(苏州)</a></div>
+          </div></div>
+        <div class="card-b tight" style="overflow:auto">
+          <table class="tbl compact">
+            <thead>
+              <tr><th>规格(外径 × 壁厚)</th><th class="r">加价</th><th class="r">衡钢代理 A<div class="tiny muted">无锡库 · 基价 4,380</div></th><th class="r">天津大无缝 B<div class="tiny muted">天津直发 · 基价 4,290</div></th><th class="r">烟宝 代理 C<div class="tiny muted">上海库 · 基价 4,420</div></th><th class="r">无锡贸易商 D<div class="tiny muted">无锡库 · <span class="up">过期</span></div></th><th class="r">找钢网 最低<div class="tiny muted">平台 · 多来源</div></th><th>最优</th><th class="r">可用库存</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="bold">Φ57 × 3.5</td><td class="r num">+120</td><td class="cell h1">4,528<small>4,380+120+28</small></td><td class="cell h0">4,522<small>4,290+120+112</small></td><td class="cell h2">4,576</td><td class="cell muted">4,540</td><td class="cell h2">4,560<small>贸易商 F</small></td><td><span class="tag green">B</span></td><td class="r num">86t</td></tr>
+              <tr><td class="bold">Φ76 × 4</td><td class="r num">+60</td><td class="cell h0">4,468</td><td class="cell h1">4,462<small>晚 2 天</small></td><td class="cell h2">4,516</td><td class="cell muted">4,480</td><td class="cell h2">4,505</td><td><span class="tag green">A</span> <span class="tiny muted">B 便宜 6 但晚 2 天</span></td><td class="r num">142t</td></tr>
+              <tr><td class="bold">Φ89 × 4.5</td><td class="r num">+30</td><td class="cell h0">4,438</td><td class="cell h1">4,432</td><td class="cell h2">4,486</td><td class="cell muted">4,450</td><td class="cell h3">4,490</td><td><span class="tag green">A</span></td><td class="r num">210t</td></tr>
+              <tr class="best"><td class="bold">Φ108 × 4.5 <span class="tag blue">基价规格</span></td><td class="r num">0</td><td class="cell h0">4,408<small>4,380+0+28</small></td><td class="cell h0">4,402<small>4,290+0+112</small></td><td class="cell h2">4,456<small>4,420+0+36</small></td><td class="cell muted">4,420</td><td class="cell h2">4,450</td><td><span class="tag green">B / A</span></td><td class="r num">380t</td></tr>
+              <tr><td class="bold">Φ133 × 5</td><td class="r num">+80</td><td class="cell h1">4,488</td><td class="cell h0">4,482</td><td class="cell h2">4,536</td><td class="cell muted">4,500</td><td class="cell h3">4,550</td><td><span class="tag green">B</span></td><td class="r num">160t</td></tr>
+              <tr><td class="bold">Φ159 × 6</td><td class="r num">+120</td><td class="cell h1">4,528</td><td class="cell h0">4,522</td><td class="cell h2">4,576</td><td class="cell muted">4,540</td><td class="cell h3">4,590</td><td><span class="tag green">B</span></td><td class="r num">120t</td></tr>
+              <tr><td class="bold">Φ219 × 8</td><td class="r num">+150</td><td class="cell h1">4,558</td><td class="cell h0">4,552</td><td class="cell h1">4,606<small>C 自定义 +150</small></td><td class="cell muted">4,570</td><td class="cell h3">4,620</td><td><span class="tag green">B</span></td><td class="r num">64t</td></tr>
+              <tr><td class="bold">Φ325 × 10</td><td class="r num">+280</td><td class="cell h2">4,688</td><td class="cell h0">4,632<small>B 自定义 +230</small></td><td class="cell h1">4,736</td><td class="cell muted">—</td><td class="cell h4">4,780</td><td><span class="tag green">B</span> <span class="tiny muted">C-Z 按单</span></td><td class="r num">0</td></tr>
+              <tr><td colspan="9" class="center muted small">… 该规格族共 96 个规格(含 12m / 定尺)· <a href="#">展开全部</a> · 供应商 A/C 使用行业通用加价表,B 自定义 3 项差价</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row" style="padding:10px 14px;border-top:1px solid var(--line);gap:12px">
+          <span class="small dim">到厂价已含:运费(A 无锡→苏州 28 · B 天津→苏州 112 · C 上海→苏州 36)、账期资金、磅差风险;<b>B 基价最低但运费高,大口径大批量走 B、小批量急单走 A</b> —— 这类判断由配货引擎自动完成。</span>
+          <a class="btn sm" style="margin-left:auto" data-toast="已按该规格族向 5 家供应商发起询价,供应商只需更新基价">按规格族询价</a>
+          <a class="btn sm primary" href="compare.html">进入比价工作台</a>
+        </div>
+      </div>
+
+      <div class="grid g3">
+        <div class="card">
+          <div class="card-h"><h3>加价表 · 中板 Q235B 厚度</h3><span class="sub">行业通用(可按供应商覆盖)</span></div>
+          <div class="card-b">
+            <table class="surcharge">
+              <tr><td>6 mm</td><td>+150</td></tr><tr><td>8 mm</td><td>+80</td></tr><tr><td>10 – 12 mm</td><td>0(基准)</td></tr><tr><td>14 – 20 mm</td><td>0</td></tr><tr><td>22 – 30 mm</td><td>+50</td></tr><tr><td>32 – 50 mm</td><td>+150</td></tr><tr><td>&gt; 50 mm</td><td>+300</td></tr>
+              <tr><td>宽度 &gt; 2,500 / 长度 &gt; 12,000</td><td>+100 / +80</td></tr><tr><td>材质 Q355B / Q355C</td><td>+150 / +250</td></tr><tr><td>开平 / 剪切加工</td><td>+40 / +60</td></tr>
+            </table>
+            <div class="small dim mt">敬业、马钢、鞍钢各有自定义版本;差异 &gt; 30 元的项在矩阵中标注。</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>加价表 · H型钢 Q235B 型号</h3><span class="sub">马钢 API 同步 08:00</span></div>
+          <div class="card-b">
+            <table class="surcharge">
+              <tr><td>200×100 ~ 300×150(小规格)</td><td>+80</td></tr><tr><td>350×175 ~ 400×200(基准)</td><td>0</td></tr><tr><td>450×200 ~ 500×200</td><td>+30</td></tr><tr><td>600×200 ~ 700×300</td><td>+100</td></tr><tr><td>800×300 以上</td><td>+200</td></tr><tr><td>非常用规格(表外)</td><td>+150 · 需排产</td></tr><tr><td>Q355B</td><td>+150</td></tr><tr><td>9m / 12m</td><td>0 / +20</td></tr><tr><td>定尺</td><td>+30</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="think">
+          <div class="h"><span class="ai">价格库洞察</span></div>
+          <ul style="margin:0;padding-left:16px">
+            <li>无缝管 20# 规格族:天津大无缝 B 基价比华东低 90,但运费 +112,只有 <b>≥ 3 车且非急单</b>才划算;配货引擎已按此拆分。</li>
+            <li>烟宝 C 今日基价 +50 但加价表未变,系统自动判定为「钢厂调价传导」而非录错。</li>
+            <li>找钢网平台最低价近 30 天有 38% 为「不足量 / 非标 / 过期挂牌」,系统仅作参考基准,不直接配货。</li>
+            <li>板材厚度加价表 3 家钢厂对 6mm 差异达 60 元 → 薄板需求优先比价钢厂而非贸易商。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-foot">
+      <div><div class="small dim">待确认导入</div><b>友发钢管 839 行</b> <span class="tag yellow">3 待映射 · 2 异常</span></div>
+      <div><div class="small dim">展开后 SKU</div><b class="num">1,120</b></div>
+      <div><div class="small dim">价格覆盖率</div><b class="num">92% → 93.4%</b></div>
+      <div style="margin-left:auto" class="row">
+        <button class="btn" data-toast="已下载 3 sheet 标准模板">下载标准模板</button>
+        <button class="btn" data-toast="已生成供应商自助填报链接并发送">邀请供应商自助填报</button>
+        <button class="btn primary lg" data-toast="839 行已入库,1,120 SKU 价格已刷新;比价矩阵与配货引擎已同步">✓ 确认入库并刷新比价</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

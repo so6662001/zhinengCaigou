@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>接口(ERP / 钢厂 / 物流) · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .conn { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: #fff; display: flex; gap: 10px; align-items: flex-start; }
+  .conn .ic { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 12px; flex: 0 0 auto; }
+  .conn .n { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .conn .m { color: var(--text-3); font-size: 11.5px; margin-top: 2px; }
+  .conn .kv { display: flex; gap: 10px; margin-top: 6px; font-size: 11.5px; color: var(--text-2); flex-wrap: wrap; }
+  .conn .kv b { font-family: var(--mono); font-weight: 600; color: var(--text); }
+  .conn.err { border-color: #f5c6c2; background: #fff8f7; }
+  .conn.warn { border-color: #ffd2b8; }
+  .grp-h { display: flex; align-items: center; gap: 8px; font-weight: 700; margin: 6px 0 8px; font-size: 13px; }
+  .grp-h .muted { font-weight: 400; }
+  .map { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 6px 8px; align-items: center; font-size: 12px; }
+  .map .f { border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; background: #fff; font-family: var(--mono); font-size: 11.5px; }
+  .map .f.std { background: var(--primary-2); border-color: transparent; color: var(--primary); font-weight: 600; }
+  .map .a { text-align: center; color: var(--text-3); }
+  .arch { display: grid; grid-template-columns: 1fr 40px 1fr 40px 1fr; gap: 8px; align-items: center; font-size: 12px; }
+  .arch .box { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: #fff; }
+  .arch .box b { display: block; margin-bottom: 4px; }
+  .arch .box.core { background: var(--side); color: #fff; border-color: transparent; }
+  .arch .ar { text-align: center; color: var(--primary); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="接口(ERP / 钢厂 / 物流)"></header>
+    <div class="content">
+
+      <div class="page-head">
+        <div><h1>接口中心(ERP / 钢厂 / 物流 / 行情 / 价格平台)</h1><p>所有外部数据的统一接入、映射、监控与回放。钢厂和平台没有 API 时,用 RPA 抓取、邮箱 Excel 自动解析、企微文本 NLP 兜底 —— 保证价格、资源、库存、运价「每天自动到位」。</p></div>
+        <div class="actions"><a class="btn" data-toast="接入向导已打开:选择系统类型 → 填写凭证 → 自动测试连通性">+ 接入新系统</a><a class="btn" data-toast="已重跑今日失败任务 3 个">⟳ 重跑失败任务</a><a class="btn primary" data-toast="全部连接器健康检查完成:14 正常 · 1 告警 · 1 异常">健康检查</a></div>
+      </div>
+
+      <div class="grid g6 mb">
+        <div class="card kpi hi"><div class="lbl">已接入系统</div><div class="val num">16</div><div class="delta">API 9 · RPA 3 · Excel/邮件 3 · 企微 1</div></div>
+        <div class="card kpi"><div class="lbl">今日同步任务</div><div class="val num">2,348</div><div class="delta dim">成功率 <b class="down">99.7%</b> · 失败 7(已自动重试 5)</div></div>
+        <div class="card kpi"><div class="lbl">待处理异常</div><div class="val num up">2</div><div class="delta dim">中天商城 Token 过期 · 找钢开放平台限流</div></div>
+        <div class="card kpi"><div class="lbl">价格数据新鲜度</div><div class="val num">1.8<small>h</small></div><div class="delta dim">加权平均 · 目标 ≤ 4h · 过期 6 家</div></div>
+        <div class="card kpi"><div class="lbl">今日入库记录</div><div class="val num">48.6K</div><div class="delta dim">价格 31K · 资源 12K · 运价 3K · 单据 2.6K</div></div>
+        <div class="card kpi"><div class="lbl">规格标准化命中率</div><div class="val num">97.2<small>%</small></div><div class="delta dim">2.8% 进人工映射队列(今日 36 条)</div></div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: minmax(0,1fr) 380px; gap:14px">
+        <div>
+          <div class="grp-h"><i class="dot b"></i>内部系统 <span class="muted small">ERP / WMS / 财务 / 电子签</span></div>
+          <div class="grid g3 mb">
+            <div class="conn"><div class="ic" style="background:#1f5eff">ERP</div><div style="flex:1"><div class="n">金蝶云星空 ERP <span class="tag green">正常</span></div><div class="m">API · 双向 · 销售订单 / 采购单 / 库存 / 付款</div><div class="kv"><span>频率 <b>实时+5min</b></span><span>最近 <b>09:41</b></span><span>今日 <b>1,120</b> 次</span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#0d9488">WMS</div><div style="flex:1"><div class="n">仓储 WMS(6 仓)<span class="tag green">正常</span></div><div class="m">API · 入库 / 出库 / 库龄 / 磅单 OCR</div><div class="kv"><span>频率 <b>实时</b></span><span>最近 <b>09:42</b></span><span>今日 <b>412</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#12945a">财</div><div style="flex:1"><div class="n">财务 / 银企直联 <span class="tag green">正常</span></div><div class="m">API · 付款计划 / 承兑 / 授信占用</div><div class="kv"><span>频率 <b>每小时</b></span><span>最近 <b>09:00</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#6e4cf5">签</div><div style="flex:1"><div class="n">e签宝 电子签 <span class="tag green">正常</span></div><div class="m">API · 合同签署状态回调</div><div class="kv"><span>今日 <b>9</b> 份</span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#07c160">企</div><div style="flex:1"><div class="n">企业微信 <span class="tag green">正常</span></div><div class="m">API · 报价采集 NLP / 审批卡片 / 催报 / 议价</div><div class="kv"><span>今日 <b>186</b> 条消息解析</span><span>置信 &lt; 90% <b>4</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#8a97a8">☎</div><div style="flex:1"><div class="n">云呼叫中心 ASR <span class="tag green">正常</span></div><div class="m">API · 电话报价录音 → 文本 → 结构化</div><div class="kv"><span>今日 <b>11</b> 通</span></div></div></div>
+          </div>
+
+          <div class="grp-h"><i class="dot o"></i>钢厂 / 供应商 <span class="muted small">挂牌价 · 可供资源 · 调价公告 · 电子质保书 · 排产</span></div>
+          <div class="grid g3 mb">
+            <div class="conn"><div class="ic" style="background:#1f5eff">沙</div><div style="flex:1"><div class="n">沙钢云商 <span class="tag green">正常</span></div><div class="m">API · 挂牌 / 资源 / 质保书 / 调价</div><div class="kv"><span>频率 <b>15min</b></span><span>最近 <b>09:30</b></span><span>SKU <b>1,240</b></span></div></div></div>
+            <div class="conn err"><div class="ic" style="background:#12945a">中</div><div style="flex:1"><div class="n">中天钢铁商城 <span class="tag red">Token 过期</span></div><div class="m">API · 挂牌 / 理计负差 / 排产</div><div class="kv"><span>最近成功 <b>06:15</b></span><span>已自动兜底 <b>RPA 抓取</b></span></div><div class="row mt" style="margin-top:6px;gap:6px"><a class="btn xs primary" data-toast="已向中天信息部发送 Token 刷新请求,预计 30 分钟内恢复">申请刷新</a><a class="btn xs" data-toast="RPA 兜底任务运行中,最近 09:20 成功">查看兜底</a></div></div></div>
+            <div class="conn"><div class="ic" style="background:#c98a00">永</div><div style="flex:1"><div class="n">永钢销售平台 <span class="tag yellow">RPA</span></div><div class="m">无 API · RPA 定时抓取网页挂牌</div><div class="kv"><span>频率 <b>每小时</b></span><span>最近 <b>09:05</b></span><span>成功率 <b>98%</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#c98a00">马</div><div style="flex:1"><div class="n">马钢 · 型材 / 板材 <span class="tag green">正常</span></div><div class="m">API · H型钢 / 中板 挂牌与加价表</div><div class="kv"><span>频率 <b>每日 + 调价触发</b></span><span>最近 <b>08:00</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#ff6a1a">日</div><div style="flex:1"><div class="n">日照钢铁 <span class="tag yellow">邮件 Excel</span></div><div class="m">每日邮件价格表 → 自动解析入库</div><div class="kv"><span>最近 <b>今日 07:52</b></span><span>解析 <b>386</b> 行 · 异常 <b>2</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#6e4cf5">鞍</div><div style="flex:1"><div class="n">鞍钢 · 板材 <span class="tag green">正常</span></div><div class="m">API · 冷轧 / 镀锌 订货价 + 厚度宽度加价表</div><div class="kv"><span>频率 <b>每日</b></span><span>最近 <b>08:10</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#0d9488">管</div><div style="flex:1"><div class="n">天津友发 / 衡水管材 <span class="tag yellow">邮件 Excel</span></div><div class="m">焊管 / 镀锌管 / 方管 每日价格表</div><div class="kv"><span>最近 <b>08:20</b></span><span>SKU <b>842</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#55657a">贸</div><div style="flex:1"><div class="n">贸易商 × 62 家 <span class="tag blue">小程序 / Excel</span></div><div class="m">供应商小程序填报 或 上传 Excel 价格表</div><div class="kv"><span>今日更新 <b>38</b> 家</span><span>过期 <b class="up">6</b> 家 已催</span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#8a97a8">+</div><div style="flex:1"><div class="n muted">接入新钢厂 / 供应商</div><div class="m">支持 API / RPA / 邮件 Excel / 小程序 四种方式,平均接入 0.5 天</div><a class="btn xs mt" style="margin-top:6px">+ 接入</a></div></div>
+          </div>
+
+          <div class="grp-h"><i class="dot" style="background:#6e4cf5"></i>行情 / 价格平台 <span class="muted small">现货报价 · 盘面 · 库存 · 成交</span></div>
+          <div class="grid g3 mb">
+            <div class="conn"><div class="ic" style="background:#d92d20">My</div><div style="flex:1"><div class="n">Mysteel 我的钢铁 <span class="tag green">正常</span></div><div class="m">API · 全国现货价 / 社会库存 / 日成交 / 钢坯</div><div class="kv"><span>频率 <b>09:00 / 14:00 + 变动推送</b></span><span>品种 <b>管 / 型 / 板 / 建</b></span></div></div></div>
+            <div class="conn warn"><div class="ic" style="background:#ff6a1a">找</div><div style="flex:1"><div class="n">找钢网 开放平台 <span class="tag yellow">限流</span></div><div class="m">API · 平台挂牌资源与价格(含贸易商)</div><div class="kv"><span>配额 <b>5,000/日</b> 已用 <b>4,870</b></span><span>已自动降频至 <b>30min</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#1f5eff">银</div><div style="flex:1"><div class="n">钢银电商 <span class="tag green">正常</span></div><div class="m">API · 挂牌 / 成交参考</div><div class="kv"><span>频率 <b>15min</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#12945a">欧</div><div style="flex:1"><div class="n">欧冶云商 <span class="tag green">正常</span></div><div class="m">API · 宝武系板材资源与价格</div><div class="kv"><span>频率 <b>30min</b></span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#0b1526">期</div><div style="flex:1"><div class="n">上期所行情(rb / hc)<span class="tag green">正常</span></div><div class="m">行情 API · 主力合约 / 基差 / 夜盘</div><div class="kv"><span>频率 <b>实时(500ms)</b></span></div></div></div>
+          </div>
+
+          <div class="grp-h"><i class="dot g"></i>物流 <span class="muted small">运价 · 运单 · GPS · 磅房</span></div>
+          <div class="grid g3 mb">
+            <div class="conn"><div class="ic" style="background:#ff6a1a">满</div><div style="flex:1"><div class="n">满帮 / 运满满 <span class="tag green">正常</span></div><div class="m">API · 实时运价询价 / 发布运单 / 返程车匹配</div><div class="kv"><span>今日询价 <b>312</b></span><span>成交 <b>31</b> 车</span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#12945a">G7</div><div style="flex:1"><div class="n">G7 车联网 GPS <span class="tag green">正常</span></div><div class="m">API · 在途轨迹 / ETA / 延迟预警</div><div class="kv"><span>在线 <b>29/31</b> 车</span></div></div></div>
+            <div class="conn"><div class="ic" style="background:#6e4cf5">磅</div><div style="flex:1"><div class="n">磅房 / 磅单 OCR <span class="tag green">正常</span></div><div class="m">仓库地磅直连 + 供应商磅单拍照 OCR</div><div class="kv"><span>今日 <b>98</b> 张</span><span>识别率 <b>99.2%</b></span></div></div></div>
+          </div>
+        </div>
+
+        <!-- 右栏 -->
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>接入架构</h3><span class="sub">四种接入方式统一落到标准数据模型</span></div>
+            <div class="card-b">
+              <div class="arch">
+                <div class="box"><b>接入层</b>API · RPA 抓取 · 邮件 Excel 解析 · 企微/电话 NLP · 小程序填报</div>
+                <div class="ar">→</div>
+                <div class="box core"><b>标准化层</b>规格标准化(品类 → 规格族 → SKU)· 单位/计重换算 · 供应商别名映射 · 质检去重</div>
+                <div class="ar">→</div>
+                <div class="box"><b>数据资产</b>价格库 · 资源池 · 库存 · 运价 · 行情 · 单据 → 供配货 / 比价 / 安全库存引擎调用</div>
+              </div>
+              <div class="small dim mt">每条入库数据带「来源、原文、时间、置信度」四要素,任何价格都可回溯到原始 Excel 行 / API 报文 / 聊天记录。</div>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>规格标准化映射</h3><span class="ai">NLP</span><span class="sub">不同来源写法 → 标准 SKU</span></div>
+            <div class="card-b">
+              <div class="map">
+                <div class="f">沙钢云: 无缝管 20# 108*4.5*6000</div><div class="a">→</div><div class="f std">PIPE-SML-20#-108×4.5-6m</div>
+                <div class="f">友发 Excel: 4寸*3.75 Q235 镀锌管</div><div class="a">→</div><div class="f std">PIPE-GAL-Q235B-DN100×3.75-6m</div>
+                <div class="f">马钢 API: H型钢 400*200*8*13 Q355B 12m</div><div class="a">→</div><div class="f std">SEC-H-Q355B-400×200-12m</div>
+                <div class="f">企微: "12个厚的 Q235 中板 2米宽 8米长"</div><div class="a">→</div><div class="f std">PLT-MP-Q235B-12×2000×8000</div>
+                <div class="f">日照邮件: 热卷 5.75*1500*C Q235B</div><div class="a">→</div><div class="f std">PLT-HRC-Q235B-5.75×1500×C</div>
+                <div class="f">贸易商: "10#槽钢 国标 唐钢"</div><div class="a">→</div><div class="f std">SEC-C-Q235B-10#-6m <span class="tag yellow" style="margin-left:4px">待确认长度</span></div>
+              </div>
+              <div class="row mt" style="gap:8px"><span class="small dim">人工映射队列 <b>36</b> 条 · 每次确认自动学习为别名规则</span><a class="btn xs" style="margin-left:auto" data-toast="映射队列已打开">处理队列</a></div>
+            </div>
+          </div>
+
+          <div class="card mb">
+            <div class="card-h"><h3>事件 / Webhook</h3><span class="sub">数据到达即触发引擎</span></div>
+            <div class="card-b tight">
+              <table class="tbl compact">
+                <tbody>
+                  <tr><td>钢厂调价公告到达</td><td class="small dim">→ 折算规则更新 · 配货重算 · 推送采购</td></tr>
+                  <tr><td>供应商价格表入库</td><td class="small dim">→ 比价矩阵刷新 · 过期价格失效</td></tr>
+                  <tr><td>WMS 入库 / 出库</td><td class="small dim">→ 可用量更新 · 次日安全库存复算</td></tr>
+                  <tr><td>GPS ETA 延迟 &gt; 2h</td><td class="small dim">→ 在途可用量按延后重算 · 通知客户</td></tr>
+                  <tr><td>磅单 OCR 完成</td><td class="small dim">→ 三单匹配 · 磅差判定 · 索赔</td></tr>
+                  <tr><td>ERP 新销售订单</td><td class="small dim">→ 需求池标准化 · 合并 · 预配货</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3>同步日志</h3><span class="sub">最近</span><div class="r"><a class="small" href="#">全部</a></div></div>
+            <div class="card-b tight">
+              <table class="tbl compact">
+                <tbody>
+                  <tr><td class="num tiny">09:42</td><td>WMS 出库 12 条</td><td><span class="tag green">OK</span></td></tr>
+                  <tr><td class="num tiny">09:41</td><td>ERP 销售订单 +2</td><td><span class="tag green">OK</span></td></tr>
+                  <tr><td class="num tiny">09:30</td><td>沙钢云 挂牌 1,240 SKU</td><td><span class="tag green">OK</span></td></tr>
+                  <tr><td class="num tiny">09:30</td><td>找钢网 资源拉取</td><td><span class="tag yellow">限流 · 降频</span></td></tr>
+                  <tr><td class="num tiny">09:20</td><td>中天 RPA 兜底抓取</td><td><span class="tag green">OK</span></td></tr>
+                  <tr><td class="num tiny">09:15</td><td>中天商城 API</td><td><span class="tag red">401 Token</span></td></tr>
+                  <tr><td class="num tiny">08:20</td><td>友发 邮件 Excel 842 行</td><td><span class="tag green">OK · 3 行待映射</span></td></tr>
+                  <tr><td class="num tiny">07:52</td><td>日照 邮件 Excel 386 行</td><td><span class="tag green">OK · 2 行价格异常</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>
