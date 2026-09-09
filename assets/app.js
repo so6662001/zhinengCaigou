@@ -5,14 +5,16 @@
     { href: 'index.html', ico: '◈', text: '采购驾驭舱' },
     { href: 'allocation.html', ico: '⇶', text: '智能配货', cnt: '12' },
     { href: 'compare.html', ico: '⚖', text: '智能比价', cnt: '5' },
+    { href: 'compare-multi.html', ico: '▦', text: '多规格整单比价' },
+    { href: 'price-lookup.html', ico: '⌕', text: '价格速查' },
     { href: 'orders.html', ico: '▤', text: '采购执行跟踪' },
     { group: '数据资产' },
     { href: 'market.html', ico: '⟁', text: '行情与钢厂调价' },
-    { href: 'suppliers.html', ico: '◎', text: '供应商画像' },
+    { href: 'suppliers.html', ico: '◎', text: '供应商画像', alias: ['supplier-detail.html'] },
     { href: 'inventory.html', ico: '▦', text: '资源库存(自有+在途)' },
     { href: 'safety-stock.html', ico: '◔', text: '安全库存自动运算', cnt: '6' },
     { href: 'demand.html', ico: '⌁', text: '销售需求池' },
-    { href: 'pricing.html', ico: '¥', text: '供应商价格库', cnt: '6' },
+    { href: 'pricing.html', ico: '¥', text: '供应商价格库', cnt: '6', alias: ['import.html'] },
     { group: '系统' },
     { href: 'rules.html', ico: '⚙', text: '配货规则 / 权重' },
     { href: 'risk.html', ico: '⛨', text: '风控与审批流', cnt: '2' },
@@ -26,7 +28,7 @@
     let h = `<div class="brand"><div class="logo">钢</div><div><div class="name">钢采智配</div><div class="sub">SteelBuy · 自动配货 & 比价</div></div></div><nav class="nav">`;
     NAV.forEach(n => {
       if (n.group) { h += `<div class="group">${n.group}</div>`; return; }
-      const act = n.href === cur ? 'active' : '';
+      const act = (n.href === cur || (n.alias && n.alias.includes(cur))) ? 'active' : '';
       h += `<a class="${act}" href="${n.href}"><span class="ico">${n.ico}</span>${n.text}${n.cnt ? `<span class="cnt">${n.cnt}</span>` : ''}</a>`;
     });
     h += `</nav><div class="side-foot"><div class="u"><div class="av">陈</div><div><div>陈建国</div><div class="role">采购总监 · 华东大区</div></div></div></div>`;
