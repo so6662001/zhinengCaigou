@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多规格整单比价 · 钢采智配</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .mx { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px; }
+  .mx th { background: #f8fafc; color: var(--text-2); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; text-align: right; position: sticky; top: 0; z-index: 2; }
+  .mx th:first-child, .mx th:nth-child(2) { text-align: left; }
+  .mx th .sup { font-weight: 700; color: var(--text); font-size: 12.5px; }
+  .mx th .sm { display: block; font-weight: 400; font-size: 10.5px; color: var(--text-3); }
+  .mx td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: right; font-family: var(--mono); cursor: pointer; }
+  .mx td:first-child, .mx td:nth-child(2) { text-align: left; font-family: inherit; }
+  .mx tr:hover td { background: #fafbfd; }
+  .mx tr.cur td { background: var(--primary-2) !important; }
+  .mx td.rowmin { color: var(--success); font-weight: 700; }
+  .mx td.pick { box-shadow: inset 0 0 0 2px var(--primary); background: #eef4ff; font-weight: 700; border-radius: 4px; }
+  .mx td.na { color: var(--text-3); }
+  .mx td.stale { color: var(--text-3); text-decoration: line-through; }
+  .mx tfoot td { background: #f8fafc; font-weight: 700; border-top: 2px solid var(--line-strong); cursor: default; }
+  .mx tfoot td .sm { display: block; font-weight: 400; font-size: 10.5px; color: var(--text-3); font-family: inherit; }
+  .mx tfoot td.bestsingle { color: var(--primary); }
+  .mx .urg { display: inline-block; background: var(--danger-2); color: var(--danger); font-size: 10px; padding: 0 5px; border-radius: 3px; margin-left: 4px; font-weight: 700; }
+  .strat { display: flex; flex-direction: column; gap: 6px; }
+  .strat label { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; font-size: 12.5px; }
+  .strat label.on { border-color: var(--primary); background: var(--primary-2); font-weight: 600; }
+  .strat label .tot { margin-left: auto; font-family: var(--mono); font-weight: 700; }
+  .plan-sum .big { font-size: 24px; font-weight: 800; letter-spacing: -.5px; font-family: var(--mono); }
+  .alloc-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .alloc-row:last-child { border-bottom: none; }
+  .alloc-row .bar { flex: 1; }
+  .sbar { display: grid; grid-template-columns: 130px 1fr 90px; gap: 8px; align-items: center; font-size: 12.5px; padding: 5px 0; }
+  .sbar .track { height: 18px; background: #eef1f5; border-radius: 4px; overflow: hidden; position: relative; }
+  .sbar .track i { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px; }
+  .sbar .track span { position: absolute; left: 8px; top: 0; line-height: 18px; font-size: 10.5px; color: #fff; font-weight: 600; }
+  .sbar .v { font-family: var(--mono); font-weight: 700; text-align: right; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" data-crumb="比价 / 多规格整单"></header>
+    <div class="content" style="padding-bottom:90px">
+
+      <div class="page-head">
+        <div>
+          <h1>多规格整单比价 <span class="tag purple" style="vertical-align:middle">✦ 单规格 + 整单 + 拆单 一屏搞定</span></h1>
+          <p><b class="num">RFQ-260909-05</b> · 无缝管 20# · 6m · 12 个规格 · 186t · 无锡到货 · 要求 9/11 · 关联 SO-260909-12(中船南通)+ RPL-0909-04。矩阵每格是归一化到厂价;<b>点任一行</b>看单规格对比,<b>右侧切换策略</b>看整单 / 拆单结果,矩阵自动高亮选中的格子。</p>
+        </div>
+        <div class="actions">
+          <a class="btn" href="compare.html">← 单规格比价</a>
+          <div class="seg" id="priceMode"><a class="on" data-mode="landed">到厂价</a><a data-mode="raw">挂牌价</a></div>
+          <a class="btn" data-toast="已向 4 家供应商发出二轮议价,只需回复新基价">二轮议价</a>
+          <a class="btn primary" data-toast="已按当前策略生成采购单草稿">✓ 采纳当前策略</a>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: minmax(0,1fr) 360px; gap:14px">
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>规格 × 供应商 价格矩阵</h3><span class="sub">元/吨 · 含税 · 到无锡</span>
+              <div class="r"><label class="row small" style="gap:4px;white-space:nowrap"><input type="checkbox" id="urgentOn" checked> 急用规格必须即提</label><label class="row small" style="gap:4px;white-space:nowrap"><input type="checkbox" id="staleOff" checked> 排除过期价格</label></div></div>
+            <div class="row small" style="padding:8px 14px;border-bottom:1px solid var(--line);gap:14px;color:var(--text-2)"><span><b style="color:var(--success)">绿字</b> = 该规格最低</span><span><span style="display:inline-block;width:14px;height:12px;border:2px solid var(--primary);border-radius:3px;vertical-align:-2px;background:#eef4ff"></span> = 当前策略选中</span><span><span class="urg" style="margin:0">急</span> = 9/11 前必须到,不能等直发(灰字「晚」)</span><span class="dim">— 无货 = 该供应商无此规格</span></div>
+            <div class="card-b tight" style="overflow:auto;max-height:560px">
+              <table class="mx" id="mx"></table>
+            </div>
+            <div class="row" style="padding:10px 14px;border-top:1px solid var(--line);gap:12px" class="small">
+              <span class="small dim" id="mxNote"></span>
+              <a class="btn xs" style="margin-left:auto" data-toast="矩阵已导出 Excel(含分解)">导出矩阵</a>
+              <a class="btn xs" data-toast="已生成对比 PDF">导出比价报告</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h3 id="specTitle">单规格对比 · Φ108×4.5</h3><span class="sub">点矩阵任一行切换 · 展示成本分解</span><div class="r"><a class="btn xs" href="price-lookup.html">价格速查 →</a></div></div>
+            <div class="card-b" id="specDetail"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb">
+            <div class="card-h"><h3>整单策略</h3><span class="sub">实时计算</span></div>
+            <div class="card-b">
+              <div class="strat" id="strat"></div>
+              <div class="small dim mt">拆单成本:每增加 1 家供应商 +8 元/吨(对账 / 装卸 / 多点提货),已计入。</div>
+            </div>
+          </div>
+          <div class="card mb plan-sum">
+            <div class="card-h"><h3 id="planName">方案</h3><span class="tag green" id="planTag">推荐</span></div>
+            <div class="card-b" id="planBody"></div>
+          </div>
+          <div class="think">
+            <div class="h"><span class="ai">引擎建议</span></div>
+            <ul style="margin:0;padding-left:16px" id="advice"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-foot">
+      <div><div class="small dim">当前策略</div><b id="footPlan">—</b></div>
+      <div><div class="small dim">整单总价</div><b class="num" id="footTotal">—</b></div>
+      <div><div class="small dim">均价</div><b class="num" id="footAvg">—</b></div>
+      <div><div class="small dim">比最优单一供应商</div><b class="num down" id="footSave">—</b></div>
+      <div style="margin-left:auto" class="row">
+        <button class="btn" data-toast="已推送销售确认 3 个急用规格交期">推送销售确认</button>
+        <button class="btn primary lg" data-toast="已按当前策略生成采购单草稿并推送电子签">✓ 采纳并生成采购单</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  const SPECS=[
+    {s:'Φ57×3.5',t:12,add:120},{s:'Φ76×4',t:14,add:60,u:1},{s:'Φ89×4.5',t:16,add:30,u:1},{s:'Φ108×4.5',t:40,add:0},
+    {s:'Φ114×4.5',t:10,add:10},{s:'Φ133×5',t:18,add:80},{s:'Φ159×6',t:22,add:120},{s:'Φ168×6',t:8,add:130,u:1},
+    {s:'Φ219×8',t:20,add:150},{s:'Φ273×8',t:12,add:220},{s:'Φ325×10',t:8,add:280},{s:'Φ377×10',t:6,add:350}];
+  const SUPS=[
+    {id:'A',name:'衡钢代理 A',where:'无锡库 · 即提',base:4380,fr:28,oth:0,lt:0,color:'#1f5eff',cust:{}},
+    {id:'B',name:'天津大无缝 B',where:'天津直发 · +2 天',base:4250,fr:105,oth:7,lt:2,color:'#c98a00',cust:{'Φ219×8':140,'Φ325×10':230,'Φ377×10':300}},
+    {id:'C',name:'烟宝代理 C',where:'上海库 · 次日',base:4360,fr:36,oth:4,lt:1,color:'#12945a',cust:{'Φ133×5':40,'Φ159×6':30},na:['Φ325×10','Φ377×10']},
+    {id:'F',name:'找钢 · 贸易商 F',where:'苏州库 · 次日 · 非协议',base:4400,fr:40,oth:12,lt:1,color:'#6e4cf5',cust:{'Φ108×4.5':-20},na:['Φ273×8','Φ377×10']},
+    {id:'D',name:'无锡贸易商 D',where:'无锡库 · 价格过期 1 天',base:4392,fr:28,oth:0,lt:0,color:'#8a97a8',stale:1,cust:{}}];
+  const T=SPECS.reduce((a,x)=>a+x.t,0), SPLIT=8;
+  let mode='landed', cur='Φ108×4.5', stratKey='split2';
+  const price=(sp,su)=>{ if(su.na&&su.na.includes(sp.s)) return null; const add=su.cust[sp.s]!=null?su.cust[sp.s]:sp.add; return mode==='landed'? su.base+add+su.fr+su.oth : su.base+add; };
+  const landed=(sp,su)=>{ if(su.na&&su.na.includes(sp.s)) return null; const add=su.cust[sp.s]!=null?su.cust[sp.s]:sp.add; return su.base+add+su.fr+su.oth; };
+  const fmt=n=>n.toLocaleString('zh-CN');
+  const active=()=>SUPS.filter(s=>!(document.getElementById('staleOff').checked&&s.stale));
+  const ok=(sp,su)=>landed(sp,su)!=null && !(document.getElementById('urgentOn').checked&&sp.u&&su.lt>0);
+
+  function solve(subset){ let tot=0, pick={}; for(const sp of SPECS){ let best=null; for(const su of subset){ if(!ok(sp,su)) continue; const p=landed(sp,su); if(best==null||p<best.p) best={p,su}; } if(!best) return null; tot+=best.p*sp.t; pick[sp.s]=best.su.id; } const used=new Set(Object.values(pick)).size; return {tot:tot+(used-1)*SPLIT*T, base:tot, pick, used}; }
+  function combos(arr,k){ const out=[]; (function rec(i,acc){ if(acc.length===k){out.push(acc.slice());return;} for(let j=i;j<arr.length;j++){acc.push(arr[j]);rec(j+1,acc);acc.pop();} })(0,[]); return out; }
+  function plans(){
+    const A=active(); const res={};
+    let bestSingle=null; A.forEach(su=>{ const r=solve([su]); if(r&&(!bestSingle||r.tot<bestSingle.tot)) bestSingle={...r,label:'单一供应商 · '+su.name,sups:[su]}; });
+    res.single=bestSingle;
+    for(const k of [2,3]){ let best=null; for(let n=1;n<=k;n++) for(const c of combos(A,n)){ const r=solve(c); if(r&&(!best||r.tot<best.tot)) best={...r,sups:c}; } res['split'+k]={...best,label:`拆单 ≤ ${k} 家`}; }
+    const r=solve(A); res.free={...r,label:'逐规格最低(不限家数)',sups:A};
+    return res;
+  }
+  function render(){
+    const A=active(), P=plans(), plan=P[stratKey]||P.split2;
+    // matrix
+    let h='<thead><tr><th>规格</th><th>吨位</th>'+SUPS.map(su=>`<th><span class="sup" style="color:${su.color}">${su.name}</span><span class="sm">${su.where} · 基价 ${fmt(su.base)}${su.stale?' · <b style="color:var(--danger)">过期</b>':''}</span></th>`).join('')+'<th>最低</th></tr></thead><tbody>';
+    SPECS.forEach(sp=>{
+      const vals=SUPS.map(su=>({su,p:price(sp,su),okk:ok(sp,su)&&A.includes(su)}));
+      const minv=Math.min(...vals.filter(v=>v.p!=null&&v.okk).map(v=>v.p));
+      h+=`<tr data-s="${sp.s}" class="${sp.s===cur?'cur':''}"><td><b>${sp.s}</b>${sp.u?'<span class="urg">急</span>':''}<span class="tiny muted" style="margin-left:6px">加价 ${sp.add>=0?'+':''}${sp.add}</span></td><td class="num">${sp.t}t</td>`;
+      vals.forEach(v=>{ if(v.p==null){h+='<td class="na">— 无货</td>';return;} const cls=[]; if(!A.includes(v.su)) cls.push('stale'); else if(!v.okk) cls.push('na'); if(v.okk&&v.p===minv) cls.push('rowmin'); if(plan&&plan.pick[sp.s]===v.su.id) cls.push('pick'); h+=`<td class="${cls.join(' ')}" title="${v.okk?'':'急用规格不能等直发'}">${fmt(v.p)}${!v.okk&&A.includes(v.su)?'<span class="tiny"> 晚</span>':''}</td>`; });
+      const minSu=vals.find(v=>v.okk&&v.p===minv); h+=`<td style="color:${minSu?minSu.su.color:'#999'};font-weight:700">${minSu?minSu.su.id:'—'}</td></tr>`;
+    });
+    h+='</tbody><tfoot><tr><td>整单合计</td><td class="num">'+T+'t</td>';
+    SUPS.forEach(su=>{ const r=A.includes(su)?solve([su]):null; const cover=SPECS.filter(sp=>landed(sp,su)!=null).length; h+=`<td class="${P.single&&P.single.sups[0].id===su.id?'bestsingle':''}">${r?'¥ '+fmt(r.tot):'—'}<span class="sm">${cover<12?'缺 '+(12-cover)+' 个规格':(r?'均 '+fmt(Math.round(r.tot/T)):(A.includes(su)?'急用规格无法即提':'已排除'))}</span></td>`; });
+    h+=`<td style="color:var(--primary)">拆单<span class="sm">¥ ${fmt(plan.tot)}</span></td></tr></tfoot>`;
+    document.getElementById('mx').innerHTML=h;
+    document.getElementById('mxNote').innerHTML=`${mode==='landed'?'到厂价 = 基价 + 规格加价 + 运费 + 账期/风险':'挂牌价 = 基价 + 规格加价(未含运费,仅供参考)'} · B 自定义 3 项加价(Φ219 / 325 / 377 更低)· F 对 Φ108 有 −20 特价但为非协议户,风险溢价 +12`;
+    // strategies
+    const keys=[['single','单一供应商(整单一家)'],['split2','拆单 ≤ 2 家'],['split3','拆单 ≤ 3 家'],['free','逐规格最低(不限家数)']];
+    document.getElementById('strat').innerHTML=keys.map(([k,l])=>{ const p=P[k]; return `<label class="${k===stratKey?'on':''}" data-k="${k}"><input type="radio" name="st" ${k===stratKey?'checked':''}><span>${l}<div class="tiny muted" style="font-weight:400">${p?(p.sups.length===1?p.sups[0].name:p.used+' 家 · '+Object.values(p.pick).filter((v,i,a)=>a.indexOf(v)===i).join(' + ')):'不可行'}</div></span><span class="tot">${p?'¥ '+fmt(p.tot):'—'}</span></label>`; }).join('');
+    // plan summary
+    const single=P.single, save=single?single.tot-plan.tot:0;
+    const bySup={}; SPECS.forEach(sp=>{ const id=plan.pick[sp.s]; bySup[id]=bySup[id]||{t:0,n:0}; bySup[id].t+=sp.t; bySup[id].n++; });
+    document.getElementById('planName').textContent=plan.label; document.getElementById('planTag').textContent=stratKey==='split2'?'推荐':(save>0?'可行':'对比');
+    document.getElementById('planBody').innerHTML=`<div class="big">¥ ${fmt(plan.tot)}</div><div class="small dim">均价 <b class="num">${fmt(Math.round(plan.tot/T))}</b> 元/吨 · 含拆单成本 ¥ ${fmt(plan.tot-plan.base)} · ${single?('比最优单一供应商 <b class="'+(save>=0?'down':'up')+'">'+(save>=0?'省':'贵')+' ¥ '+fmt(Math.abs(save))+'</b>'):''}</div><div class="divider"></div>`+
+      Object.entries(bySup).map(([id,v])=>{ const su=SUPS.find(s=>s.id===id); return `<div class="alloc-row"><span class="avatar" style="background:${su.color};width:22px;height:22px;font-size:10px">${id}</span><b style="width:110px">${su.name}</b><div class="bar"><i style="width:${(v.t/T*100).toFixed(0)}%;background:${su.color}"></i></div><span class="num">${v.n} 规格 · ${v.t}t</span></div>`; }).join('')+
+      `<div class="divider"></div><div class="small dim">交期:急用 3 规格(38t)即提 ✓ · 其余 ${plan.sups.some(s=>s.lt===2)?'B 直发 9/12 到(+2 天,在 9/11 要求外 → 已标注需销售确认)':'9/11 前到 ✓'}</div>`;
+    document.getElementById('footPlan').textContent=plan.label; document.getElementById('footTotal').textContent='¥ '+fmt(plan.tot); document.getElementById('footAvg').textContent=fmt(Math.round(plan.tot/T))+' 元/吨'; document.getElementById('footSave').textContent=(save>=0?'−':'+')+'¥ '+fmt(Math.abs(save));
+    document.getElementById('advice').innerHTML=`<li><b>推荐拆单 ≤ 2 家:</b>B 基价最低但直发晚 2 天,拿大口径非急用规格;A 无锡库即提,拿 3 个急用规格与小口径。再多拆一家每吨 +8 对账成本,第 3 家几乎无增益。</li><li>F 对 Φ108 有 −20 特价,但非协议户风险溢价 +12 与运费后仍高于 B 70 元 → 不采纳。C 在 Φ133 / Φ159 略低于 B,但多拆一家 +¥1,488 对账成本 &gt; 收益 ¥1,180 → 维持 2 家。</li><li>B 若能把 Φ108 基价再让 20(近 7 日成交 4,230),整单可再省 ¥ 800;已生成议价话术。</li><li>Φ325 / Φ377 为 C-Z 长尾,仅 B 有自定义低价,建议随本单一起采购,不单独备库。</li>`;
+  }
+  document.getElementById('mx').addEventListener('click',e=>{ const tr=e.target.closest('tr[data-s]'); if(!tr) return; cur=tr.dataset.s; render(); renderSpec(); });
+  document.getElementById('strat').addEventListener('click',e=>{ const l=e.target.closest('label'); if(!l) return; stratKey=l.dataset.k; render(); });
+  document.getElementById('priceMode').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; mode=a.dataset.mode; render(); renderSpec(); });
+  ['urgentOn','staleOff'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{render();renderSpec();}));
+  function renderSpec(){
+    const sp=SPECS.find(x=>x.s===cur); document.getElementById('specTitle').textContent=`单规格对比 · 无缝管 20# ${sp.s} · 6m · ${sp.t}t${sp.u?' · 急用':''}`;
+    const rows=SUPS.map(su=>({su,p:landed(sp,su),raw:price(sp,su)})).filter(r=>r.p!=null).sort((a,b)=>a.p-b.p);
+    const max=Math.max(...rows.map(r=>r.p)), min=rows[0].p;
+    document.getElementById('specDetail').innerHTML=rows.map((r,i)=>{ const add=r.su.cust[sp.s]!=null?r.su.cust[sp.s]:sp.add; const w=Math.max(30,((r.p-min*0.97)/(max-min*0.97))*100); return `<div class="sbar"><div><b style="color:${r.su.color}">${r.su.name}</b><div class="tiny muted">${r.su.where}</div></div><div class="track"><i style="width:${w.toFixed(0)}%;background:${r.su.color};opacity:${r.su.stale?.4:1}"></i><span>基价 ${fmt(r.su.base)} ${add>=0?'+':''}${add} + 运费 ${r.su.fr} + 其他 ${r.su.oth}</span></div><div class="v">${fmt(r.p)}${i===0?' <span class="tag green">最低</span>':`<span class="tiny up"> +${r.p-min}</span>`}${r.su.stale?'<div class="tiny up">过期</div>':''}${sp.u&&r.su.lt>0?'<div class="tiny up">晚 '+r.su.lt+' 天</div>':''}</div></div>`; }).join('')+
+      `<div class="row mt" style="gap:8px"><span class="small dim">近 30 天该规格我司成交均价 <b class="num">${fmt(min+6)}</b>,Mysteel 无锡 ${fmt(min+38)};本次最低价处于 <b>22 分位</b>。</span><a class="btn xs" style="margin-left:auto" data-toast="已向该规格最低 2 家发起议价">议价</a><a class="btn xs" href="price-lookup.html">历史走势</a></div>`;
+  }
+  render(); renderSpec();
+})();
+</script>
+</body>
+</html>
