@@ -13,6 +13,15 @@
   .demand .t { font-weight: 600; }
   .demand .m { color: var(--text-3); font-size: 11.5px; margin-top: 2px; }
   .demand .q { margin-left: auto; text-align: right; white-space: nowrap; }
+  .demand.hide { display: none; }
+  .short { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .short-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .short-why { padding: 8px 14px; font-size: 12.5px; color: var(--text-2); border-bottom: 1px solid var(--line); }
+  .short .tbl th { white-space: nowrap; }
+  .short .tbl td { white-space: nowrap; }
+  .short .tbl td:nth-child(2) { white-space: normal; min-width: 180px; }
+  .short .tbl td:nth-child(9) { white-space: normal; min-width: 90px; }
+  .focus-card.flash { box-shadow: 0 0 0 3px var(--primary-2), 0 0 0 5px var(--primary); transition: box-shadow .2s; }
   .src-row td { background: #fbfcfe; font-size: 12px; color: var(--text-2); }
   .src-row td:first-child { padding-left: 34px; }
   .engine-log { background: #0b1526; color: #b9d0ff; font-family: var(--mono); font-size: 11px; border-radius: 8px; padding: 10px 12px; line-height: 1.7; max-height: 150px; overflow: auto; }
@@ -47,25 +56,27 @@
         <!-- 左:需求池 -->
         <div>
           <div class="card">
-            <div class="card-h"><h3>需求池</h3><span class="tag blue">12 单 · 1,860 t</span><div class="r"><a class="btn xs" data-toast="已从 ERP 同步 2 张新销售订单">⟳ 同步 ERP</a></div></div>
+            <div class="card-h"><h3>需求池</h3><span class="tag blue" id="poolCnt">14 单 · 1,960 t</span><div class="r"><a class="btn xs" data-toast="已从 ERP 同步 2 张新销售订单">⟳ 同步 ERP</a></div></div>
             <div style="padding:10px 12px;border-bottom:1px solid var(--line)">
               <div class="chips">
-                <span class="chip on">全部</span><span class="chip">今日交货</span><span class="chip">缺资源</span><span class="chip">安全库存补货</span>
+                <span class="chip on" data-f="all">全部</span><span class="chip" data-f="soon">48h 内交货</span><span class="chip" data-f="short">缺资源 <b>2</b></span><span class="chip" data-f="rpl">安全库存补货 <b>3</b></span>
               </div>
             </div>
             <div style="max-height:640px;overflow:auto">
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-01 <span class="tag green">已配齐</span></div><div class="m">中建八局 · 苏州工业园 · 9/11 到</div><div class="m">螺纹 HRB400E Φ20×100t / Φ22×80t / Φ25×80t</div></div><div class="q"><b class="num">260</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-02 <span class="tag green">已配齐</span></div><div class="m">三一重工 · 昆山 · 9/10 到</div><div class="m">热卷 Q235B 5.75*1500*C</div></div><div class="q"><b class="num">180</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-03 <span class="tag red">缺 40t</span></div><div class="m">上海建工 · 宝山 · 9/10 到 · <b style="color:var(--danger)">急</b></div><div class="m">螺纹 HRB400E Φ32 12m 定尺</div></div><div class="q"><b class="num">120</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-04 <span class="tag green">已配齐</span></div><div class="m">中铁四局 · 无锡 · 9/12 到</div><div class="m">盘螺 HRB400E Φ8×70t / Φ10×80t</div></div><div class="q"><b class="num">150</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-05 <span class="tag yellow">待确认</span></div><div class="m">格力电器 · 南京 · 9/13 到</div><div class="m">冷轧 SPCC 1.0*1250*C</div></div><div class="q"><b class="num">95</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-06 <span class="tag green">已配齐</span></div><div class="m">浙江交工 · 嘉兴 · 9/14 到</div><div class="m">H型钢 Q355B 400*200*8*13</div></div><div class="q"><b class="num">210</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-07 <span class="tag yellow">待确认</span></div><div class="m">徐工集团 · 徐州 · 9/15 到</div><div class="m">中板 Q355B 20*2200*10000</div></div><div class="q"><b class="num">160</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-08 <span class="tag green">已配齐</span></div><div class="m">万科 · 合肥 · 9/12 到</div><div class="m">螺纹 HRB400E Φ12/14/16 · 允许理计</div></div><div class="q"><b class="num">340</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-09 <span class="tag green">已配齐</span></div><div class="m">绿地控股 · 杭州 · 9/13 到</div><div class="m">螺纹 HRB400E Φ18/20</div></div><div class="q"><b class="num">150</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-10 <span class="tag green">已配齐</span></div><div class="m">中船 · 南通 · 9/16 到</div><div class="m">中板 Q235B 12*2000*8000</div></div><div class="q"><b class="num">85</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">SO-260909-11 <span class="tag green">已配齐</span></div><div class="m">比亚迪 · 常州 · 9/14 到</div><div class="m">镀锌 DX51D+Z 0.8*1250*C</div></div><div class="q"><b class="num">60</b> t</div></label>
-              <label class="demand on"><input type="checkbox" checked><div><div class="t">RPL-0909-01 <span class="tag purple">补库</span></div><div class="m">太仓库安全库存预警 · 自动生成</div><div class="m">螺纹 HRB400E Φ14/16 · 库存 3 天用量</div></div><div class="q"><b class="num">50</b> t</div></label>
+              <label class="demand on" data-tags="soon"><input type="checkbox" checked><div><div class="t">SO-260909-01 <span class="tag green">已配齐</span></div><div class="m">中建八局 · 苏州工业园 · 9/11 到</div><div class="m">螺纹 HRB400E Φ20×100t / Φ22×80t / Φ25×80t</div></div><div class="q"><b class="num">260</b> t</div></label>
+              <label class="demand on" data-tags="soon"><input type="checkbox" checked><div><div class="t">SO-260909-02 <span class="tag green">已配齐</span></div><div class="m">三一重工 · 昆山 · 9/10 到</div><div class="m">热卷 Q235B 5.75*1500*C</div></div><div class="q"><b class="num">180</b> t</div></label>
+              <label class="demand on" data-tags="soon short"><input type="checkbox" checked><div><div class="t">SO-260909-03 <span class="tag red">缺 40t</span></div><div class="m">上海建工 · 宝山 · 9/10 到 · <b style="color:var(--danger)">急</b></div><div class="m">螺纹 HRB400E Φ32 12m 定尺</div></div><div class="q"><b class="num">120</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-04 <span class="tag green">已配齐</span></div><div class="m">中铁四局 · 无锡 · 9/12 到</div><div class="m">盘螺 HRB400E Φ8×70t / Φ10×80t</div></div><div class="q"><b class="num">150</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-05 <span class="tag yellow">待确认</span></div><div class="m">格力电器 · 南京 · 9/13 到</div><div class="m">冷轧 SPCC 1.0*1250*C</div></div><div class="q"><b class="num">95</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-06 <span class="tag green">已配齐</span></div><div class="m">浙江交工 · 嘉兴 · 9/14 到</div><div class="m">H型钢 Q355B 400*200*8*13</div></div><div class="q"><b class="num">210</b> t</div></label>
+              <label class="demand on" data-tags="short"><input type="checkbox" checked><div><div class="t">SO-260909-07 <span class="tag red">缺 60t</span></div><div class="m">徐工集团 · 徐州 · 9/15 到</div><div class="m">中板 Q355B 20*2200*10000 · 10m 定尺无货</div></div><div class="q"><b class="num">160</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-08 <span class="tag green">已配齐</span></div><div class="m">万科 · 合肥 · 9/12 到</div><div class="m">螺纹 HRB400E Φ12/14/16 · 允许理计</div></div><div class="q"><b class="num">340</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-09 <span class="tag green">已配齐</span></div><div class="m">绿地控股 · 杭州 · 9/13 到</div><div class="m">螺纹 HRB400E Φ18/20</div></div><div class="q"><b class="num">150</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-10 <span class="tag green">已配齐</span></div><div class="m">中船 · 南通 · 9/16 到</div><div class="m">中板 Q235B 12*2000*8000</div></div><div class="q"><b class="num">85</b> t</div></label>
+              <label class="demand on" data-tags=""><input type="checkbox" checked><div><div class="t">SO-260909-11 <span class="tag green">已配齐</span></div><div class="m">比亚迪 · 常州 · 9/14 到</div><div class="m">镀锌 DX51D+Z 0.8*1250*C</div></div><div class="q"><b class="num">60</b> t</div></label>
+              <label class="demand on" data-tags="rpl"><input type="checkbox" checked><div><div class="t">RPL-0909-01 <span class="tag purple">补库</span></div><div class="m">太仓库安全库存预警 · 自动生成</div><div class="m">螺纹 HRB400E Φ14/16 · 库存 3 天用量</div></div><div class="q"><b class="num">50</b> t</div></label>
+              <label class="demand on" data-tags="rpl"><input type="checkbox" checked><div><div class="t">RPL-0909-02 <span class="tag purple">补库</span></div><div class="m">无锡库安全库存预警 · 自动生成</div><div class="m">无缝管 20# Φ108×4.5 6m · 可用 18t &lt; ROP 40t</div></div><div class="q"><b class="num">40</b> t</div></label>
+              <label class="demand on" data-tags="rpl"><input type="checkbox" checked><div><div class="t">RPL-0909-03 <span class="tag purple">补库</span></div><div class="m">张家港库安全库存预警 · 可与 SO-10 拼车</div><div class="m">中板 Q235B 12mm 2200×L · 可用 42t &lt; ROP 60t</div></div><div class="q"><b class="num">60</b> t</div></label>
             </div>
           </div>
         </div>
@@ -226,6 +237,67 @@
             </div>
           </div>
 
+
+          <!-- 缺资源处理 -->
+          <div class="card mt focus-card" id="shortPanel">
+            <div class="card-h"><h3>缺资源处理工作台</h3><span class="tag red">2 单 · 100t 缺口</span><span class="sub">引擎对每个缺口自动生成补救路径,按「到厂成本 + 交期偏差 + 需否销售确认」排序,一键采纳即改写方案</span>
+              <div class="r"><a class="btn xs" data-toast="已向 6 家有该规格的供应商发出紧急询价,截止 11:30">紧急询价(6 家)</a><a class="btn xs" data-toast="已推送 2 条交期确认给销售">推送销售确认</a></div></div>
+            <div class="card-b">
+              <div class="short">
+                <div class="short-h">
+                  <div><b>SO-260909-03</b> · 上海建工 · 宝山 · <b style="color:var(--danger)">9/10 急</b> · 螺纹 HRB400E Φ32 12m 定尺 · 需 120t</div>
+                  <div class="row" style="gap:8px"><span class="tag">已配 80t(常州库)</span><span class="tag red">缺 40t</span></div>
+                </div>
+                <div class="short-why"><b>缺口原因:</b>常州库 Φ32 仅 80t;中天直发最早 9/12 到;Φ32 12m 定尺为 C 类冷门规格,市场货少 · 价格库中 4 家有货 / 2 家过期。</div>
+                <table class="tbl compact">
+                  <thead><tr><th style="width:36px">#</th><th>补救路径</th><th>来源</th><th class="r">数量</th><th class="r">到厂价</th><th class="r">vs 方案 A</th><th>到货</th><th>需确认</th><th>风险</th><th style="width:150px"></th></tr></thead>
+                  <tbody>
+                    <tr class="best"><td><span class="rank r1">1</span></td><td><b>现货补足</b> · 协议供应商</td><td><span class="mill"><span class="avatar" style="background:#c98a00">永</span><b>永钢 · 上海库</b></span></td><td class="r num">40t</td><td class="r num bold">3,548</td><td class="r num up">+31 · ¥1,240</td><td>9/10 当天可提 ✓</td><td><span class="tag green">否</span></td><td class="small">低 · 磅差 −0.06%</td><td><a class="btn xs primary" data-toast="已采纳:SO-03 缺口 40t 由永钢上海库补足,方案 A 已重算(+¥1,240)">采纳</a> <a class="btn xs" href="price-lookup.html">看全部报价</a></td></tr>
+                    <tr><td><span class="rank r2">2</span></td><td><b>分批交付</b> · 9/10 先发 80t,9/12 中天直发补 40t</td><td><span class="mill"><span class="avatar" style="background:#12945a">中</span><b>中天 · 直发</b></span></td><td class="r num">40t</td><td class="r num">3,517</td><td class="r num">±0</td><td><span class="up">9/12(晚 2 天)</span></td><td><span class="tag yellow">销售 → 客户</span></td><td class="small">中 · 工地进度</td><td><a class="btn xs" data-toast="已向销售(王磊)推送分批交付确认">问销售</a></td></tr>
+                    <tr><td><span class="rank r3">3</span></td><td><b>库间调拨</b> · 太仓库 Φ32 32t + 缺 8t 市场补</td><td>太仓库 → 宝山</td><td class="r num">32 + 8t</td><td class="r num">3,531</td><td class="r num up">+14 · ¥560</td><td>9/10 ✓</td><td><span class="tag green">否</span></td><td class="small">中 · 太仓库降至 ROP 下</td><td><a class="btn xs" data-toast="已模拟:采纳后太仓库 Φ32 触发补库 RPL">模拟</a></td></tr>
+                    <tr><td><span class="rank">4</span></td><td><b>市场现货</b> · 非协议贸易商</td><td><span class="mill"><span class="avatar" style="background:#8a97a8">市</span><b>上海贸易商 X</b></span></td><td class="r num">40t</td><td class="r num">3,585</td><td class="r num up">+68 · ¥2,720</td><td>9/10 ✓</td><td><span class="tag yellow">风控(新供应商)</span></td><td class="small up">高 · 无历史 · 现款</td><td><a class="btn xs" data-toast="已加入备选">备选</a></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="short mt">
+                <div class="short-h">
+                  <div><b>SO-260909-07</b> · 徐工集团 · 徐州 · 9/15 · 中板 Q355B 20×2200×10000 定尺 · 需 160t</div>
+                  <div class="row" style="gap:8px"><span class="tag">已配 100t(玖隆库 定尺)</span><span class="tag red">缺 60t</span></div>
+                </div>
+                <div class="short-why"><b>缺口原因:</b>10m 定尺板全网仅 100t;沙钢定尺订轧排产最早 9/20。属板材「大板可切小板」规则可自动替代。</div>
+                <table class="tbl compact">
+                  <thead><tr><th style="width:36px">#</th><th>补救路径</th><th>来源</th><th class="r">数量</th><th class="r">到厂价</th><th class="r">vs 方案 A</th><th>到货</th><th>需确认</th><th>风险</th><th style="width:150px"></th></tr></thead>
+                  <tbody>
+                    <tr class="best"><td><span class="rank r1">1</span></td><td><b>规格替代 · 大板切割</b> 20×2200×12000 → 10000,余料 2m 入库</td><td><span class="mill"><span class="avatar" style="background:#1f5eff">沙</span><b>沙钢 · 玖隆库</b></span></td><td class="r num">60t(切后)</td><td class="r num bold">3,690<span class="tiny muted"> 含切割 +40</span></td><td class="r num up">+40 · ¥2,400</td><td>9/13 ✓(切割 1 天)</td><td><span class="tag green">否(规则内)</span></td><td class="small">低 · 余料 12t 可售</td><td><a class="btn xs primary" data-toast="已采纳:60t 由 12m 大板切割,余料 12t 转张家港库存">采纳</a></td></tr>
+                    <tr><td><span class="rank r2">2</span></td><td><b>钢厂定尺订轧</b></td><td><span class="mill"><span class="avatar" style="background:#1f5eff">沙</span><b>沙钢 · 订轧</b></span></td><td class="r num">60t</td><td class="r num">3,650</td><td class="r num">±0</td><td><span class="up">9/20(晚 5 天)</span></td><td><span class="tag yellow">销售 → 客户</span></td><td class="small">中 · 排产变动</td><td><a class="btn xs" data-toast="已推送销售确认">问销售</a></td></tr>
+                    <tr><td><span class="rank r3">3</span></td><td><b>宽度替代</b> 2200 → 2500(客户下料是否可接受)</td><td><span class="mill"><span class="avatar" style="background:#c98a00">永</span><b>永钢 · 华东</b></span></td><td class="r num">60t</td><td class="r num">3,662</td><td class="r num up">+12 · ¥720</td><td>9/14 ✓</td><td><span class="tag yellow">销售 → 客户</span></td><td class="small">中 · 下料损耗</td><td><a class="btn xs" data-toast="已推送销售确认">问销售</a></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="alert blue mt"><span class="ic">✦</span><div><b>缺口不再靠人打电话满世界找货:</b>缺口出现的 12 秒内,引擎已按品类规则(可替代规格 / 切割 / 调拨 / 分批)枚举全部可行路径并算好成本与交期;需要客户点头的路径自动推给销售确认,采购员只需要点「采纳」。手工处理一个缺口平均 40 分钟 → 现在 &lt; 2 分钟。</div></div>
+            </div>
+          </div>
+
+          <!-- 安全库存补货 -->
+          <div class="card mt focus-card" id="rplPanel">
+            <div class="card-h"><h3>安全库存补货需求</h3><span class="tag purple">3 单 · 150t · 引擎自动生成</span><span class="sub">来自「安全库存自动运算」:可用 &lt; ROP 即生成 RPL 单进池,优先并入现有采购 / 拼车,不单独跑一趟</span>
+              <div class="r"><a class="btn xs" href="safety-stock.html">运算参数 →</a><a class="btn xs primary" data-toast="3 张补库单已按建议并入方案 A,新增采购 150t,额外运费 ¥0">全部按建议并入</a></div></div>
+            <div class="card-b tight" style="overflow:auto">
+              <table class="tbl compact">
+                <thead><tr><th>补库单</th><th>仓库 · 规格族</th><th class="r">可用</th><th class="r">在途</th><th class="r">ROP</th><th class="r">目标</th><th class="r">建议补</th><th>补货方式(引擎建议)</th><th>来源 · 价格</th><th class="r">额外运费</th><th>状态</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td class="num bold">RPL-0909-01</td><td>太仓库 · 螺纹 Φ14/16<div class="tiny muted">A-X · 服务水平 98%</div></td><td class="r num up">3 天用量</td><td class="r num">0</td><td class="r num">120t</td><td class="r num">200t</td><td class="r num bold">50t</td><td><span class="tag green">并入 SO-08</span> 万科同规格 · 同车</td><td>中天 · 3,505 <span class="tiny muted">(与 SO-08 同价)</span></td><td class="r num">¥0</td><td><span class="tag green">已并入方案 A</span></td><td><a class="btn xs" data-toast="已打开 RPL-0909-01 运算明细">明细</a></td></tr>
+                  <tr><td class="num bold">RPL-0909-02</td><td>无锡库 · 无缝管 20# Φ108×4.5<div class="tiny muted">A-Y · 服务水平 95%</div></td><td class="r num up">18t</td><td class="r num">0</td><td class="r num">40t</td><td class="r num">80t</td><td class="r num bold">40t</td><td><span class="tag green">并入 RFQ-05</span> 中船 186t 整单,由 A 衡钢无锡库供</td><td>衡钢代理 A · 4,408</td><td class="r num">¥0</td><td><span class="tag yellow">待并入</span></td><td><a class="btn xs" href="compare-multi.html">去整单比价</a></td></tr>
+                  <tr><td class="num bold">RPL-0909-03</td><td>张家港库 · 中板 Q235B 12mm<div class="tiny muted">B-X · 服务水平 95%</div></td><td class="r num up">42t</td><td class="r num">0</td><td class="r num">60t</td><td class="r num">120t</td><td class="r num bold">60t</td><td><span class="tag blue">拼车 SO-10</span> 中船 85t 同源同库,凑整 145t 一车</td><td>沙钢 玖隆 · 3,514</td><td class="r num down">−¥720<div class="tiny muted">整车费率 −12/t</div></td><td><span class="tag yellow">待并入</span></td><td><a class="btn xs" data-toast="已并入 SO-10 拼车,采购 145t">并入</a></td></tr>
+                  <tr style="opacity:.7"><td class="num">RPL-预触发</td><td>无锡库 · H型钢 Q355B 400×200<div class="tiny muted">A-X · 预计 9/14 触发</div></td><td class="r num">96t</td><td class="r num">0</td><td class="r num">90t</td><td class="r num">180t</td><td class="r num">≈ 80t</td><td><span class="tag">建议提前</span> 随 SO-06 浙江交工 210t 同源采购,免 9/14 单跑</td><td>马钢 华东 · 3,586</td><td class="r num down">−¥960</td><td><span class="tag">观察</span></td><td><a class="btn xs" data-toast="已提前触发 RPL-0909-04 并并入 SO-06">提前并入</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row" style="padding:10px 14px;border-top:1px solid var(--line);gap:14px;flex-wrap:wrap">
+              <span class="small dim"><b>补库规则:</b>并入现有采购 &gt; 拼车 &gt; 独立采购 · 补库限价 = 30 日成交均价 · 买入时机指数 &lt; 40 时补库量按 50% 执行(当前 58 · 中性 → 100%)· 单仓单规格族补库上限 = 目标 − 可用 − 在途</span>
+            </div>
+          </div>
+
           <!-- 品类规则 -->
           <div class="card mt">
             <div class="card-h"><h3>品类配货规则 · 管材 / 型材 / 板材</h3><span class="sub">几千个规格的配货靠「规格族 + 替代 + 装车约束」而不是逐规格人工找货</span><div class="r"><a class="btn xs" href="rules.html">规则配置 →</a></div></div>
@@ -298,6 +370,20 @@
     bs[0].textContent = map[p][0]; bs[2].textContent = map[p][1]; bs[3].textContent = map[p][2]; bs[4].textContent = map[p][3];
     toast('已切换至' + map[p][0] + ',明细表已刷新');
   };
+</script>
+
+<script>
+(function(){
+  const chips=document.querySelectorAll('.chips .chip[data-f]'), items=document.querySelectorAll('label.demand');
+  const panel={short:'shortPanel',rpl:'rplPanel'};
+  const h=location.hash.replace('#',''); if(panel[h]) setTimeout(()=>document.querySelector(`.chip[data-f="${h}"]`).click(),50);
+  chips.forEach(c=>c.addEventListener('click',()=>{
+    chips.forEach(x=>x.classList.remove('on')); c.classList.add('on'); const f=c.dataset.f;
+    let n=0,t=0; items.forEach(it=>{ const show=f==='all'||(it.dataset.tags||'').split(' ').includes(f); it.classList.toggle('hide',!show); if(show){n++; t+=parseInt(it.querySelector('.q .num').textContent.replace(/,/g,''))||0;} });
+    document.getElementById('poolCnt').textContent=`${n} 单 · ${t.toLocaleString()} t`;
+    if(panel[f]){ const el=document.getElementById(panel[f]); el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1600); }
+  }));
+})();
 </script>
 </body>
 </html>
