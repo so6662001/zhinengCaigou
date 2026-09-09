@@ -19,6 +19,13 @@
   .raw .parsed { margin-top: 5px; display: flex; gap: 4px; flex-wrap: wrap; }
   th.grp { text-align: center !important; background: #eef2f7 !important; color: var(--text) !important; border-left: 1px solid var(--line); }
   td.grp-l, th.grp-l { border-left: 1px solid var(--line); }
+  #matrix.raw-mode .adj { display: none; }
+  #matrix.raw-mode .landed { opacity: .45; }
+  #matrix tr.trap td { background: #fff1f0 !important; }
+  #matrix.score-mode .adj { display: none; }
+  #matrix.score-mode .score-col { background: #f2fbf6; font-size: 13px; }
+  .mode-banner { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 12.5px; display: none; }
+  .mode-banner.show { display: flex; gap: 10px; align-items: center; }
 </style>
 </head>
 <body>
@@ -49,6 +56,7 @@
           <div class="card">
             <div class="card-h"><h3>比价单</h3><span class="tag blue">5 进行中</span><div class="r"><a class="btn xs primary" data-toast="新建询价单:已从需求池带入规格">+ 新建</a></div></div>
             <div class="rfq on"><div class="t">RFQ-260909-01 <span class="tag green">7/9 已报</span></div><div class="m">螺纹 HRB400E Φ20 12m · 200t · 苏州工业园</div><div class="m">截止 10:30 · <b class="up">剩 48 分</b></div></div>
+            <a class="rfq" href="compare-multi.html" style="display:block;border-left:3px solid var(--purple)"><div class="t">RFQ-260909-05 <span class="tag purple">多规格 · 12</span></div><div class="m">无缝管 20# 6m · 12 规格 · 186t · 无锡</div><div class="m">4/5 已报 · <b>整单 / 拆单比价 →</b></div></a>
             <div class="rfq"><div class="t">RFQ-260909-02 <span class="tag green">6/8 已报</span></div><div class="m">热卷 Q235B 3.0*1500*C · 150t · 昆山</div><div class="m">截止 11:00</div></div>
             <div class="rfq"><div class="t">RFQ-260908-02 <span class="tag red">异常</span></div><div class="m">热卷 Q235B 5.75*1500 · 300t · 上海</div><div class="m">最低价偏离 -68,待核验</div></div>
             <div class="rfq"><div class="t">RFQ-260909-03 <span class="tag yellow">3/10 已报</span></div><div class="m">中板 Q355B 20mm · 160t · 徐州</div><div class="m">截止 14:00</div></div>
@@ -90,144 +98,146 @@
           <div class="card mb">
             <div class="card-h"><h3>归一化到厂价矩阵</h3><span class="sub">所有价格:元/吨 · 含 13% 税 · 折算为「磅计 · 现款 · 到工地」口径</span>
               <div class="r">
-                <div class="seg"><a class="on">到厂价排序</a><a>综合得分排序</a><a>原始报价</a></div>
+                <div class="seg" id="sortSeg"><a class="on" data-sort="landed">到厂价排序</a><a data-sort="score">综合得分排序</a><a data-sort="raw">原始报价</a></div>
                 <a class="btn xs">显示折算公式</a>
               </div></div>
             <div class="card-b tight" style="overflow:auto">
-              <table class="tbl compact">
+              <table class="tbl compact" id="matrix">
                 <thead>
                   <tr>
                     <th rowspan="2" class="c">#</th><th rowspan="2">供应商</th><th rowspan="2">资源</th><th rowspan="2">计重</th><th rowspan="2" class="r">原始报价</th>
-                    <th colspan="4" class="grp">归一化调整项(自动计算)</th>
-                    <th rowspan="2" class="r grp-l">到厂价</th><th rowspan="2" class="r">vs 最优</th><th rowspan="2" class="r">可供</th><th rowspan="2">交期</th><th rowspan="2" class="r">综合分</th><th rowspan="2"></th>
+                    <th colspan="4" class="grp adj">归一化调整项(自动计算)</th>
+                    <th rowspan="2" class="r grp-l landed">到厂价</th><th rowspan="2" class="r">vs 最优</th><th rowspan="2" class="r">可供</th><th rowspan="2">交期</th><th rowspan="2" class="r">综合分</th><th rowspan="2"></th>
                   </tr>
-                  <tr><th class="r grp-l">计重折算</th><th class="r">运费 / 装卸</th><th class="r">账期资金</th><th class="r">磅差/风险</th></tr>
+                  <tr class="adj"><th class="r grp-l">计重折算</th><th class="r">运费 / 装卸</th><th class="r">账期资金</th><th class="r">磅差/风险</th></tr>
                 </thead>
                 <tbody>
-                  <tr class="best">
+                  <tr class="best" data-raw="3410" data-landed="3442" data-score="96.8">
                     <td class="c"><span class="rank r1">1</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#12945a">中</span><div><b>中天钢铁 · 苏南办</b><div class="tiny muted">一级协议 · 近 30 天成交 12 次</div><div class="tiny"><span class="score"><span class="n">94</span><span class="stars">★★★★★</span></span></div></div></span></td>
                     <td class="nowrap">常州库 <span class="tiny muted">62 km</span></td>
                     <td>磅计</td>
                     <td class="r num">3,410</td>
-                    <td class="r num grp-l muted">0</td>
-                    <td class="r num nowrap">+28<span class="muted"> / </span>+0 </td>
-                    <td class="r num">+4 <span class="tiny muted">30天承兑</span></td>
-                    <td class="r num">+0</td>
-                    <td class="r heat h0 grp-l">3,442</td>
+                    <td class="adj r num grp-l muted">0</td>
+                    <td class="adj r num nowrap">+28<span class="muted"> / </span>+0 </td>
+                    <td class="adj r num">+4 <span class="tiny muted">30天承兑</span></td>
+                    <td class="adj r num">+0</td>
+                    <td class="landed r heat h0 grp-l">3,442</td>
                     <td class="r num">—</td>
                     <td class="r num">300t</td>
                     <td>9/10 <span class="tag green">✓</span></td>
-                    <td class="r num bold">96.8</td>
+                    <td class="score-col r num bold">96.8</td>
                     <td><button class="btn xs primary" data-toast="已按 3,442 到厂价生成采购单草稿(中天 200t)">采纳</button></td>
                   </tr>
-                  <tr>
+                  <tr data-raw="3425" data-landed="3447" data-score="95.1">
                     <td class="c"><span class="rank r2">2</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#1f5eff">沙</span><div><b>沙钢 · 江苏玖隆(代理)</b><div class="tiny muted">一级协议 · 近 30 天成交 9 次</div><div class="tiny"><span class="score"><span class="n">96</span><span class="stars">★★★★★</span></span></div></div></span></td>
                     <td class="nowrap">太仓库 <span class="tiny muted">48 km</span></td>
                     <td>磅计</td>
                     <td class="r num">3,425</td>
-                    <td class="r num grp-l muted">0</td>
-                    <td class="r num nowrap">+22<span class="muted"> / </span>+0 </td>
-                    <td class="r num">0 <span class="tiny muted">现款</span></td>
-                    <td class="r num">+0</td>
-                    <td class="r heat h1 grp-l">3,447</td>
+                    <td class="adj r num grp-l muted">0</td>
+                    <td class="adj r num nowrap">+22<span class="muted"> / </span>+0 </td>
+                    <td class="adj r num">0 <span class="tiny muted">现款</span></td>
+                    <td class="adj r num">+0</td>
+                    <td class="landed r heat h1 grp-l">3,447</td>
                     <td class="r num up">+5</td>
                     <td class="r num">200t</td>
                     <td>9/10 <span class="tag green">✓</span></td>
-                    <td class="r num bold">95.1</td>
+                    <td class="score-col r num bold">95.1</td>
                     <td><button class="btn xs" data-toast="已生成议价:建议沙钢降至 3,415">议价</button></td>
                   </tr>
-                  <tr>
+                  <tr data-raw="3395" data-landed="3454" data-score="88.3">
                     <td class="c"><span class="rank r3">3</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#c98a00">永</span><div><b>永钢 · 钢厂直发</b><div class="tiny muted">协议户 · 账期收紧为现款</div><div class="tiny"><span class="score"><span class="n">92</span><span class="stars">★★★★★</span></span></div></div></span></td>
                     <td class="nowrap">张家港厂发 <span class="tiny muted">128 km</span></td>
                     <td>磅计</td>
                     <td class="r num">3,395</td>
-                    <td class="r num grp-l muted">0</td>
-                    <td class="r num nowrap">+52<span class="muted"> / </span>+0 </td>
-                    <td class="r num">+7 <span class="tiny muted">预付款</span></td>
-                    <td class="r num">+0</td>
-                    <td class="r heat h1 grp-l">3,454</td>
+                    <td class="adj r num grp-l muted">0</td>
+                    <td class="adj r num nowrap">+52<span class="muted"> / </span>+0 </td>
+                    <td class="adj r num">+7 <span class="tiny muted">预付款</span></td>
+                    <td class="adj r num">+0</td>
+                    <td class="landed r heat h1 grp-l">3,454</td>
                     <td class="r num up">+12</td>
                     <td class="r num">500t</td>
                     <td class="up">9/12 <span class="tag red">晚 1 天</span></td>
-                    <td class="r num bold">88.3</td>
+                    <td class="score-col r num bold">88.3</td>
                     <td><button class="btn xs">议价</button></td>
                   </tr>
-                  <tr style="opacity:.75">
+                  <tr style="opacity:.75" data-raw="3470" data-landed="3478" data-score="70.2">
                     <td class="c"><span class="rank">4</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#8a97a8">华</span><div><b>华东某贸易商 C</b><div class="tiny muted">电话报价 ASR · 置信 92%</div><div class="tiny"><span class="score"><span class="n">85</span><span class="stars">★★★★</span></span></div></div></span></td>
                     <td class="nowrap">苏州库 <span class="tiny muted">12 km</span></td>
                     <td>磅计</td>
                     <td class="r num">3,470</td>
-                    <td class="r num grp-l muted">0</td>
-                    <td class="r num nowrap">+8<span class="muted"> / </span>+0 </td>
-                    <td class="r num">0</td>
-                    <td class="r num">+0</td>
-                    <td class="r heat h4 grp-l">3,478</td>
+                    <td class="adj r num grp-l muted">0</td>
+                    <td class="adj r num nowrap">+8<span class="muted"> / </span>+0 </td>
+                    <td class="adj r num">0</td>
+                    <td class="adj r num">+0</td>
+                    <td class="landed r heat h4 grp-l">3,478</td>
                     <td class="r num up">+36</td>
                     <td class="r num">200t</td>
                     <td>9/09 <span class="tag green">当天</span></td>
-                    <td class="r num bold">70.2</td>
+                    <td class="score-col r num bold">70.2</td>
                     <td><a class="btn xs" data-toast="播放录音 00:42 处">复核录音</a></td>
                   </tr>
-                  <tr>
+                  <tr data-raw="3418" data-landed="3489" data-score="74.9">
                     <td class="c"><span class="rank">5</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#ff6a1a">日</span><div><b>日照钢铁 · 上海贸易商 B</b><div class="tiny muted">昨日磅差 -0.42% 超限</div><div class="tiny"><span class="score"><span class="n">78</span><span class="stars">★★★★</span></span></div></div></span></td>
                     <td class="nowrap">上海宝杨库 <span class="tiny muted">96 km</span></td>
                     <td>磅计</td>
                     <td class="r num">3,418</td>
-                    <td class="r num grp-l muted">0</td>
-                    <td class="r num nowrap">+41<span class="muted"> / </span>+12 <span class="tiny muted">二次装卸</span></td>
-                    <td class="r num">+4</td>
-                    <td class="r num up">+14 <span class="tiny muted">磅差风险</span></td>
-                    <td class="r heat h3 grp-l">3,489</td>
+                    <td class="adj r num grp-l muted">0</td>
+                    <td class="adj r num nowrap">+41<span class="muted"> / </span>+12 <span class="tiny muted">二次装卸</span></td>
+                    <td class="adj r num">+4</td>
+                    <td class="adj r num up">+14 <span class="tiny muted">磅差风险</span></td>
+                    <td class="landed r heat h3 grp-l">3,489</td>
                     <td class="r num up">+47</td>
                     <td class="r num">400t</td>
                     <td>9/10 <span class="tag green">✓</span></td>
-                    <td class="r num bold">74.9</td>
+                    <td class="score-col r num bold">74.9</td>
                     <td></td>
                   </tr>
-                  <tr>
+                  <tr data-raw="3360" data-landed="3497" data-score="72.4">
                     <td class="c"><span class="rank">6</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#6e4cf5">萋</span><div><b>萋钢 · 华东贸易商 A</b><div class="tiny muted">二级 · 理计资源</div><div class="tiny"><span class="score"><span class="n">81</span><span class="stars">★★★★</span></span></div></div></span></td>
                     <td class="nowrap">无锡库 <span class="tiny muted">55 km</span></td>
                     <td>理计 <span class="tiny muted">负差 -2.9%</span></td>
                     <td class="r num">3,360 <span class="tag purple">表面最低</span></td>
-                    <td class="r num grp-l up">+101 <span class="tiny muted">→磅计等价</span></td>
-                    <td class="r num nowrap">+26<span class="muted"> / </span>+0 </td>
-                    <td class="r num">+4</td>
-                    <td class="r num">+6 <span class="tiny muted">画像波动</span></td>
-                    <td class="r heat h2 grp-l">3,497</td>
+                    <td class="adj r num grp-l up">+101 <span class="tiny muted">→磅计等价</span></td>
+                    <td class="adj r num nowrap">+26<span class="muted"> / </span>+0 </td>
+                    <td class="adj r num">+4</td>
+                    <td class="adj r num">+6 <span class="tiny muted">画像波动</span></td>
+                    <td class="landed r heat h2 grp-l">3,497</td>
                     <td class="r num up">+55</td>
                     <td class="r num">160t <span class="tag yellow">不足</span></td>
                     <td>9/11 <span class="tag green">✓</span></td>
-                    <td class="r num bold">72.4</td>
+                    <td class="score-col r num bold">72.4</td>
                     <td></td>
                   </tr>
-                  <tr>
+                  <tr data-raw="3290" data-landed="3497" data-score="58.0">
                     <td class="c"><span class="rank">7</span></td>
                     <td><span class="mill"><span class="avatar" style="background:#0d9488">敬</span><div><b>敬业 · 北方资源</b><div class="tiny muted">非协议 · 首次报价</div><div class="tiny"><span class="score"><span class="n">—</span><span class="muted tiny">无记录</span></span></div></div></span></td>
                     <td class="nowrap">石家庄发运 <span class="tiny muted">1,050 km</span></td>
                     <td>磅计</td>
                     <td class="r num">3,290</td>
-                    <td class="r num grp-l muted">0</td>
-                    <td class="r num up nowrap">+186<span class="muted"> / </span>+0 <span class="tiny muted">汽运</span></td>
-                    <td class="r num">+9</td>
-                    <td class="r num">+12 <span class="tiny muted">新供应商</span></td>
-                    <td class="r heat h4 grp-l">3,497</td>
+                    <td class="adj r num grp-l muted">0</td>
+                    <td class="adj r num up nowrap">+186<span class="muted"> / </span>+0 <span class="tiny muted">汽运</span></td>
+                    <td class="adj r num">+9</td>
+                    <td class="adj r num">+12 <span class="tiny muted">新供应商</span></td>
+                    <td class="landed r heat h4 grp-l">3,497</td>
                     <td class="r num up">+55</td>
                     <td class="r num">1,000t</td>
                     <td class="up">9/14 <span class="tag red">晚 3 天</span></td>
-                    <td class="r num bold">58.0</td>
+                    <td class="score-col r num bold">58.0</td>
                     <td></td>
                   </tr>
                   <tr style="color:var(--text-3)"><td class="c">–</td><td>润忠(南通) · 宏泰(上海)</td><td colspan="12">未在截止前回复 · 系统已自动催报 2 次 · 连续 3 次不回复将自动下调「响应速度」评分</td></tr>
                 </tbody>
               </table>
             </div>
-            <div class="row between" style="padding:10px 14px;border-top:1px solid var(--line)">
+            <div class="mode-banner alert red" id="rawBanner" style="border-radius:0;border-left:none;border-right:none;border-bottom:none"><span class="ic">⚠</span><div><b>这就是传统手工比价看到的表:</b> 敬业 3,290、萋钢 3,360 排在最前 —— 但敬业到厂 3,497(运费 +186)、萋钢理计折算后 3,497。只看原始报价会多付 <b>55 元/吨 · ¥11,000</b>。点「到厂价排序」看真实排名。</div></div>
+            <div class="mode-banner alert green" id="scoreBanner" style="border-radius:0;border-left:none;border-right:none;border-bottom:none"><span class="ic">✦</span><div><b>综合得分 = 到厂价 45% + 交期 20% + 信用 15% + 可供量 10% + 磅差表现 5% + 响应 5%</b>(权重取自当前策略模板)。永钢到厂价第 3 但晚 1 天,得分降至 88.3;贸易商 C 当天可提但价格高,70.2。</div></div>
+            <div class="row between" id="matrixNote" style="padding:10px 14px;border-top:1px solid var(--line)">
               <div class="small dim">折算规则:<span class="kbd">到厂价 = 原始报价 ÷ (1 − 理计负差)(理计→磅计) + 运费(距离 × 车型费率,实时物流平台价) + 装卸/短驳 + 账期资金成本(年化 7.2% × 天数,承兑贴息) + 风险溢价(磅差历史 × 概率 + 新供应商 12)</span></div>
               <span class="small"><b class="down">表面最低价 ≠ 真实最低价</b>:萋钢 3,360 折算后 3,497,比中天贵 55 元/吨 —— 传统手工比价极易踩坑。</span>
             </div>
@@ -290,7 +300,7 @@
 
           <!-- 规格族比价 -->
           <div class="card mb">
-            <div class="card-h"><h3>规格族比价模式 · 管材 / 型材 / 板材</h3><span class="tag purple">✦ 一单几十个规格,一次比完</span><span class="sub">供应商只报基价或上传 Excel,系统按价格库展开逐规格到厂价,再算「整单最优」与「拆单最优」</span><div class="r"><a class="btn xs" href="pricing.html">价格库 →</a></div></div>
+            <div class="card-h"><h3>规格族比价模式 · 管材 / 型材 / 板材</h3><span class="tag purple">✦ 一单几十个规格,一次比完</span><span class="sub">供应商只报基价或上传 Excel,系统按价格库展开逐规格到厂价,再算「整单最优」与「拆单最优」</span><div class="r"><a class="btn xs primary" href="compare-multi.html">打开多规格整单比价工作台 →</a><a class="btn xs" href="price-lookup.html">价格速查</a><a class="btn xs" href="pricing.html">价格库 →</a></div></div>
             <div class="card-b tight" style="overflow:auto">
               <table class="tbl compact">
                 <thead><tr><th>RFQ-260909-05 · 无缝管 20# 6m · 12 个规格 · 186t · 无锡到货</th><th class="r">整单总价</th><th class="r">均价 元/吨</th><th class="r">规格覆盖</th><th>交期</th><th class="r">拆单成本</th><th class="r">综合</th><th>建议</th></tr></thead>
@@ -336,6 +346,25 @@
 </div>
 <script src="assets/app.js"></script>
 <script>
+  // 排序切换:到厂价 / 综合得分 / 原始报价
+  (function(){
+    const seg=document.getElementById('sortSeg'), tbl=document.getElementById('matrix'), tb=tbl.querySelector('tbody');
+    const rows=[...tb.querySelectorAll('tr[data-landed]')], tail=tb.querySelector('tr:not([data-landed])');
+    const rank=(tr,i)=>{ const r=tr.querySelector('.rank'); r.textContent=i+1; r.className='rank'+(i<3?' r'+(i+1):''); };
+    seg.addEventListener('click',e=>{
+      const a=e.target.closest('a'); if(!a) return; const mode=a.dataset.sort;
+      const key=mode==='score'?(r=>-parseFloat(r.dataset.score)):(r=>parseFloat(r.dataset[mode]));
+      rows.sort((x,y)=>key(x)-key(y));
+      rows.forEach((r,i)=>{ tb.insertBefore(r,tail); rank(r,i); r.classList.remove('best','trap'); });
+      tbl.classList.toggle('raw-mode',mode==='raw'); tbl.classList.toggle('score-mode',mode==='score');
+      if(mode==='raw'){ rows[0].classList.add('trap'); rows[1].classList.add('trap'); }
+      else rows.find(r=>r.dataset.landed==='3442').classList.add('best');
+      document.getElementById('rawBanner').classList.toggle('show',mode==='raw');
+      document.getElementById('scoreBanner').classList.toggle('show',mode==='score');
+      seg.querySelectorAll('a').forEach(x=>x.classList.toggle('on',x===a));
+    });
+    const h=location.hash.replace('#',''); if(['score','raw'].includes(h)) seg.querySelector(`a[data-sort="${h}"]`).click();
+  })();
   document.getElementById('radar').innerHTML = radar(['到厂价','交期','信用','可供量','磅差表现','响应速度'], [
     { data: [0.98,0.95,0.94,0.75,0.92,0.96], color: '#12945a' },
     { data: [0.95,0.95,0.96,0.55,0.97,0.88], color: '#1f5eff' },
