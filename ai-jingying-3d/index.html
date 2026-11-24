@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#060b18" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Cpath d='M8 22h16M8 16h16M8 10h16' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <title>钢贸AI经营系统 · 3D全景</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app" data-mode="ai">
+      <div id="stage" aria-label="钢贸AI经营系统3D场景"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">钢</div>
+          <div class="brand-text">
+            <h1 id="brand-title"></h1>
+            <p id="brand-sub"></p>
+          </div>
+        </div>
+        <div class="mode-switch" role="group" aria-label="对比模式">
+          <button type="button" data-mode="old">传统做法</button>
+          <button type="button" data-mode="ai" class="on">AI经营</button>
+        </div>
+        <div class="top-actions">
+          <button type="button" class="btn btn-accent" id="btn-calc">算算你家的账</button>
+          <button type="button" class="btn" id="btn-golive">上线须知</button>
+        </div>
+      </header>
+
+      <div class="legend" id="legend" role="group" aria-label="显示哪些流动"></div>
+
+      <aside class="panel" id="panel" aria-live="polite">
+        <button type="button" class="panel-toggle" id="panel-toggle" aria-label="收起或展开详情"></button>
+        <div class="panel-body" id="panel-body"></div>
+      </aside>
+
+      <footer class="tourbar">
+        <div class="tour-top">
+          <div class="caption" id="caption"></div>
+          <button type="button" class="tour-play" id="tour-play">
+            <span class="play-icon" aria-hidden="true"></span><span class="play-text">自动导览</span>
+          </button>
+        </div>
+        <div class="tour-controls">
+          <button type="button" class="tour-btn" id="tour-prev" aria-label="上一步">‹</button>
+          <div class="steps" id="steps" role="tablist"></div>
+          <button type="button" class="tour-btn" id="tour-next" aria-label="下一步">›</button>
+        </div>
+        <div class="tour-progress"><div id="tour-progress-bar"></div></div>
+      </footer>
+
+      <div class="hint" id="hint">拖动旋转 · 滚轮缩放 · 点击建筑看详情</div>
+
+      <div class="modal" id="modal" hidden>
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-card" role="dialog" aria-modal="true">
+          <button type="button" class="modal-close" data-close aria-label="关闭">×</button>
+          <div class="modal-body" id="modal-body"></div>
+        </div>
+      </div>
+
+      <div class="fallback" id="fallback" hidden>
+        <h2>当前浏览器无法显示3D画面</h2>
+        <p>请使用新版 Chrome、Edge 或 Safari 打开,并确认已开启硬件加速。</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
