@@ -1,0 +1,20 @@
+{
+  "name": "ai-jingying-3d",
+  "private": true,
+  "version": "0.1.0",
+  "description": "钢贸AI经营系统 3D 动态全景演示",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:offline": "vite build --mode offline",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.8",
+    "vite-plugin-singlefile": "^2.3.4"
+  }
+}
