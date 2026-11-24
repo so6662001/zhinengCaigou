@@ -81,7 +81,7 @@ function nodeJumpList(mode) {
         return `
         <button type="button" class="jump" data-node="${id}" style="--c:${d.color}">
           <span class="dot"></span>
-          <span><b>${d.name}</b><em>${d.bubble[mode]}</em></span><i>›</i>
+          <span><b>${mode === 'old' ? d.oldName : d.name}</b><em>${d.bubble[mode]}</em></span><i>›</i>
         </button>`;
       }).join('')}
     </div>`;
